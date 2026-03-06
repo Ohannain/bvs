@@ -30,7 +30,6 @@ public abstract class Media {
         this.publisher = publisher;
     }
 
-    // Getters and Setters
     public String getMediaId() {
         return mediaId;
     }
@@ -165,7 +164,18 @@ public abstract class Media {
         }
         return LocalDate.now().toEpochDay() - dueDate.toEpochDay();
     }
-    
-}
 
+    public abstract MediaType getMediaType();
+
+    @Override
+    public String toString() {
+        return "Media{" +
+                "mediaId='" + mediaId + '\'' +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", status=" + status +
+                ", type=" + getMediaType() +
+                '}';
+    }
+}
 

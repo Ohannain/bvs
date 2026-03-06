@@ -15,7 +15,6 @@ public class Book extends Media {
         super(mediaId, title, author, publisher);
     }
 
-    // Getters and Setters
     public int getPages() {
         return pages;
     }
@@ -56,4 +55,20 @@ public class Book extends Media {
         isDigital = digital;
     }
 
+    @Override
+    public MediaType getMediaType() {
+        return MediaType.BOOK;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "mediaId='" + mediaId + '\'' +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", genre='" + genre + '\'' +
+                ", pages=" + pages +
+                ", status=" + status +
+                '}';
+    }
 }

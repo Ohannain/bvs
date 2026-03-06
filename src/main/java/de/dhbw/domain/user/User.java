@@ -1,5 +1,227 @@
 package de.dhbw.domain.user;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 public class User {
-    // empty skeleton
+    private String userId;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phone;
+    private String address;
+    private LocalDate registrationDate;
+    private LocalDate birthDate;
+    private UserRole role;
+    private UserStatus status;
+    private List<String> borrowedMediaIds;
+    private List<String> reservationIds;
+    private double outstandingFines;
+    private int maxBorrowLimit;
+    private String password;
+    private int warningCount;
+    private LocalDate lastLoginDate;
+
+    public User() {
+        this.registrationDate = LocalDate.now();
+        this.role = UserRole.MEMBER;
+        this.status = UserStatus.ACTIVE;
+        this.borrowedMediaIds = new ArrayList<>();
+        this.reservationIds = new ArrayList<>();
+        this.outstandingFines = 0.0;
+        this.maxBorrowLimit = 5;
+        this.warningCount = 0;
+    }
+
+    public User(String userId, String firstName, String lastName, String email) {
+        this();
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public LocalDate getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(LocalDate registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
+    public UserStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(UserStatus status) {
+        this.status = status;
+    }
+
+    public List<String> getBorrowedMediaIds() {
+        return borrowedMediaIds;
+    }
+
+    public void setBorrowedMediaIds(List<String> borrowedMediaIds) {
+        this.borrowedMediaIds = borrowedMediaIds;
+    }
+
+    public List<String> getReservationIds() {
+        return reservationIds;
+    }
+
+    public void setReservationIds(List<String> reservationIds) {
+        this.reservationIds = reservationIds;
+    }
+
+    public double getOutstandingFines() {
+        return outstandingFines;
+    }
+
+    public void setOutstandingFines(double outstandingFines) {
+        this.outstandingFines = outstandingFines;
+    }
+
+    public int getMaxBorrowLimit() {
+        return maxBorrowLimit;
+    }
+
+    public void setMaxBorrowLimit(int maxBorrowLimit) {
+        this.maxBorrowLimit = maxBorrowLimit;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public int getWarningCount() {
+        return warningCount;
+    }
+
+    public void setWarningCount(int warningCount) {
+        this.warningCount = warningCount;
+    }
+
+    public LocalDate getLastLoginDate() {
+        return lastLoginDate;
+    }
+
+    public void setLastLoginDate(LocalDate lastLoginDate) {
+        this.lastLoginDate = lastLoginDate;
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+
+    public boolean canBorrow() {
+        return status == UserStatus.ACTIVE && 
+               borrowedMediaIds.size() < maxBorrowLimit && 
+               outstandingFines < 50.0;
+    }
+
+    public boolean hasOverdueFines() {
+        return outstandingFines > 0;
+    }
+
+    public void addBorrowedMedia(String mediaId) {
+        if (!borrowedMediaIds.contains(mediaId)) {
+            borrowedMediaIds.add(mediaId);
+        }
+    }
+
+    public void removeBorrowedMedia(String mediaId) {
+        borrowedMediaIds.remove(mediaId);
+    }
+
+    public void addReservation(String reservationId) {
+        if (!reservationIds.contains(reservationId)) {
+            reservationIds.add(reservationId);
+        }
+    }
+
+    public void removeReservation(String reservationId) {
+        reservationIds.remove(reservationId);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId='" + userId + '\'' +
+                ", name='" + getFullName() + '\'' +
+                ", email='" + email + '\'' +
+                ", role=" + role +
+                ", status=" + status +
+                ", borrowedMedia=" + borrowedMediaIds.size() +
+                ", fines=" + outstandingFines +
+                '}';
+    }
 }

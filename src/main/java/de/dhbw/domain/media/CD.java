@@ -17,7 +17,6 @@ public class CD extends Media {
         this.artist = artist;
     }
 
-    // Getters and Setters
     public int getDurationMinutes() {
         return durationMinutes;
     }
@@ -32,7 +31,7 @@ public class CD extends Media {
 
     public void setArtist(String artist) {
         this.artist = artist;
-        this.author = artist; // Artist is also the "author" for CDs
+        this.author = artist; 
     }
 
     public String getGenre() {
@@ -65,5 +64,22 @@ public class CD extends Media {
 
     public void setAlbumType(String albumType) {
         this.albumType = albumType;
+    }
+
+    @Override
+    public MediaType getMediaType() {
+        return MediaType.CD;
+    }
+
+    @Override
+    public String toString() {
+        return "CD{" +
+                "mediaId='" + mediaId + '\'' +
+                ", title='" + title + '\'' +
+                ", artist='" + artist + '\'' +
+                ", genre='" + genre + '\'' +
+                ", tracks=" + trackCount +
+                ", status=" + status +
+                '}';
     }
 }
