@@ -18,7 +18,6 @@ public class DVD extends Media {
     }
 
 
-    // Getters and Setters
     public int getDurationMinutes() {
         return durationMinutes;
     }
@@ -33,7 +32,7 @@ public class DVD extends Media {
 
     public void setDirector(String director) {
         this.director = director;
-        this.author = director; // Director is also the "author" for DVDs
+        this.author = director; 
     }
 
     public String getGenre() {
@@ -66,5 +65,22 @@ public class DVD extends Media {
 
     public void setSubtitles(String subtitles) {
         this.subtitles = subtitles;
+    }
+
+    @Override
+    public MediaType getMediaType() {
+        return MediaType.DVD;
+    }
+
+    @Override
+    public String toString() {
+        return "DVD{" +
+                "mediaId='" + mediaId + '\'' +
+                ", title='" + title + '\'' +
+                ", director='" + director + '\'' +
+                ", genre='" + genre + '\'' +
+                ", duration=" + durationMinutes + " min" +
+                ", status=" + status +
+                '}';
     }
 }
