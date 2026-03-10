@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -49,40 +50,40 @@ public class JsonUtils {
             parentDir.mkdirs();
         }
         
-        try (FileWriter writer = new FileWriter(file)) {
+        try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
             gson.toJson(object, writer);
         }
     }
-    
-    public static <T> T readFromFile(String filePath, Class<T> clazz) throws IOException {
+
+    public static <T> T readFromFile(String filePath, Class<T> clazz)throws IOException {
         File file = new File(filePath);
         if (!file.exists()) {
             return null;
         }
         
-        try (FileReader reader = new FileReader(file)) {
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
             return gson.fromJson(reader, clazz);
         }
     }
-    
-    public static <T> T readFromFile(String filePath, Type type) throws IOException {
+
+    public static <T> T readFromFile(String filePath, Type type)throws IOException {
         File file = new File(filePath);
         if (!file.exists()) {
             return null;
         }
         
-        try (FileReader reader = new FileReader(file)) {
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
             return gson.fromJson(reader, type);
         }
     }
-    
+
     public static <T> List<T> readListFromFile(String filePath, Class<T> clazz) throws IOException {
         File file = new File(filePath);
         if (!file.exists()) {
             return new ArrayList<>();
         }
         
-        try (FileReader reader = new FileReader(file)) {
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
             Type listType = TypeToken.getParameterized(List.class, clazz).getType();
             List<T> result = gson.fromJson(reader, listType);
             return result != null ? result : new ArrayList<>();
@@ -104,7 +105,7 @@ public class JsonUtils {
             if (parentDir != null && !parentDir.exists()) {
                 parentDir.mkdirs();
             }
-            try (FileWriter writer = new FileWriter(file)) {
+            try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
                 writer.write(defaultContent);
             }
         }
@@ -127,7 +128,11 @@ public class JsonUtils {
                 return null;
             }
             String dateStr = in.nextString();
-            return LocalDate.parse(dateStr);
+            try {
+                return LocalDate.parse(dateStr);
+            } catch (java.time.format.DateTimeParseException e) {
+                throw new JsonSyntaxException("Invalid date format: '" + dateStr + "'", e);
+            }
         }
     }
 }

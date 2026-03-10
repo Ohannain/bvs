@@ -3,6 +3,7 @@ package de.dhbw.domain.user;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import de.dhbw.util.Config;
 
 public class User {
     private String userId;
@@ -127,7 +128,7 @@ public class User {
     }
 
     public void setBorrowedMediaIds(List<String> borrowedMediaIds) {
-        this.borrowedMediaIds = borrowedMediaIds;
+        this.borrowedMediaIds = borrowedMediaIds != null ? borrowedMediaIds : new ArrayList<>();
     }
 
     public List<String> getReservationIds() {
@@ -179,13 +180,15 @@ public class User {
     }
 
     public String getFullName() {
-        return firstName + " " + lastName;
+        String fn = firstName != null ? firstName : "";
+        String ln = lastName != null ? lastName : "";
+        return (fn + " " + ln).trim();
     }
 
     public boolean canBorrow() {
         return status == UserStatus.ACTIVE && 
                borrowedMediaIds.size() < maxBorrowLimit && 
-               outstandingFines < 50.0;
+               outstandingFines < Config.MAX_OUTSTANDING_FINES;
     }
 
     public boolean hasOverdueFines() {

@@ -19,6 +19,9 @@ public class Logger {
     private static Level currentLevel = Level.INFO;
     
     public static void setLevel(Level level) {
+        if (level == null) {
+            throw new IllegalArgumentException("Log level cannot be null");
+        }
         currentLevel = level;
     }
     
@@ -77,9 +80,21 @@ public class Logger {
     }
     
     public static void error(String message, Throwable throwable) {
+        if (throwable == null) {
+            log(Level.ERROR, message);
+            return;
+        }
         log(Level.ERROR, message + " - " + throwable.getMessage());
         if (enableConsoleOutput) {
             throwable.printStackTrace();
+        }
+        if (enableFileOutput) {
+            try (FileWriter fw = new FileWriter(LOG_FILE, true);
+                 PrintWriter pw = new PrintWriter(fw)) {
+                throwable.printStackTrace(pw);
+            } catch (IOException e) {
+                System.err.println("Failed to write stack trace to log file: " + e.getMessage());
+            }
         }
     }
 }

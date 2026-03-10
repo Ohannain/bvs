@@ -98,12 +98,14 @@ class DateUtilsTest {
 
     @Test
     void addDaysNullUsesToday() {
-        assertEquals(LocalDate.now().plusDays(5), DateUtils.addDays(null, 5));
+        LocalDate today = LocalDate.now();
+        assertEquals(today.plusDays(5), DateUtils.addDays(null, 5));
     }
 
     @Test
     void today() {
-        assertEquals(LocalDate.now(), DateUtils.today());
+        LocalDate today = LocalDate.now();
+        assertEquals(today, DateUtils.today());
     }
 
     @Test

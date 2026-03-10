@@ -90,7 +90,8 @@ class UserTest {
 
     @Test
     void registrationDateIsToday() {
+        LocalDate today = LocalDate.now();
         User user = new User();
-        assertEquals(LocalDate.now(), user.getRegistrationDate());
+        assertEquals(today, user.getRegistrationDate());
     }
 }
