@@ -1,7 +1,8 @@
 package de.dhbw.domain.fine;
 
 public enum FineStatus {
-    UNPAID,
+    PENDING,
     PAID,
-    WAIVED
+    WAIVED,
+    OVERDUE,
 }
