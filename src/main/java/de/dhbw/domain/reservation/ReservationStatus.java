@@ -1,7 +1,8 @@
 package de.dhbw.domain.reservation;
 
 public enum ReservationStatus {
-    PENDING,
+    ACTIVE,
     FULFILLED,
-    CANCELLED
+    CANCELLED,
+    EXPIRED
 }
