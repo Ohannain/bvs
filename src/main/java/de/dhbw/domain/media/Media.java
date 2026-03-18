@@ -150,14 +150,23 @@ public abstract class Media {
         return status == MediaStatus.BORROWED;
     }
 
+    /**
+     * Checks whether the reserved.
+     */
     public boolean isReserved() {
         return status == MediaStatus.RESERVED;
     }
 
+    /**
+     * Checks whether the overdue.
+     */
     public boolean isOverdue() {
         return isBorrowed() && dueDate != null && LocalDate.now().isAfter(dueDate);
     }
 
+    /**
+     * Returns the days overdue.
+     */
     public long getDaysOverdue() {
         if (!isOverdue()) {
             return 0;
@@ -168,6 +177,9 @@ public abstract class Media {
     public abstract MediaType getMediaType();
 
     @Override
+    /**
+     * Executes the to string operation.
+     */
     public String toString() {
         return "Media{" +
                 "mediaId='" + mediaId + '\'' +

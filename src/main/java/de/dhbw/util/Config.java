@@ -43,10 +43,16 @@ public class Config {
         }
     }
     
+    /**
+     * Returns the string property.
+     */
     public static String getProperty(String key, String defaultValue) {
         return properties.getProperty(key, defaultValue);
     }
     
+    /**
+     * Returns the int property.
+     */
     public static int getIntProperty(String key, int defaultValue) {
         String value = properties.getProperty(key);
         if (value == null) {
@@ -59,6 +65,9 @@ public class Config {
         }
     }
     
+    /**
+     * Returns the double property.
+     */
     public static double getDoubleProperty(String key, double defaultValue) {
         String value = properties.getProperty(key);
         if (value == null) {
@@ -71,6 +80,9 @@ public class Config {
         }
     }
     
+    /**
+     * Returns the boolean property.
+     */
     public static boolean getBooleanProperty(String key, boolean defaultValue) {
         String value = properties.getProperty(key);
         if (value == null) {
