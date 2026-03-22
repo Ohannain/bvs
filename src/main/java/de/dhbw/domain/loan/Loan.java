@@ -2,6 +2,7 @@ package de.dhbw.domain.loan;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 public class Loan {
@@ -9,7 +10,7 @@ public class Loan {
     /** the id of a loan */
     private final UUID loanId;
     /** the ids of the media loaned */
-    private UUID[] mediaIds;
+    private List<UUID> mediaIds;
     /** the id of the user the media was loaned to */
     private UUID userId;
     /** the date the loan was issued */
@@ -40,14 +41,14 @@ public class Loan {
     }
 
     /** getMediaIds gets the ids of the media loaned */
-    public UUID[] getMediaIds() {
+    public List<UUID> getMediaIds() {
         return this.mediaIds;
     }
 
     /** addMediaId adds media to a loan */
     private void addMediaId(UUID mediaId) {
-        this.mediaIds = Arrays.copyOf(this.mediaIds, this.mediaIds.length + 1);
-        this.mediaIds[this.mediaIds.length - 1] = mediaId;
+        if (this.mediaIds.contains(mediaId)) { return; }
+        this.mediaIds.add(mediaId);
     }
 
     /** addMediaIds adds media to a loan */
