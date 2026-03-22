@@ -15,27 +15,34 @@ public class FineCalculator {
      * calculateOverdueFine calculates a fine according to the days a loan is overdue.
      */
     public static double calculateOverdueFine(Loan loan) {
-        return 1;
+        if (loan == null) { return 0.0; }
+        double fine = 0.0;
+
+        int daysBetween = calculateDaysSince();
+
+        if (daysBetween > 0) { fine = daysBetween * Config.DEFAULT_FINE_RATE_PER_DAY; }
+
+        return fine;
     }
 
     /**
      * calculateLostItemFine calculates a fine for a lost loaned item.
      */
     public static double calculateLostItemFine(Media media) {
-        return 1;
+        if (media == null) { return 0.0; }
+
+        return media.replacementCost;
     }
 
     /**
      * calculateDamageFine calculates a fine depending on the damage made to a loaned item
      */
     public static double calculateDamageFine(Media media, DamageLevel damageLevel) {
-        double replacementCost = 0;
-
         return switch (damageLevel) {
-            case MINOR -> replacementCost * 0.25;
-            case MODERATE -> replacementCost * 0.5;
-            case SEVERE -> replacementCost * 0.75;
-            case TOTAL -> replacementCost;
+            case MINOR -> media.replacementCost * 0.25;
+            case MODERATE -> media.replacementCost * 0.5;
+            case SEVERE -> media.replacementCost * 0.75;
+            case TOTAL -> media.replacementCost;
             default -> 0;
         };
     }
