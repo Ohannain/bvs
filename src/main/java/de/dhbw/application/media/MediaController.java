@@ -22,6 +22,14 @@ public class MediaController {
         return mediaService.createDVD(title, director, publisher, duration, genre, ageRating);
     }
 
+    public Media addBluRay(String title, String director, String publisher, int duration, String genre, String ageRating, String resolution) {
+        return mediaService.createBluRay(title, director, publisher, duration, genre, ageRating, resolution);
+    }
+
+    public Media addEBook(String title, String author, String publisher, String isbn, int pages, String genre, String fileFormat) {
+        return mediaService.createEBook(title, author, publisher, isbn, pages, genre, fileFormat);
+    }
+
     public Media addCD(String title, String artist, String recordLabel, int duration, String genre, int trackCount) {
         return mediaService.createCD(title, artist, recordLabel, duration, genre, trackCount);
     }

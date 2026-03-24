@@ -1,30 +1,38 @@
 package de.dhbw.domain.media;
 
-public class DVD extends Film {
+public class BluRay extends Film {
+    private String resolution;
 
-    public DVD() {
+    public BluRay() {
         super();
     }
 
-    public DVD(String mediaId, String title, String director, String publisher) {
+    public BluRay(String mediaId, String title, String director, String publisher) {
         super(mediaId, title, director, publisher);
-        this.director = director;
     }
 
+    public String getResolution() {
+        return resolution;
+    }
+
+    public void setResolution(String resolution) {
+        this.resolution = resolution;
+    }
 
     @Override
     public MediaType getMediaType() {
-        return MediaType.DVD;
+        return MediaType.BLURAY;
     }
 
     @Override
     public String toString() {
-        return "DVD{" +
+        return "BluRay{" +
                 "mediaId='" + mediaId + '\'' +
                 ", title='" + title + '\'' +
                 ", director='" + director + '\'' +
                 ", genre='" + genre + '\'' +
                 ", duration=" + durationMinutes + " min" +
+                ", resolution='" + resolution + '\'' +
                 ", status=" + status +
                 '}';
     }
