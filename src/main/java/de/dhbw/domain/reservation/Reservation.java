@@ -22,7 +22,7 @@ public class Reservation {
         this.priority = 0;
     }
 
-    public Reservation(String reservationId, String userId, String mediaId) {
+    public Reservation(UUID reservationId, String userId, String mediaId) {
         this();
         this.reservationId = reservationId;
         this.userId = userId;
@@ -30,27 +30,27 @@ public class Reservation {
     }
 
     // Getters and Setters
-    public String getReservationId() {
+    public UUID getReservationId() {
         return reservationId;
     }
 
-    public void setReservationId(String reservationId) {
+    public void setReservationId(UUID reservationId) {
         this.reservationId = reservationId;
     }
 
-    public String getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 
-    public String getMediaId() {
+    public UUID getMediaId() {
         return mediaId;
     }
 
-    public void setMediaId(String mediaId) {
+    public void setMediaId(UUID mediaId) {
         this.mediaId = mediaId;
     }
 
