@@ -123,4 +123,17 @@ public class Reservation {
     public void markAsExpired() {
         this.status = ReservationStatus.EXPIRED;
     }
+
+    //return the reservation data as a nice string
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "reservationId='" + reservationId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", mediaId='" + mediaId + '\'' +
+                ", status=" + status +
+                ", reservationDate=" + reservationDate +
+                '}';
+    }
+
 }
