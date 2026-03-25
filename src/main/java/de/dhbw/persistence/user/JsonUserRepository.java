@@ -6,6 +6,7 @@ import de.dhbw.util.JsonUtils;
 import de.dhbw.util.Logger;
 
 import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +30,13 @@ public class JsonUserRepository implements UserRepository {
 
     private void loadUsers() {
         try {
+            File file = new File(filePath);
+            if (!file.exists()) {
+                this.users = new ArrayList<>();
+                saveUsers();
+                Logger.info("User file not found. Created new file at " + filePath);
+                return;
+            }
             this.users = JsonUtils.readListFromFile(filePath, User.class);
             Logger.info("Loaded " + users.size() + " users from " + filePath);
         } catch (IOException e) {

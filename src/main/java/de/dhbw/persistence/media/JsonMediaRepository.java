@@ -38,6 +38,8 @@ public class JsonMediaRepository implements MediaRepository {
                 .of(Media.class, "type")
                 .registerSubtype(Book.class, "BOOK")
                 .registerSubtype(DVD.class, "DVD")
+            .registerSubtype(BluRay.class, "BLURAY")
+            .registerSubtype(EBook.class, "EBOOK")
                 .registerSubtype(CD.class, "CD");
 
         return new GsonBuilder()
@@ -57,6 +59,7 @@ public class JsonMediaRepository implements MediaRepository {
                 }
                 this.mediaList = new ArrayList<>();
                 saveMedia();
+                Logger.info("Media file not found. Created new file at " + filePath);
                 return;
             }
 

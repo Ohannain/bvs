@@ -61,4 +61,18 @@ public class UserValidator {
     public static boolean isValid(User user) {
         return validate(user).isEmpty();
     }
+
+    public static boolean isValidEmail(String email) {
+        return email != null
+                && !email.trim().isEmpty()
+                && EMAIL_PATTERN.matcher(email.trim()).matches();
+    }
+
+    public static boolean isValidPhone(String phone) {
+        if (phone == null || phone.trim().isEmpty()) {
+            return true;
+        }
+        String normalized = phone.replaceAll("[\\s-]", "");
+        return PHONE_PATTERN.matcher(normalized).matches();
+    }
 }
