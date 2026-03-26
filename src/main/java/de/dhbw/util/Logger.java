@@ -54,6 +54,9 @@ public class Logger {
         }
     }
     
+    /**
+     * Writes data to the target.
+     */
     private static void writeToFile(String message) {
         try (FileWriter fw = new FileWriter(LOG_FILE, true);
              PrintWriter pw = new PrintWriter(fw)) {
@@ -63,22 +66,37 @@ public class Logger {
         }
     }
     
+    /**
+     * Executes the debug operation.
+     */
     public static void debug(String message) {
         log(Level.DEBUG, message);
     }
     
+    /**
+     * Executes the info operation.
+     */
     public static void info(String message) {
         log(Level.INFO, message);
     }
     
+    /**
+     * Executes the warn operation.
+     */
     public static void warn(String message) {
         log(Level.WARN, message);
     }
     
+    /**
+     * Executes the error operation.
+     */
     public static void error(String message) {
         log(Level.ERROR, message);
     }
     
+    /**
+     * Executes the error operation.
+     */
     public static void error(String message, Throwable throwable) {
         if (throwable == null) {
             log(Level.ERROR, message);

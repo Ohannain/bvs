@@ -1,5 +1,106 @@
 package de.dhbw.persistence.user;
 
+import de.dhbw.domain.user.User;
+import de.dhbw.util.Config;
+import de.dhbw.util.JsonUtils;
+import de.dhbw.util.Logger;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+    
 public class JsonUserRepository implements UserRepository {
-    // empty skeleton
+    private final String filePath;
+    private List<User> users;
+
+    public JsonUserRepository() {
+        this.filePath = Config.USERS_FILE;
+        this.users = new ArrayList<>();
+        loadUsers();
+    }
+
+    public JsonUserRepository(String filePath) {
+        this.filePath = filePath;
+        this.users = new ArrayList<>();
+        loadUsers();
+    }
+
+    private void loadUsers() {
+        try {
+            this.users = JsonUtils.readListFromFile(filePath, User.class);
+            Logger.info("Loaded " + users.size() + " users from " + filePath);
+        } catch (IOException e) {
+            Logger.warn("Could not load users from file: " + e.getMessage());
+            this.users = new ArrayList<>();
+        }
+    }
+
+    private void saveUsers() {
+        try {
+            JsonUtils.writeListToFile(filePath, users);
+            Logger.debug("Saved " + users.size() + " users to " + filePath);
+        } catch (IOException e) {
+            Logger.error("Failed to save users: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void save(User user) {
+        if (user == null || user.getUserId() == null) {
+            Logger.error("Cannot save null user or user with null ID");
+            return;
+        }
+        users.removeIf(u -> u.getUserId().equals(user.getUserId()));
+        users.add(user);
+        saveUsers();
+        Logger.info("Saved user: " + user.getUserId());
+    }
+
+    @Override
+    public Optional<User> findById(String userId) {
+        return users.stream()
+                .filter(u -> u.getUserId().equals(userId))
+                .findFirst();
+    }
+
+    @Override
+    public List<User> findAll() {
+        return new ArrayList<>(users);
+    }
+
+    @Override
+    public List<User> findByName(String name) {
+        String searchTerm = name.toLowerCase();
+        return users.stream()
+                .filter(u -> u.getFullName().toLowerCase().contains(searchTerm))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return users.stream()
+                .filter(u -> u.getEmail() != null && u.getEmail().equalsIgnoreCase(email))
+                .findFirst();
+    }
+
+    @Override
+    public void update(User user) {
+        save(user);
+    }
+
+    @Override
+    public void delete(String userId) {
+        boolean removed = users.removeIf(u -> u.getUserId().equals(userId));
+        if (removed) {
+            saveUsers();
+            Logger.info("Deleted user: " + userId);
+        }
+    }
+
+    @Override
+    public boolean exists(String userId) {
+        return users.stream().anyMatch(u -> u.getUserId().equals(userId));
+    }
 }
