@@ -1,13 +1,22 @@
 package de.dhbw;
 
+import de.dhbw.application.fine.FineService;
+import de.dhbw.application.loan.LoanService;
+import de.dhbw.domain.fine.Fine;
+import de.dhbw.domain.loan.Loan;
 import de.dhbw.domain.media.Book;
 import de.dhbw.domain.media.CD;
 import de.dhbw.domain.media.DVD;
 import de.dhbw.domain.media.MediaStatus;
 import de.dhbw.domain.user.User;
 import de.dhbw.domain.user.UserRole;
+import de.dhbw.persistence.fine.FineRepository;
+import de.dhbw.persistence.fine.JsonFineRepository;
+import de.dhbw.persistence.loan.JsonLoanRepository;
+import de.dhbw.persistence.loan.LoanRepository;
 import de.dhbw.util.Logger;
 
+import java.io.File;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
@@ -53,6 +62,32 @@ public class Main {
             System.err.println("FATAL ERROR: " + e.getMessage());
             e.printStackTrace();
             Logger.error("Fatal error during initialization", e);
+            System.exit(1);
+        }
+
+        try {
+            File dataDirectory = new File("data");
+            if (!dataDirectory.exists()) {
+                dataDirectory.mkdirs();
+                Logger.info("Created data directory");
+            }
+
+            FineRepository fineRepository = new JsonFineRepository();
+            LoanRepository loanRepository = new JsonLoanRepository();
+
+            Logger.info("Repositories initialized");
+
+            FineService fineService = new FineService(fineRepository);
+            LoanService loanService = new LoanService(loanRepository, mediaRepository, userRepository);
+
+            Logger.info("Services initialized");
+
+
+
+        } catch (Exception e) {
+            System.err.println("FATAL ERROR: " + e.getMessage());
+            e.printStackTrace();
+            Logger.error("Fatal error during system initialization", e);
             System.exit(1);
         }
     }
