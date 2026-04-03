@@ -42,6 +42,34 @@ public class MediaService {
         return dvd;
     }
 
+    public Media createBluRay(String title, String director, String publisher, int duration, String genre, String ageRating, String resolution) {
+        String mediaId = generateMediaId("BR");
+        BluRay bluRay = new BluRay(mediaId, title, director, publisher);
+        bluRay.setDurationMinutes(duration);
+        bluRay.setGenre(genre);
+        bluRay.setAgeRating(ageRating);
+        bluRay.setResolution(resolution);
+        bluRay.setStatus(MediaStatus.AVAILABLE);
+
+        mediaRepository.save(bluRay);
+        Logger.info("Created new BluRay: " + mediaId);
+        return bluRay;
+    }
+
+    public Media createEBook(String title, String author, String publisher, String isbn, int pages, String genre, String fileFormat) {
+        String mediaId = generateMediaId("EB");
+        EBook eBook = new EBook(mediaId, title, author, publisher);
+        eBook.setIsbn(isbn);
+        eBook.setPages(pages);
+        eBook.setGenre(genre);
+        eBook.setFileFormat(fileFormat);
+        eBook.setStatus(MediaStatus.AVAILABLE);
+
+        mediaRepository.save(eBook);
+        Logger.info("Created new EBook: " + mediaId);
+        return eBook;
+    }
+
     public Media createCD(String title, String artist, String recordLabel, int duration, String genre, int trackCount) {
         String mediaId = generateMediaId("C");
         CD cd = new CD(mediaId, title, artist, recordLabel);

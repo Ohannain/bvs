@@ -1,37 +1,38 @@
 package de.dhbw.domain.media;
 
-public class Book extends WrittenMedia {
-    private boolean isDigital;
+public class EBook extends WrittenMedia {
+    private String fileFormat;
 
-    public Book() {
+    public EBook() {
         super();
     }
 
-    public Book(String mediaId, String title, String author, String publisher) {
+    public EBook(String mediaId, String title, String author, String publisher) {
         super(mediaId, title, author, publisher);
     }
 
-    public boolean isDigital() {
-        return isDigital;
+    public String getFileFormat() {
+        return fileFormat;
     }
 
-    public void setDigital(boolean digital) {
-        isDigital = digital;
+    public void setFileFormat(String fileFormat) {
+        this.fileFormat = fileFormat;
     }
 
     @Override
     public MediaType getMediaType() {
-        return MediaType.BOOK;
+        return MediaType.EBOOK;
     }
 
     @Override
     public String toString() {
-        return "Book{" +
+        return "EBook{" +
                 "mediaId='" + mediaId + '\'' +
                 ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
                 ", genre='" + genre + '\'' +
                 ", pages=" + pages +
+                ", format='" + fileFormat + '\'' +
                 ", status=" + status +
                 '}';
     }
