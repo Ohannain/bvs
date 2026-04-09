@@ -3,6 +3,7 @@ package de.dhbw.application.user;
 import de.dhbw.domain.user.User;
 import de.dhbw.domain.user.UserStatus;
 import de.dhbw.persistence.user.UserRepository;
+import de.dhbw.util.Config;
 import de.dhbw.util.Logger;
 
 import java.time.LocalDate;
@@ -12,11 +13,9 @@ import java.util.UUID;
 
 public class UserService {
     private final UserRepository userRepository;
-    private final UserValidator userValidator;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.userValidator = new UserValidator();
     }
 
     public User createUser(String firstName, String lastName, String email, String phone, String address) {
@@ -65,56 +64,37 @@ public class UserService {
     }
 
     public void deleteUser(String userId) {
-        Optional<User> user = userRepository.findById(userId);
-        if (user.isPresent()) {
-            if (!user.get().getBorrowedMediaIds().isEmpty()) {
-                throw new IllegalStateException("Cannot delete user with active loans");
-            }
-            if (user.get().getOutstandingFines() > 0) {
-                throw new IllegalStateException("Cannot delete user with outstanding fines");
-            }
-            userRepository.delete(userId);
-            Logger.info("Deleted user: " + userId);
-        } else {
-            throw new IllegalArgumentException("User not found: " + userId);
+        User user = getRequiredUser(userId);
+        if (!user.getBorrowedMediaIds().isEmpty()) {
+            throw new IllegalStateException("Cannot delete user with active loans");
         }
+        if (user.getOutstandingFines() > 0) {
+            throw new IllegalStateException("Cannot delete user with outstanding fines");
+        }
+        userRepository.delete(userId);
+        Logger.info("Deleted user: " + userId);
     }
 
     public void suspendUser(String userId, String reason) {
-        Optional<User> userOpt = userRepository.findById(userId);
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
-            user.setStatus(UserStatus.SUSPENDED);
-            user.setWarningCount(user.getWarningCount() + 1);
-            userRepository.update(user);
-            Logger.info("Suspended user: " + userId + " - Reason: " + reason);
-        } else {
-            throw new IllegalArgumentException("User not found: " + userId);
-        }
+        User user = getRequiredUser(userId);
+        user.setStatus(UserStatus.SUSPENDED);
+        user.setWarningCount(user.getWarningCount() + 1);
+        userRepository.update(user);
+        Logger.info("Suspended user: " + userId + " - Reason: " + reason);
     }
 
     public void activateUser(String userId) {
-        Optional<User> userOpt = userRepository.findById(userId);
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
-            user.setStatus(UserStatus.ACTIVE);
-            userRepository.update(user);
-            Logger.info("Activated user: " + userId);
-        } else {
-            throw new IllegalArgumentException("User not found: " + userId);
-        }
+        User user = getRequiredUser(userId);
+        user.setStatus(UserStatus.ACTIVE);
+        userRepository.update(user);
+        Logger.info("Activated user: " + userId);
     }
 
     public void blockUser(String userId, String reason) {
-        Optional<User> userOpt = userRepository.findById(userId);
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
-            user.setStatus(UserStatus.BLOCKED);
-            userRepository.update(user);
-            Logger.info("Blocked user: " + userId + " - Reason: " + reason);
-        } else {
-            throw new IllegalArgumentException("User not found: " + userId);
-        }
+        User user = getRequiredUser(userId);
+        user.setStatus(UserStatus.BLOCKED);
+        userRepository.update(user);
+        Logger.info("Blocked user: " + userId + " - Reason: " + reason);
     }
 
     public boolean canUserBorrow(String userId) {
@@ -128,38 +108,30 @@ public class UserService {
     }
 
     public void addFine(String userId, double amount) {
-        Optional<User> userOpt = userRepository.findById(userId);
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
-            user.setOutstandingFines(user.getOutstandingFines() + amount);
-            
-            // Auto-suspend if fines exceed threshold
-            if (user.getOutstandingFines() >= 50.0 && user.getStatus() == UserStatus.ACTIVE) {
-                user.setStatus(UserStatus.SUSPENDED);
-                Logger.warn("User " + userId + " auto-suspended due to high fines");
-            }
-            
-            userRepository.update(user);
-            Logger.info("Added fine of " + amount + " to user: " + userId);
+        User user = getRequiredUser(userId);
+        user.setOutstandingFines(user.getOutstandingFines() + amount);
+
+        if (user.getOutstandingFines() >= Config.MAX_OUTSTANDING_FINES && user.getStatus() == UserStatus.ACTIVE) {
+            user.setStatus(UserStatus.SUSPENDED);
+            Logger.warn("User " + userId + " auto-suspended due to high fines");
         }
+
+        userRepository.update(user);
+        Logger.info("Added fine of " + amount + " to user: " + userId);
     }
 
     public void payFine(String userId, double amount) {
-        Optional<User> userOpt = userRepository.findById(userId);
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
-            double newFines = Math.max(0, user.getOutstandingFines() - amount);
-            user.setOutstandingFines(newFines);
-            
-            // Reactivate if fines are cleared and user was suspended due to fines
-            if (newFines < 50.0 && user.getStatus() == UserStatus.SUSPENDED) {
-                user.setStatus(UserStatus.ACTIVE);
-                Logger.info("User " + userId + " reactivated after fine payment");
-            }
-            
-            userRepository.update(user);
-            Logger.info("Paid fine of " + amount + " for user: " + userId);
+        User user = getRequiredUser(userId);
+        double newFines = Math.max(0, user.getOutstandingFines() - amount);
+        user.setOutstandingFines(newFines);
+
+        if (newFines < Config.MAX_OUTSTANDING_FINES && user.getStatus() == UserStatus.SUSPENDED) {
+            user.setStatus(UserStatus.ACTIVE);
+            Logger.info("User " + userId + " reactivated after fine payment");
         }
+
+        userRepository.update(user);
+        Logger.info("Paid fine of " + amount + " for user: " + userId);
     }
 
     private String generateUserId() {
@@ -168,5 +140,10 @@ public class UserService {
             userId = "U" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         } while (userRepository.exists(userId));
         return userId;
+    }
+
+    private User getRequiredUser(String userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
     }
 }

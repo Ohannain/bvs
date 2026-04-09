@@ -11,6 +11,7 @@ import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -106,8 +107,11 @@ public class JsonMediaRepository implements MediaRepository {
 
     @Override
     public Optional<Media> findById(String mediaId) {
+        if (mediaId == null || mediaId.isBlank()) {
+            return Optional.empty();
+        }
         return mediaList.stream()
-                .filter(m -> m.getMediaId().equals(mediaId))
+                .filter(m -> mediaId.equals(m.getMediaId()))
                 .findFirst();
     }
 
@@ -118,17 +122,23 @@ public class JsonMediaRepository implements MediaRepository {
 
     @Override
     public List<Media> findByTitle(String title) {
-        String searchTerm = title.toLowerCase();
+        if (title == null || title.isBlank()) {
+            return List.of();
+        }
+        String searchTerm = title.trim().toLowerCase(Locale.ROOT);
         return mediaList.stream()
-                .filter(m -> m.getTitle() != null && m.getTitle().toLowerCase().contains(searchTerm))
+                .filter(m -> m.getTitle() != null && m.getTitle().toLowerCase(Locale.ROOT).contains(searchTerm))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<Media> findByAuthor(String author) {
-        String searchTerm = author.toLowerCase();
+        if (author == null || author.isBlank()) {
+            return List.of();
+        }
+        String searchTerm = author.trim().toLowerCase(Locale.ROOT);
         return mediaList.stream()
-                .filter(m -> m.getAuthor() != null && m.getAuthor().toLowerCase().contains(searchTerm))
+                .filter(m -> m.getAuthor() != null && m.getAuthor().toLowerCase(Locale.ROOT).contains(searchTerm))
                 .collect(Collectors.toList());
     }
 
@@ -153,7 +163,7 @@ public class JsonMediaRepository implements MediaRepository {
 
     @Override
     public void delete(String mediaId) {
-        boolean removed = mediaList.removeIf(m -> m.getMediaId().equals(mediaId));
+        boolean removed = mediaList.removeIf(m -> mediaId != null && mediaId.equals(m.getMediaId()));
         if (removed) {
             saveMedia();
             Logger.info("Deleted media: " + mediaId);
@@ -162,7 +172,10 @@ public class JsonMediaRepository implements MediaRepository {
 
     @Override
     public boolean exists(String mediaId) {
-        return mediaList.stream().anyMatch(m -> m.getMediaId().equals(mediaId));
+        if (mediaId == null || mediaId.isBlank()) {
+            return false;
+        }
+        return mediaList.stream().anyMatch(m -> mediaId.equals(m.getMediaId()));
     }
 
     // LocalDate adapter

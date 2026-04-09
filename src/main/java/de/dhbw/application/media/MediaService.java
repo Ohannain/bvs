@@ -5,6 +5,7 @@ import de.dhbw.persistence.media.MediaRepository;
 import de.dhbw.util.Logger;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -151,15 +152,18 @@ public class MediaService {
     }
 
     public List<Media> searchMedia(String searchTerm) {
+        if (searchTerm == null || searchTerm.isBlank()) {
+            return List.of();
+        }
         List<Media> allMedia = mediaRepository.findAll();
-        String search = searchTerm.toLowerCase();
+        String search = searchTerm.trim().toLowerCase(Locale.ROOT);
         
         return allMedia.stream()
                 .filter(m -> 
-                    (m.getTitle() != null && m.getTitle().toLowerCase().contains(search)) ||
-                    (m.getAuthor() != null && m.getAuthor().toLowerCase().contains(search)) ||
-                    (m.getIsbn() != null && m.getIsbn().toLowerCase().contains(search)) ||
-                    (m.getCategory() != null && m.getCategory().toLowerCase().contains(search))
+                    (m.getTitle() != null && m.getTitle().toLowerCase(Locale.ROOT).contains(search)) ||
+                    (m.getAuthor() != null && m.getAuthor().toLowerCase(Locale.ROOT).contains(search)) ||
+                    (m.getIsbn() != null && m.getIsbn().toLowerCase(Locale.ROOT).contains(search)) ||
+                    (m.getCategory() != null && m.getCategory().toLowerCase(Locale.ROOT).contains(search))
                 )
                 .collect(Collectors.toList());
     }

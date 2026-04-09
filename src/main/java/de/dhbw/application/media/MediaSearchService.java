@@ -6,6 +6,7 @@ import de.dhbw.domain.media.MediaType;
 import de.dhbw.persistence.media.MediaRepository;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class MediaSearchService {
@@ -20,7 +21,7 @@ public class MediaSearchService {
             return List.of();
         }
         
-        String searchTerm = keyword.toLowerCase();
+        String searchTerm = keyword.trim().toLowerCase(Locale.ROOT);
         return mediaRepository.findAll().stream()
                 .filter(m -> matchesKeyword(m, searchTerm))
                 .collect(Collectors.toList());
@@ -39,10 +40,10 @@ public class MediaSearchService {
             return List.of();
         }
         
-        String searchTerm = category.toLowerCase();
+        String searchTerm = category.trim().toLowerCase(Locale.ROOT);
         return mediaRepository.findAll().stream()
                 .filter(m -> m.getCategory() != null && 
-                           m.getCategory().toLowerCase().contains(searchTerm))
+                           m.getCategory().toLowerCase(Locale.ROOT).contains(searchTerm))
                 .collect(Collectors.toList());
     }
 
@@ -54,18 +55,18 @@ public class MediaSearchService {
         List<Media> results = mediaRepository.findAll();
         
         if (title != null && !title.trim().isEmpty()) {
-            String titleSearch = title.toLowerCase();
+            String titleSearch = title.trim().toLowerCase(Locale.ROOT);
             results = results.stream()
                     .filter(m -> m.getTitle() != null && 
-                               m.getTitle().toLowerCase().contains(titleSearch))
+                               m.getTitle().toLowerCase(Locale.ROOT).contains(titleSearch))
                     .collect(Collectors.toList());
         }
         
         if (author != null && !author.trim().isEmpty()) {
-            String authorSearch = author.toLowerCase();
+            String authorSearch = author.trim().toLowerCase(Locale.ROOT);
             results = results.stream()
                     .filter(m -> m.getAuthor() != null && 
-                               m.getAuthor().toLowerCase().contains(authorSearch))
+                               m.getAuthor().toLowerCase(Locale.ROOT).contains(authorSearch))
                     .collect(Collectors.toList());
         }
         
@@ -85,11 +86,11 @@ public class MediaSearchService {
     }
 
     private boolean matchesKeyword(Media media, String keyword) {
-        return (media.getTitle() != null && media.getTitle().toLowerCase().contains(keyword)) ||
-               (media.getAuthor() != null && media.getAuthor().toLowerCase().contains(keyword)) ||
-               (media.getPublisher() != null && media.getPublisher().toLowerCase().contains(keyword)) ||
-               (media.getIsbn() != null && media.getIsbn().toLowerCase().contains(keyword)) ||
-               (media.getCategory() != null && media.getCategory().toLowerCase().contains(keyword)) ||
-               (media.getDescription() != null && media.getDescription().toLowerCase().contains(keyword));
+        return (media.getTitle() != null && media.getTitle().toLowerCase(Locale.ROOT).contains(keyword)) ||
+               (media.getAuthor() != null && media.getAuthor().toLowerCase(Locale.ROOT).contains(keyword)) ||
+               (media.getPublisher() != null && media.getPublisher().toLowerCase(Locale.ROOT).contains(keyword)) ||
+               (media.getIsbn() != null && media.getIsbn().toLowerCase(Locale.ROOT).contains(keyword)) ||
+               (media.getCategory() != null && media.getCategory().toLowerCase(Locale.ROOT).contains(keyword)) ||
+               (media.getDescription() != null && media.getDescription().toLowerCase(Locale.ROOT).contains(keyword));
     }
 }

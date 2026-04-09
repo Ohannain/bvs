@@ -27,11 +27,12 @@ public class DateUtils {
         if (dateString == null || dateString.trim().isEmpty()) {
             return null;
         }
+        String normalized = dateString.trim();
         try {
-            return LocalDate.parse(dateString, DEFAULT_FORMATTER);
+            return LocalDate.parse(normalized, DEFAULT_FORMATTER);
         } catch (DateTimeParseException e) {
             try {
-                return LocalDate.parse(dateString, ISO_FORMATTER);
+                return LocalDate.parse(normalized, ISO_FORMATTER);
             } catch (DateTimeParseException ex) {
                 Logger.error("Failed to parse date: " + dateString);
                 return null;

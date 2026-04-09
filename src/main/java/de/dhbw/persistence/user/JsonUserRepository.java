@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
     
@@ -68,8 +69,11 @@ public class JsonUserRepository implements UserRepository {
 
     @Override
     public Optional<User> findById(String userId) {
+        if (userId == null || userId.isBlank()) {
+            return Optional.empty();
+        }
         return users.stream()
-                .filter(u -> u.getUserId().equals(userId))
+                .filter(u -> userId.equals(u.getUserId()))
                 .findFirst();
     }
 
@@ -80,14 +84,20 @@ public class JsonUserRepository implements UserRepository {
 
     @Override
     public List<User> findByName(String name) {
-        String searchTerm = name.toLowerCase();
+        if (name == null || name.isBlank()) {
+            return List.of();
+        }
+        String searchTerm = name.trim().toLowerCase(Locale.ROOT);
         return users.stream()
-                .filter(u -> u.getFullName().toLowerCase().contains(searchTerm))
+                .filter(u -> u.getFullName().toLowerCase(Locale.ROOT).contains(searchTerm))
                 .collect(Collectors.toList());
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
+        if (email == null || email.isBlank()) {
+            return Optional.empty();
+        }
         return users.stream()
                 .filter(u -> u.getEmail() != null && u.getEmail().equalsIgnoreCase(email))
                 .findFirst();
@@ -100,7 +110,7 @@ public class JsonUserRepository implements UserRepository {
 
     @Override
     public void delete(String userId) {
-        boolean removed = users.removeIf(u -> u.getUserId().equals(userId));
+        boolean removed = users.removeIf(u -> userId != null && userId.equals(u.getUserId()));
         if (removed) {
             saveUsers();
             Logger.info("Deleted user: " + userId);
@@ -109,6 +119,9 @@ public class JsonUserRepository implements UserRepository {
 
     @Override
     public boolean exists(String userId) {
-        return users.stream().anyMatch(u -> u.getUserId().equals(userId));
+        if (userId == null || userId.isBlank()) {
+            return false;
+        }
+        return users.stream().anyMatch(u -> userId.equals(u.getUserId()));
     }
 }

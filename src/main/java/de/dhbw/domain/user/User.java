@@ -31,7 +31,7 @@ public class User {
         this.borrowedMediaIds = new ArrayList<>();
         this.reservationIds = new ArrayList<>();
         this.outstandingFines = 0.0;
-        this.maxBorrowLimit = 5;
+        this.maxBorrowLimit = Config.MAX_BORROW_LIMIT;
         this.warningCount = 0;
     }
 
@@ -136,7 +136,7 @@ public class User {
     }
 
     public void setReservationIds(List<String> reservationIds) {
-        this.reservationIds = reservationIds;
+        this.reservationIds = reservationIds != null ? reservationIds : new ArrayList<>();
     }
 
     public double getOutstandingFines() {
