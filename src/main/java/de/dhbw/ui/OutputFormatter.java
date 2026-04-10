@@ -89,7 +89,6 @@ public class OutputFormatter {
             System.out.println("No users found.");
             return;
         }
-
         System.out.printf("%-15s %-25s %-30s %-15s %-10s%n",
                 "User ID", "Name", "Email", "Status", "Borrowed");
         printSeparator();
