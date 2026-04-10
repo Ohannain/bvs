@@ -85,6 +85,9 @@ public class MediaSearchService {
         return results;
     }
 
+    /**
+     * Executes the matches keyword operation.
+     */
     private boolean matchesKeyword(Media media, String keyword) {
         return (media.getTitle() != null && media.getTitle().toLowerCase(Locale.ROOT).contains(keyword)) ||
                (media.getAuthor() != null && media.getAuthor().toLowerCase(Locale.ROOT).contains(keyword)) ||

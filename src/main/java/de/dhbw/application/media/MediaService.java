@@ -168,6 +168,9 @@ public class MediaService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Generates a new value.
+     */
     private String generateMediaId(String prefix) {
         String mediaId;
         do {

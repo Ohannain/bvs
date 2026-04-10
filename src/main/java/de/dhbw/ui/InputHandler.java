@@ -5,18 +5,27 @@ import de.dhbw.util.DateUtils;
 import java.time.LocalDate;
 import java.util.Scanner;
 
-public class InputHandler implements AutoCloseable {
+public class InputHandler {
     private final Scanner scanner;
 
     public InputHandler() {
         this.scanner = new Scanner(System.in);
     }
 
+    /**
+     * readString reads a string from the user
+     */
     public String readString(String prompt) {
         System.out.print(prompt);
         return scanner.nextLine().trim();
     }
 
+    /**
+     * readNonEmptyString tries to read a string from the user, which cannot be empty
+     *
+     * @param prompt the prompt to show the user
+     * @return the input from the user
+     */
     public String readNonEmptyString(String prompt) {
         String input;
         do {
@@ -29,6 +38,12 @@ public class InputHandler implements AutoCloseable {
         return input;
     }
 
+    /**
+     * readInt tries to read a number from the user
+     *
+     * @param prompt the prompt to show the user
+     * @return the input from the user
+     */
     public int readInt(String prompt) {
         while (true) {
             try {
@@ -41,6 +56,14 @@ public class InputHandler implements AutoCloseable {
         }
     }
 
+    /**
+     * readInt tries to read a number from the user, where a min and max value are defined.
+     *
+     * @param prompt the prompt to show the user
+     * @param min the smallest number allowed
+     * @param max the highest number allowed
+     * @return the input from the user
+     */
     public int readInt(String prompt, int min, int max) {
         int value;
         do {
@@ -52,6 +75,12 @@ public class InputHandler implements AutoCloseable {
         return value;
     }
 
+    /**
+     * readDouble tries to read a number from the user
+     *
+     * @param prompt the prompt to show the user
+     * @return the input from the user
+     */
     public double readDouble(String prompt) {
         while (true) {
             try {
@@ -64,6 +93,12 @@ public class InputHandler implements AutoCloseable {
         }
     }
 
+    /**
+     * readBoolean gets a yes/no decision by the user.
+     *
+     * @param prompt the prompt to show the user
+     * @return the decision from the user
+     */
     public boolean readBoolean(String prompt) {
         while (true) {
             System.out.print(prompt + " (y/n): ");
@@ -78,6 +113,13 @@ public class InputHandler implements AutoCloseable {
         }
     }
 
+    /**
+     * readDate tries to read a date from the user.
+     * the date is formatted as dd.MM.yyyy
+     *
+     * @param prompt the prompt to show the user
+     * @return the input from the user
+     */
     public LocalDate readDate(String prompt) {
         while (true) {
             System.out.print(prompt + " (dd.MM.yyyy): ");
@@ -90,12 +132,17 @@ public class InputHandler implements AutoCloseable {
         }
     }
 
+    /**
+     * waitForEnter waits until the user confirms with enter to continue
+     */
     public void waitForEnter() {
         System.out.println("\nPress Enter to continue...");
         scanner.nextLine();
     }
 
-    @Override
+    /**
+     * close closes the scanner
+     */
     public void close() {
         scanner.close();
     }
