@@ -53,6 +53,16 @@ class MediaTest {
     }
 
     @Test
+    void bookIsWrittenMedia() {
+        assertTrue(new Book() instanceof WrittenMedia);
+    }
+
+    @Test
+    void eBookMediaType() {
+        assertEquals(MediaType.EBOOK, new EBook().getMediaType());
+    }
+
+    @Test
     void bookIsOverdueWhenDueDatePassed() {
         Book book = new Book();
         book.setStatus(MediaStatus.BORROWED);
@@ -89,6 +99,24 @@ class MediaTest {
         DVD dvd = new DVD();
         dvd.setDurationMinutes(148);
         assertEquals(148, dvd.getDurationMinutes());
+    }
+
+    @Test
+    void dvdIsFilm() {
+        assertTrue(new DVD() instanceof Film);
+    }
+
+    @Test
+    void bluRayMediaType() {
+        assertEquals(MediaType.BLURAY, new BluRay().getMediaType());
+    }
+
+    @Test
+    void bluRayConstructor() {
+        BluRay bluRay = new BluRay("BR1", "Dune", "Denis Villeneuve", "Warner");
+        assertEquals("BR1", bluRay.getMediaId());
+        assertEquals("Dune", bluRay.getTitle());
+        assertEquals("Denis Villeneuve", bluRay.getDirector());
     }
 
     // --- CD ---
@@ -130,6 +158,7 @@ class MediaTest {
     void mediaTypeDefaultLoanDays() {
         assertEquals(30, MediaType.BOOK.getDefaultLoanDays());
         assertEquals(7,  MediaType.DVD.getDefaultLoanDays());
+        assertEquals(7,  MediaType.BLURAY.getDefaultLoanDays());
         assertEquals(14, MediaType.CD.getDefaultLoanDays());
     }
 
@@ -137,6 +166,7 @@ class MediaTest {
     void mediaTypeDailyFineRate() {
         assertEquals(0.50, MediaType.BOOK.getDailyFineRate(), 0.001);
         assertEquals(1.00, MediaType.DVD.getDailyFineRate(), 0.001);
+        assertEquals(1.20, MediaType.BLURAY.getDailyFineRate(), 0.001);
         assertEquals(0.75, MediaType.CD.getDailyFineRate(), 0.001);
     }
 }

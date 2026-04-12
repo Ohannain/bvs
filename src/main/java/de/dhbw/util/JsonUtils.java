@@ -55,6 +55,9 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Reads data from the source.
+     */
     public static <T> T readFromFile(String filePath, Class<T> clazz)throws IOException {
         File file = new File(filePath);
         if (!file.exists()) {
@@ -66,6 +69,9 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Reads data from the source.
+     */
     public static <T> T readFromFile(String filePath, Type type)throws IOException {
         File file = new File(filePath);
         if (!file.exists()) {
@@ -77,6 +83,9 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Reads data from the source.
+     */
     public static <T> List<T> readListFromFile(String filePath, Class<T> clazz) throws IOException {
         File file = new File(filePath);
         if (!file.exists()) {
@@ -90,14 +99,23 @@ public class JsonUtils {
         }
     }
     
+    /**
+     * Writes data to the target.
+     */
     public static <T> void writeListToFile(String filePath, List<T> list) throws IOException {
         writeToFile(filePath, list);
     }
     
+    /**
+     * Executes the file exists operation.
+     */
     public static boolean fileExists(String filePath) {
         return Files.exists(Paths.get(filePath));
     }
     
+    /**
+     * Executes the ensure file exists operation.
+     */
     public static void ensureFileExists(String filePath, String defaultContent) throws IOException {
         File file = new File(filePath);
         if (!file.exists()) {
@@ -113,6 +131,9 @@ public class JsonUtils {
     
     private static class LocalDateAdapter extends com.google.gson.TypeAdapter<LocalDate> {
         @Override
+        /**
+         * Writes data to the target.
+         */
         public void write(com.google.gson.stream.JsonWriter out, LocalDate value) throws IOException {
             if (value == null) {
                 out.nullValue();
@@ -122,6 +143,9 @@ public class JsonUtils {
         }
         
         @Override
+        /**
+         * Reads data from the source.
+         */
         public LocalDate read(com.google.gson.stream.JsonReader in) throws IOException {
             if (in.peek() == com.google.gson.stream.JsonToken.NULL) {
                 in.nextNull();

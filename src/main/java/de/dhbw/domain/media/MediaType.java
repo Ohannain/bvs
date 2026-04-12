@@ -3,6 +3,7 @@ package de.dhbw.domain.media;
 public enum MediaType {
     BOOK(30, 0.50),
     DVD(7, 1.00),
+    BLURAY(7, 1.20),
     CD(14, 0.75),
     MAGAZINE(7, 0.25),
     EBOOK(21, 0.30);

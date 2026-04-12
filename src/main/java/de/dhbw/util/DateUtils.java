@@ -27,11 +27,12 @@ public class DateUtils {
         if (dateString == null || dateString.trim().isEmpty()) {
             return null;
         }
+        String normalized = dateString.trim();
         try {
-            return LocalDate.parse(dateString, DEFAULT_FORMATTER);
+            return LocalDate.parse(normalized, DEFAULT_FORMATTER);
         } catch (DateTimeParseException e) {
             try {
-                return LocalDate.parse(dateString, ISO_FORMATTER);
+                return LocalDate.parse(normalized, ISO_FORMATTER);
             } catch (DateTimeParseException ex) {
                 Logger.error("Failed to parse date: " + dateString);
                 return null;
@@ -46,6 +47,9 @@ public class DateUtils {
         return ChronoUnit.DAYS.between(start, end);
     }
     
+    /**
+     * Checks whether the overdue.
+     */
     public static boolean isOverdue(LocalDate dueDate) {
         if (dueDate == null) {
             return false;
@@ -53,6 +57,9 @@ public class DateUtils {
         return LocalDate.now().isAfter(dueDate);
     }
     
+    /**
+     * Executes the days overdue operation.
+     */
     public static long daysOverdue(LocalDate dueDate) {
         if (!isOverdue(dueDate)) {
             return 0;
@@ -60,6 +67,9 @@ public class DateUtils {
         return daysBetween(dueDate, LocalDate.now());
     }
     
+    /**
+     * Adds a days.
+     */
     public static LocalDate addDays(LocalDate date, int days) {
         if (date == null) {
             return LocalDate.now().plusDays(days);
@@ -67,10 +77,16 @@ public class DateUtils {
         return date.plusDays(days);
     }
     
+    /**
+     * Executes the today operation.
+     */
     public static LocalDate today() {
         return LocalDate.now();
     }
     
+    /**
+     * Checks whether the future.
+     */
     public static boolean isFuture(LocalDate date) {
         if (date == null) {
             return false;
@@ -78,6 +94,9 @@ public class DateUtils {
         return date.isAfter(LocalDate.now());
     }
     
+    /**
+     * Checks whether the past.
+     */
     public static boolean isPast(LocalDate date) {
         if (date == null) {
             return false;
@@ -85,6 +104,9 @@ public class DateUtils {
         return date.isBefore(LocalDate.now());
     }
     
+    /**
+     * Checks whether the today.
+     */
     public static boolean isToday(LocalDate date) {
         if (date == null) {
             return false;

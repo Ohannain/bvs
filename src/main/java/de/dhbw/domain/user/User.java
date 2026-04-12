@@ -31,7 +31,7 @@ public class User {
         this.borrowedMediaIds = new ArrayList<>();
         this.reservationIds = new ArrayList<>();
         this.outstandingFines = 0.0;
-        this.maxBorrowLimit = 5;
+        this.maxBorrowLimit = Config.MAX_BORROW_LIMIT;
         this.warningCount = 0;
     }
 
@@ -136,7 +136,7 @@ public class User {
     }
 
     public void setReservationIds(List<String> reservationIds) {
-        this.reservationIds = reservationIds;
+        this.reservationIds = reservationIds != null ? reservationIds : new ArrayList<>();
     }
 
     public double getOutstandingFines() {
@@ -185,37 +185,58 @@ public class User {
         return (fn + " " + ln).trim();
     }
 
+    /**
+     * Checks whether the borrow.
+     */
     public boolean canBorrow() {
         return status == UserStatus.ACTIVE && 
                borrowedMediaIds.size() < maxBorrowLimit && 
                outstandingFines < Config.MAX_OUTSTANDING_FINES;
     }
 
+    /**
+     * Checks whether the overdue fines.
+     */
     public boolean hasOverdueFines() {
         return outstandingFines > 0;
     }
 
+    /**
+     * Adds a borrowed media.
+     */
     public void addBorrowedMedia(String mediaId) {
         if (!borrowedMediaIds.contains(mediaId)) {
             borrowedMediaIds.add(mediaId);
         }
     }
 
+    /**
+     * Removes a borrowed media.
+     */
     public void removeBorrowedMedia(String mediaId) {
         borrowedMediaIds.remove(mediaId);
     }
 
+    /**
+     * Adds a reservation.
+     */
     public void addReservation(String reservationId) {
         if (!reservationIds.contains(reservationId)) {
             reservationIds.add(reservationId);
         }
     }
 
+    /**
+     * Removes a reservation.
+     */
     public void removeReservation(String reservationId) {
         reservationIds.remove(reservationId);
     }
 
     @Override
+    /**
+     * Executes the to string operation.
+     */
     public String toString() {
         return "User{" +
                 "userId='" + userId + '\'' +

@@ -11,6 +11,7 @@ import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -38,6 +39,8 @@ public class JsonMediaRepository implements MediaRepository {
                 .of(Media.class, "type")
                 .registerSubtype(Book.class, "BOOK")
                 .registerSubtype(DVD.class, "DVD")
+            .registerSubtype(BluRay.class, "BLURAY")
+            .registerSubtype(EBook.class, "EBOOK")
                 .registerSubtype(CD.class, "CD");
 
         return new GsonBuilder()
@@ -57,6 +60,7 @@ public class JsonMediaRepository implements MediaRepository {
                 }
                 this.mediaList = new ArrayList<>();
                 saveMedia();
+                Logger.info("Media file not found. Created new file at " + filePath);
                 return;
             }
 
@@ -103,8 +107,11 @@ public class JsonMediaRepository implements MediaRepository {
 
     @Override
     public Optional<Media> findById(String mediaId) {
+        if (mediaId == null || mediaId.isBlank()) {
+            return Optional.empty();
+        }
         return mediaList.stream()
-                .filter(m -> m.getMediaId().equals(mediaId))
+                .filter(m -> mediaId.equals(m.getMediaId()))
                 .findFirst();
     }
 
@@ -115,17 +122,23 @@ public class JsonMediaRepository implements MediaRepository {
 
     @Override
     public List<Media> findByTitle(String title) {
-        String searchTerm = title.toLowerCase();
+        if (title == null || title.isBlank()) {
+            return List.of();
+        }
+        String searchTerm = title.trim().toLowerCase(Locale.ROOT);
         return mediaList.stream()
-                .filter(m -> m.getTitle() != null && m.getTitle().toLowerCase().contains(searchTerm))
+                .filter(m -> m.getTitle() != null && m.getTitle().toLowerCase(Locale.ROOT).contains(searchTerm))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<Media> findByAuthor(String author) {
-        String searchTerm = author.toLowerCase();
+        if (author == null || author.isBlank()) {
+            return List.of();
+        }
+        String searchTerm = author.trim().toLowerCase(Locale.ROOT);
         return mediaList.stream()
-                .filter(m -> m.getAuthor() != null && m.getAuthor().toLowerCase().contains(searchTerm))
+                .filter(m -> m.getAuthor() != null && m.getAuthor().toLowerCase(Locale.ROOT).contains(searchTerm))
                 .collect(Collectors.toList());
     }
 
@@ -150,7 +163,7 @@ public class JsonMediaRepository implements MediaRepository {
 
     @Override
     public void delete(String mediaId) {
-        boolean removed = mediaList.removeIf(m -> m.getMediaId().equals(mediaId));
+        boolean removed = mediaList.removeIf(m -> mediaId != null && mediaId.equals(m.getMediaId()));
         if (removed) {
             saveMedia();
             Logger.info("Deleted media: " + mediaId);
@@ -158,13 +171,22 @@ public class JsonMediaRepository implements MediaRepository {
     }
 
     @Override
+    /**
+     * Executes the exists operation.
+     */
     public boolean exists(String mediaId) {
-        return mediaList.stream().anyMatch(m -> m.getMediaId().equals(mediaId));
+        if (mediaId == null || mediaId.isBlank()) {
+            return false;
+        }
+        return mediaList.stream().anyMatch(m -> mediaId.equals(m.getMediaId()));
     }
 
     // LocalDate adapter
     private static class LocalDateAdapter extends TypeAdapter<LocalDate> {
         @Override
+        /**
+         * Writes data to the target.
+         */
         public void write(com.google.gson.stream.JsonWriter out, LocalDate value) throws IOException {
             if (value == null) {
                 out.nullValue();
@@ -174,6 +196,9 @@ public class JsonMediaRepository implements MediaRepository {
         }
 
         @Override
+        /**
+         * Reads data from the source.
+         */
         public LocalDate read(com.google.gson.stream.JsonReader in) throws IOException {
             if (in.peek() == com.google.gson.stream.JsonToken.NULL) {
                 in.nextNull();
@@ -189,15 +214,24 @@ public class JsonMediaRepository implements MediaRepository {
         private final java.util.Map<String, Class<?>> labelToSubtype = new java.util.LinkedHashMap<>();
         private final java.util.Map<Class<?>, String> subtypeToLabel = new java.util.LinkedHashMap<>();
 
+        /**
+         * Executes the runtime type adapter factory operation.
+         */
         private RuntimeTypeAdapterFactory(Class<?> baseType, String typeFieldName) {
             this.baseType = baseType;
             this.typeFieldName = typeFieldName;
         }
 
+        /**
+         * Executes the of operation.
+         */
         public static <T> RuntimeTypeAdapterFactory<T> of(Class<T> baseType, String typeFieldName) {
             return new RuntimeTypeAdapterFactory<>(baseType, typeFieldName);
         }
 
+        /**
+         * Executes the register subtype operation.
+         */
         public RuntimeTypeAdapterFactory<T> registerSubtype(Class<? extends T> type, String label) {
             labelToSubtype.put(label, type);
             subtypeToLabel.put(type, label);
@@ -205,6 +239,9 @@ public class JsonMediaRepository implements MediaRepository {
         }
 
         @Override
+        /**
+         * Executes the create operation.
+         */
         public <R> TypeAdapter<R> create(Gson gson, TypeToken<R> type) {
             if (!baseType.isAssignableFrom(type.getRawType())) {
                 return null;
@@ -221,6 +258,9 @@ public class JsonMediaRepository implements MediaRepository {
 
             return new TypeAdapter<R>() {
                 @Override
+                /**
+                 * Reads data from the source.
+                 */
                 public R read(com.google.gson.stream.JsonReader in) throws IOException {
                     JsonElement jsonElement = JsonParser.parseReader(in);
                     JsonElement labelJsonElement = jsonElement.getAsJsonObject().get(typeFieldName);
@@ -237,6 +277,9 @@ public class JsonMediaRepository implements MediaRepository {
                 }
 
                 @Override
+                /**
+                 * Writes data to the target.
+                 */
                 public void write(com.google.gson.stream.JsonWriter out, R value) throws IOException {
                     Class<?> srcType = value.getClass();
                     String label = subtypeToLabel.get(srcType);
