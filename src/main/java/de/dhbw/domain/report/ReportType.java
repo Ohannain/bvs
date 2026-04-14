@@ -1,8 +1,11 @@
 package de.dhbw.domain.report;
-
+// are those all we need?
 public enum ReportType {
-    MAHN,
+    ANNUAL,
+    MONTHLY,
+    FINE_STATISTICS,
     USAGE,
-    TREND,
-    ANNUAL
+    TREND_ANALYSIS,
+    POPULARITY,
+    OVERDUE_ITEMS
 }
