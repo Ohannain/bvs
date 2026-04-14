@@ -1,6 +1,7 @@
 package de.dhbw.domain.loan;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,6 +33,7 @@ public class Loan {
         this.issueDate = LocalDate.now();
         this.status = LoanStatus.ACTIVE;
         this.userId = userId;
+        this.mediaIds = new ArrayList<>();
     }
 
     /** getLoanId gets the id of a loan */

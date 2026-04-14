@@ -5,7 +5,7 @@ import de.dhbw.util.DateUtils;
 import java.time.LocalDate;
 import java.util.Scanner;
 
-public class InputHandler {
+public class InputHandler implements AutoCloseable {
     private final Scanner scanner;
 
     public InputHandler() {
