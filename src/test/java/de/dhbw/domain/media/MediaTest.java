@@ -3,6 +3,7 @@ package de.dhbw.domain.media;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,8 +19,8 @@ class MediaTest {
 
     @Test
     void bookConstructorSetsFields() {
-        Book book = new Book("B1", "Clean Code", "Robert Martin", "Prentice Hall");
-        assertEquals("B1", book.getMediaId());
+        Book book = new Book(UUID.randomUUID(), "Clean Code", "Robert Martin", "Prentice Hall");
+        assertEquals("B1", book.getMediaId()); //this will fail, see above
         assertEquals("Clean Code", book.getTitle());
         assertEquals("Robert Martin", book.getAuthor());
         assertEquals("Prentice Hall", book.getPublisher());
@@ -89,8 +90,8 @@ class MediaTest {
 
     @Test
     void dvdConstructor() {
-        DVD dvd = new DVD("D1", "Inception", "Christopher Nolan", "Warner");
-        assertEquals("D1", dvd.getMediaId());
+        DVD dvd = new DVD(UUID.randomUUID(), "Inception", "Christopher Nolan", "Warner");
+        assertEquals("D1", dvd.getMediaId()); //this will fail, see above
         assertEquals("Inception", dvd.getTitle());
     }
 
@@ -113,8 +114,8 @@ class MediaTest {
 
     @Test
     void bluRayConstructor() {
-        BluRay bluRay = new BluRay("BR1", "Dune", "Denis Villeneuve", "Warner");
-        assertEquals("BR1", bluRay.getMediaId());
+        BluRay bluRay = new BluRay(UUID.randomUUID(), "Dune", "Denis Villeneuve", "Warner");
+        assertEquals("BR1", bluRay.getMediaId()); //this will fail, see above
         assertEquals("Dune", bluRay.getTitle());
         assertEquals("Denis Villeneuve", bluRay.getDirector());
     }
@@ -128,8 +129,8 @@ class MediaTest {
 
     @Test
     void cdConstructor() {
-        CD cd = new CD("C1", "Abbey Road", "The Beatles", "Apple Records");
-        assertEquals("C1", cd.getMediaId());
+        CD cd = new CD(UUID.randomUUID(), "Abbey Road", "The Beatles", "Apple Records");
+        assertEquals("C1", cd.getMediaId()); //this will fail, see above
         assertEquals("Abbey Road", cd.getTitle());
     }
 

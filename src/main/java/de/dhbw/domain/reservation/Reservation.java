@@ -1,9 +1,10 @@
 package de.dhbw.domain.reservation;
 
 import java.time.LocalDate;
-import java.util.UUID
+import java.util.UUID;
 
 public class Reservation {
+
     // these are only a best guess to what might be needed and are subject to change
     private UUID reservationId;
     private UUID userId;
@@ -22,7 +23,7 @@ public class Reservation {
         this.priority = 0;
     }
 
-    public Reservation(UUID reservationId, String userId, String mediaId) {
+    public Reservation(UUID reservationId, UUID userId, UUID mediaId) {
         this();
         this.reservationId = reservationId;
         this.userId = userId;
@@ -108,7 +109,10 @@ public class Reservation {
 
     // maybe move this and markAsExpired together?
     public boolean isExpired() {
-        return LocalDate.now().isAfter(expiryDate) && status == ReservationStatus.ACTIVE;
+        return (
+            LocalDate.now().isAfter(expiryDate) &&
+            status == ReservationStatus.ACTIVE
+        );
     }
 
     public void fulfill() {
@@ -127,13 +131,22 @@ public class Reservation {
     //return the reservation data as a nice string
     @Override
     public String toString() {
-        return "Reservation{" +
-                "reservationId='" + reservationId + '\'' +
-                ", userId='" + userId + '\'' +
-                ", mediaId='" + mediaId + '\'' +
-                ", status=" + status +
-                ", reservationDate=" + reservationDate +
-                '}';
+        return (
+            "Reservation{" +
+            "reservationId='" +
+            reservationId +
+            '\'' +
+            ", userId='" +
+            userId +
+            '\'' +
+            ", mediaId='" +
+            mediaId +
+            '\'' +
+            ", status=" +
+            status +
+            ", reservationDate=" +
+            reservationDate +
+            '}'
+        );
     }
-
 }

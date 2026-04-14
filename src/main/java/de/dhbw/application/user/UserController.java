@@ -1,10 +1,10 @@
 package de.dhbw.application.user;
 
 import de.dhbw.domain.user.User;
-import de.dhbw.domain.user.UserStatus;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public class UserController {
     private final UserService userService;
@@ -17,7 +17,7 @@ public class UserController {
         return userService.createUser(firstName, lastName, email, phone, address);
     }
 
-    public Optional<User> findUser(String userId) {
+    public Optional<User> findUser(UUID userId) {
         return userService.getUserById(userId);
     }
 
@@ -29,23 +29,23 @@ public class UserController {
         userService.updateUser(user);
     }
 
-    public void suspendUser(String userId, String reason) {
+    public void suspendUser(UUID userId, String reason) {
         userService.suspendUser(userId, reason);
     }
 
-    public void activateUser(String userId) {
+    public void activateUser(UUID userId) {
         userService.activateUser(userId);
     }
 
-    public void blockUser(String userId, String reason) {
+    public void blockUser(UUID userId, String reason) {
         userService.blockUser(userId, reason);
     }
 
-    public boolean checkBorrowingEligibility(String userId) {
+    public boolean checkBorrowingEligibility(UUID userId) {
         return userService.canUserBorrow(userId);
     }
 
-    public void deleteUser(String userId) {
+    public void deleteUser(UUID userId) {
         userService.deleteUser(userId);
     }
 }

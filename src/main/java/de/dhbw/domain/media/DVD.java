@@ -1,16 +1,17 @@
 package de.dhbw.domain.media;
 
+import java.util.UUID;
+
 public class DVD extends Film {
 
     public DVD() {
         super();
     }
 
-    public DVD(String mediaId, String title, String director, String publisher) {
+    public DVD(UUID mediaId, String title, String director, String publisher) {
         super(mediaId, title, director, publisher);
         this.director = director;
     }
-
 
     @Override
     public MediaType getMediaType() {
@@ -22,13 +23,26 @@ public class DVD extends Film {
      * Executes the to string operation.
      */
     public String toString() {
-        return "DVD{" +
-                "mediaId='" + mediaId + '\'' +
-                ", title='" + title + '\'' +
-                ", director='" + director + '\'' +
-                ", genre='" + genre + '\'' +
-                ", duration=" + durationMinutes + " min" +
-                ", status=" + status +
-                '}';
+        return (
+            "DVD{" +
+            "mediaId='" +
+            mediaId +
+            '\'' +
+            ", title='" +
+            title +
+            '\'' +
+            ", director='" +
+            director +
+            '\'' +
+            ", genre='" +
+            genre +
+            '\'' +
+            ", duration=" +
+            durationMinutes +
+            " min" +
+            ", status=" +
+            status +
+            '}'
+        );
     }
 }

@@ -3,7 +3,6 @@ package de.dhbw.application.media;
 import de.dhbw.domain.media.*;
 import de.dhbw.persistence.media.MediaRepository;
 import de.dhbw.util.Logger;
-
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -11,40 +10,63 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class MediaService {
+
     private final MediaRepository mediaRepository;
 
     public MediaService(MediaRepository mediaRepository) {
         this.mediaRepository = mediaRepository;
     }
 
-    public Media createBook(String title, String author, String publisher, String isbn, int pages, String genre) {
-        String mediaId = generateMediaId("B");
+    public Media createBook(
+        String title,
+        String author,
+        String publisher,
+        String isbn,
+        int pages,
+        String genre
+    ) {
+        UUID mediaId = generateMediaId();
         Book book = new Book(mediaId, title, author, publisher);
         book.setIsbn(isbn);
         book.setPages(pages);
         book.setGenre(genre);
         book.setStatus(MediaStatus.AVAILABLE);
-        
+
         mediaRepository.save(book);
         Logger.info("Created new book: " + mediaId);
         return book;
     }
 
-    public Media createDVD(String title, String director, String publisher, int duration, String genre, String ageRating) {
-        String mediaId = generateMediaId("D");
+    public Media createDVD(
+        String title,
+        String director,
+        String publisher,
+        int duration,
+        String genre,
+        String ageRating
+    ) {
+        UUID mediaId = generateMediaId();
         DVD dvd = new DVD(mediaId, title, director, publisher);
         dvd.setDurationMinutes(duration);
         dvd.setGenre(genre);
         dvd.setAgeRating(ageRating);
         dvd.setStatus(MediaStatus.AVAILABLE);
-        
+
         mediaRepository.save(dvd);
         Logger.info("Created new DVD: " + mediaId);
         return dvd;
     }
 
-    public Media createBluRay(String title, String director, String publisher, int duration, String genre, String ageRating, String resolution) {
-        String mediaId = generateMediaId("BR");
+    public Media createBluRay(
+        String title,
+        String director,
+        String publisher,
+        int duration,
+        String genre,
+        String ageRating,
+        String resolution
+    ) {
+        UUID mediaId = generateMediaId();
         BluRay bluRay = new BluRay(mediaId, title, director, publisher);
         bluRay.setDurationMinutes(duration);
         bluRay.setGenre(genre);
@@ -57,8 +79,16 @@ public class MediaService {
         return bluRay;
     }
 
-    public Media createEBook(String title, String author, String publisher, String isbn, int pages, String genre, String fileFormat) {
-        String mediaId = generateMediaId("EB");
+    public Media createEBook(
+        String title,
+        String author,
+        String publisher,
+        String isbn,
+        int pages,
+        String genre,
+        String fileFormat
+    ) {
+        UUID mediaId = generateMediaId();
         EBook eBook = new EBook(mediaId, title, author, publisher);
         eBook.setIsbn(isbn);
         eBook.setPages(pages);
@@ -71,20 +101,27 @@ public class MediaService {
         return eBook;
     }
 
-    public Media createCD(String title, String artist, String recordLabel, int duration, String genre, int trackCount) {
-        String mediaId = generateMediaId("C");
+    public Media createCD(
+        String title,
+        String artist,
+        String recordLabel,
+        int duration,
+        String genre,
+        int trackCount
+    ) {
+        UUID mediaId = generateMediaId();
         CD cd = new CD(mediaId, title, artist, recordLabel);
         cd.setDurationMinutes(duration);
         cd.setGenre(genre);
         cd.setTrackCount(trackCount);
         cd.setStatus(MediaStatus.AVAILABLE);
-        
+
         mediaRepository.save(cd);
         Logger.info("Created new CD: " + mediaId);
         return cd;
     }
 
-    public Optional<Media> getMediaById(String mediaId) {
+    public Optional<Media> getMediaById(UUID mediaId) {
         return mediaRepository.findById(mediaId);
     }
 
@@ -120,7 +157,7 @@ public class MediaService {
         Logger.info("Updated media: " + media.getMediaId());
     }
 
-    public void deleteMedia(String mediaId) {
+    public void deleteMedia(UUID mediaId) {
         Optional<Media> mediaOpt = mediaRepository.findById(mediaId);
         if (mediaOpt.isPresent()) {
             Media media = mediaOpt.get();
@@ -134,7 +171,7 @@ public class MediaService {
         }
     }
 
-    public void setMediaStatus(String mediaId, MediaStatus status) {
+    public void setMediaStatus(UUID mediaId, MediaStatus status) {
         Optional<Media> mediaOpt = mediaRepository.findById(mediaId);
         if (mediaOpt.isPresent()) {
             Media media = mediaOpt.get();
@@ -146,7 +183,7 @@ public class MediaService {
         }
     }
 
-    public boolean isMediaAvailable(String mediaId) {
+    public boolean isMediaAvailable(UUID mediaId) {
         Optional<Media> mediaOpt = mediaRepository.findById(mediaId);
         return mediaOpt.map(Media::isAvailable).orElse(false);
     }
@@ -157,25 +194,43 @@ public class MediaService {
         }
         List<Media> allMedia = mediaRepository.findAll();
         String search = searchTerm.trim().toLowerCase(Locale.ROOT);
-        
-        return allMedia.stream()
-                .filter(m -> 
-                    (m.getTitle() != null && m.getTitle().toLowerCase(Locale.ROOT).contains(search)) ||
-                    (m.getAuthor() != null && m.getAuthor().toLowerCase(Locale.ROOT).contains(search)) ||
-                    (m.getIsbn() != null && m.getIsbn().toLowerCase(Locale.ROOT).contains(search)) ||
-                    (m.getCategory() != null && m.getCategory().toLowerCase(Locale.ROOT).contains(search))
-                )
-                .collect(Collectors.toList());
+
+        return allMedia
+            .stream()
+            .filter(
+                m ->
+                    (m.getTitle() != null &&
+                        m
+                            .getTitle()
+                            .toLowerCase(Locale.ROOT)
+                            .contains(search)) ||
+                    (m.getAuthor() != null &&
+                        m
+                            .getAuthor()
+                            .toLowerCase(Locale.ROOT)
+                            .contains(search)) ||
+                    (m.getIsbn() != null &&
+                        m
+                            .getIsbn()
+                            .toLowerCase(Locale.ROOT)
+                            .contains(search)) ||
+                    (m.getCategory() != null &&
+                        m
+                            .getCategory()
+                            .toLowerCase(Locale.ROOT)
+                            .contains(search))
+            )
+            .collect(Collectors.toList());
     }
 
     /**
      * Generates a new value.
      */
-    private String generateMediaId(String prefix) {
-        String mediaId;
+    private UUID generateMediaId() {
+        UUID fineId;
         do {
-            mediaId = prefix + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-        } while (mediaRepository.exists(mediaId));
-        return mediaId;
+            fineId = UUID.randomUUID();
+        } while (mediaRepository.findById(fineId).isPresent());
+        return fineId;
     }
 }

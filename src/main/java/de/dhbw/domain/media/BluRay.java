@@ -1,13 +1,21 @@
 package de.dhbw.domain.media;
 
+import java.util.UUID;
+
 public class BluRay extends Film {
+
     private String resolution;
 
     public BluRay() {
         super();
     }
 
-    public BluRay(String mediaId, String title, String director, String publisher) {
+    public BluRay(
+        UUID mediaId,
+        String title,
+        String director,
+        String publisher
+    ) {
         super(mediaId, title, director, publisher);
     }
 
@@ -26,14 +34,29 @@ public class BluRay extends Film {
 
     @Override
     public String toString() {
-        return "BluRay{" +
-                "mediaId='" + mediaId + '\'' +
-                ", title='" + title + '\'' +
-                ", director='" + director + '\'' +
-                ", genre='" + genre + '\'' +
-                ", duration=" + durationMinutes + " min" +
-                ", resolution='" + resolution + '\'' +
-                ", status=" + status +
-                '}';
+        return (
+            "BluRay{" +
+            "mediaId='" +
+            mediaId +
+            '\'' +
+            ", title='" +
+            title +
+            '\'' +
+            ", director='" +
+            director +
+            '\'' +
+            ", genre='" +
+            genre +
+            '\'' +
+            ", duration=" +
+            durationMinutes +
+            " min" +
+            ", resolution='" +
+            resolution +
+            '\'' +
+            ", status=" +
+            status +
+            '}'
+        );
     }
 }

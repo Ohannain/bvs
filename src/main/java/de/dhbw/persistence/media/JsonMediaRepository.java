@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class JsonMediaRepository implements MediaRepository {
@@ -106,8 +107,8 @@ public class JsonMediaRepository implements MediaRepository {
     }
 
     @Override
-    public Optional<Media> findById(String mediaId) {
-        if (mediaId == null || mediaId.isBlank()) {
+    public Optional<Media> findById(UUID mediaId) {
+        if (mediaId == null) {
             return Optional.empty();
         }
         return mediaList.stream()
@@ -162,7 +163,7 @@ public class JsonMediaRepository implements MediaRepository {
     }
 
     @Override
-    public void delete(String mediaId) {
+    public void delete(UUID mediaId) {
         boolean removed = mediaList.removeIf(m -> mediaId != null && mediaId.equals(m.getMediaId()));
         if (removed) {
             saveMedia();
@@ -174,8 +175,8 @@ public class JsonMediaRepository implements MediaRepository {
     /**
      * Executes the exists operation.
      */
-    public boolean exists(String mediaId) {
-        if (mediaId == null || mediaId.isBlank()) {
+    public boolean exists(UUID mediaId) {
+        if (mediaId == null) {
             return false;
         }
         return mediaList.stream().anyMatch(m -> mediaId.equals(m.getMediaId()));

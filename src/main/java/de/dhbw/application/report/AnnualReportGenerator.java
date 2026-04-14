@@ -2,11 +2,11 @@ package de.dhbw.application.report;
 
 import de.dhbw.domain.fine.Fine;
 import de.dhbw.domain.loan.Loan;
+import de.dhbw.domain.loan.LoanStatus;
 import de.dhbw.domain.media.Media;
 import de.dhbw.domain.report.Report;
 import de.dhbw.domain.report.ReportType;
 import de.dhbw.domain.user.User;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -14,10 +14,19 @@ import java.util.stream.Collectors;
 
 public class AnnualReportGenerator {
 
-    public static Report generate(int year, List<User> users, List<Media> media,
-                                 List<Loan> loans, List<Fine> fines) {
-        UUID reportId = "REP" + UUID.randomUUID();
-        Report report = new Report(reportId, ReportType.ANNUAL, "Annual Report " + year);
+    public static Report generate(
+        int year,
+        List<User> users,
+        List<Media> media,
+        List<Loan> loans,
+        List<Fine> fines
+    ) {
+        UUID reportId = UUID.randomUUID();
+        Report report = new Report(
+            reportId,
+            ReportType.ANNUAL,
+            "Annual Report " + year
+        );
 
         LocalDate startDate = LocalDate.of(year, 1, 1);
         LocalDate endDate = LocalDate.of(year, 12, 31);
@@ -25,13 +34,19 @@ public class AnnualReportGenerator {
         report.setEndDate(endDate);
 
         // Filter data for the year
-        List<Loan> yearLoans = loans.stream()
-                .filter(l -> l.getLoanDate().getYear() == year)
-                .collect(Collectors.toList());
+        List<Loan> yearLoans = loans
+            .stream()
+            .filter(
+                l ->
+                    l.getIssueDate().getYear() == year ||
+                    l.getDueDate().getYear() == year
+            )
+            .collect(Collectors.toList());
 
-        List<Fine> yearFines = fines.stream()
-                .filter(f -> f.getIssueDate().getYear() == year)
-                .collect(Collectors.toList());
+        List<Fine> yearFines = fines
+            .stream()
+            .filter(f -> f.getIssueDate().getYear() == year)
+            .collect(Collectors.toList());
 
         // Calculate statistics
         report.addDataPoint("year", year);
@@ -40,14 +55,13 @@ public class AnnualReportGenerator {
         report.addDataPoint("total_loans", yearLoans.size());
         report.addDataPoint("total_fines", yearFines.size());
 
-        double totalFineAmount = yearFines.stream()
-                .mapToDouble(Fine::getAmount)
-                .sum();
+        double totalFineAmount = yearFines
+            .stream()
+            .mapToDouble(Fine::getAmount)
+            .sum();
         report.addDataPoint("total_fine_amount", totalFineAmount);
 
-        long overdueLoans = yearLoans.stream()
-                .filter(Loan::isOverdue)
-                .count();
+        long overdueLoans = yearLoans.stream().filter(l -> l.getStatus() == LoanStatus.OVERDUE).count();
         report.addDataPoint("overdue_loans", overdueLoans);
 
         // Build summary
@@ -57,7 +71,9 @@ public class AnnualReportGenerator {
         summary.append("Total Media Items: ").append(media.size()).append("\n");
         summary.append("Total Loans: ").append(yearLoans.size()).append("\n");
         summary.append("Total Fines: ").append(yearFines.size()).append("\n");
-        summary.append("Total Fine Amount: €").append(String.format("%.2f", totalFineAmount));
+        summary
+            .append("Total Fine Amount: €")
+            .append(String.format("%.2f", totalFineAmount));
 
         report.setSummary(summary.toString());
 

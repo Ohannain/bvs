@@ -4,27 +4,25 @@ import de.dhbw.domain.loan.Loan;
 import de.dhbw.domain.loan.LoanStatus;
 import de.dhbw.domain.media.Media;
 import de.dhbw.domain.media.MediaStatus;
-import de.dhbw.domain.user.User;
 import de.dhbw.persistence.loan.LoanRepository;
 import de.dhbw.persistence.media.MediaRepository;
 import de.dhbw.persistence.user.UserRepository;
 import de.dhbw.util.Logger;
-
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public class LoanService {
+
     private final LoanRepository loanRepository;
     private final MediaRepository mediaRepository;
     private final UserRepository userRepository;
 
     public LoanService(
-            LoanRepository loanRepository,
-            MediaRepository mediaRepository,
-            UserRepository userRepository
+        LoanRepository loanRepository,
+        MediaRepository mediaRepository,
+        UserRepository userRepository
     ) {
         this.loanRepository = loanRepository;
         this.mediaRepository = mediaRepository;
@@ -54,7 +52,7 @@ public class LoanService {
             Logger.info("Returned media with id " + mediaId);
         }
 
-        if  (currentLoanedMediaIds.isEmpty()) {
+        if (currentLoanedMediaIds.isEmpty()) {
             loan.setReturnDate(LocalDate.now());
             loan.setStatus(LoanStatus.RETURNED);
         }
@@ -69,7 +67,7 @@ public class LoanService {
         }
 
         Loan loan = loanOptional.get();
-        UUID[] mediaIds = loan.getMediaIds();
+        UUID[] mediaIds = loan.getMediaIds().toArray(UUID[]::new);
         for (UUID mediaId : mediaIds) {
             Optional<Media> mediaOptional = mediaRepository.findById(mediaId);
             if (mediaOptional.isEmpty()) {
@@ -101,7 +99,7 @@ public class LoanService {
      * @return {Optional<Loan>} - the loan if found
      */
     public Optional<Loan> getLoanById(UUID loanId) {
-        return  loanRepository.findById(loanId);
+        return loanRepository.findById(loanId);
     }
 
     /**
@@ -128,10 +126,10 @@ public class LoanService {
      * @return {UUID} loanId - the generated unique id.
      */
     private UUID generateLoanId() {
-        UUID fineId;
+        UUID loanId;
         do {
-            fineId = UUID.randomUUID();
-        } while (loanRepository.findById(fineId).isPresent());
-        return fineId;
+            loanId = UUID.randomUUID();
+        } while (loanRepository.findById(loanId).isPresent());
+        return loanId;
     }
 }

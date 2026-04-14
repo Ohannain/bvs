@@ -1,5 +1,7 @@
 package de.dhbw.domain.media;
 
+import java.util.UUID;
+
 public class CD extends Media {
     private int durationMinutes;
     private String artist;
@@ -12,7 +14,7 @@ public class CD extends Media {
         super();
     }
 
-    public CD(String mediaId, String title, String artist, String recordLabel) {
+    public CD(UUID mediaId, String title, String artist, String recordLabel) {
         super(mediaId, title, artist, recordLabel);
         this.artist = artist;
     }
@@ -31,7 +33,7 @@ public class CD extends Media {
 
     public void setArtist(String artist) {
         this.artist = artist;
-        this.author = artist; 
+        this.author = artist;
     }
 
     public String getGenre() {
