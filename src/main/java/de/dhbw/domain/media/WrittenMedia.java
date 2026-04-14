@@ -1,6 +1,9 @@
 package de.dhbw.domain.media;
 
+import java.util.UUID;
+
 public abstract class WrittenMedia extends Media {
+
     protected int pages;
     protected String genre;
     protected String language;
@@ -10,7 +13,12 @@ public abstract class WrittenMedia extends Media {
         super();
     }
 
-    public WrittenMedia(String mediaId, String title, String author, String publisher) {
+    public WrittenMedia(
+        UUID mediaId,
+        String title,
+        String author,
+        String publisher
+    ) {
         super(mediaId, title, author, publisher);
     }
 

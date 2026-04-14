@@ -1,9 +1,11 @@
 package de.dhbw.domain.media;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public abstract class Media {
-    protected String mediaId;
+
+    protected UUID mediaId;
     protected String title;
     protected String author;
     protected String publisher;
@@ -22,7 +24,7 @@ public abstract class Media {
         this.status = MediaStatus.AVAILABLE;
     }
 
-    public Media(String mediaId, String title, String author, String publisher) {
+    public Media(UUID mediaId, String title, String author, String publisher) {
         this();
         this.mediaId = mediaId;
         this.title = title;
@@ -30,11 +32,11 @@ public abstract class Media {
         this.publisher = publisher;
     }
 
-    public String getMediaId() {
+    public UUID getMediaId() {
         return mediaId;
     }
 
-    public void setMediaId(String mediaId) {
+    public void setMediaId(UUID mediaId) {
         this.mediaId = mediaId;
     }
 
@@ -161,7 +163,9 @@ public abstract class Media {
      * Checks whether the overdue.
      */
     public boolean isOverdue() {
-        return isBorrowed() && dueDate != null && LocalDate.now().isAfter(dueDate);
+        return (
+            isBorrowed() && dueDate != null && LocalDate.now().isAfter(dueDate)
+        );
     }
 
     /**
@@ -181,13 +185,22 @@ public abstract class Media {
      * Executes the to string operation.
      */
     public String toString() {
-        return "Media{" +
-                "mediaId='" + mediaId + '\'' +
-                ", title='" + title + '\'' +
-                ", author='" + author + '\'' +
-                ", status=" + status +
-                ", type=" + getMediaType() +
-                '}';
+        return (
+            "Media{" +
+            "mediaId='" +
+            mediaId +
+            '\'' +
+            ", title='" +
+            title +
+            '\'' +
+            ", author='" +
+            author +
+            '\'' +
+            ", status=" +
+            status +
+            ", type=" +
+            getMediaType() +
+            '}'
+        );
     }
 }
-

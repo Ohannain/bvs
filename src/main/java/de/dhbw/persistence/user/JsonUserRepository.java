@@ -11,8 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
-    
+
 public class JsonUserRepository implements UserRepository {
     private final String filePath;
     private List<User> users;
@@ -68,8 +69,8 @@ public class JsonUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findById(String userId) {
-        if (userId == null || userId.isBlank()) {
+    public Optional<User> findById(UUID userId) {
+        if (userId == null) {
             return Optional.empty();
         }
         return users.stream()
@@ -109,7 +110,7 @@ public class JsonUserRepository implements UserRepository {
     }
 
     @Override
-    public void delete(String userId) {
+    public void delete(UUID userId) {
         boolean removed = users.removeIf(u -> userId != null && userId.equals(u.getUserId()));
         if (removed) {
             saveUsers();
@@ -118,8 +119,8 @@ public class JsonUserRepository implements UserRepository {
     }
 
     @Override
-    public boolean exists(String userId) {
-        if (userId == null || userId.isBlank()) {
+    public boolean exists(UUID userId) {
+        if (userId == null) {
             return false;
         }
         return users.stream().anyMatch(u -> userId.equals(u.getUserId()));

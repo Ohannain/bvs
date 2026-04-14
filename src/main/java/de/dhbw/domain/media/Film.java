@@ -1,6 +1,9 @@
 package de.dhbw.domain.media;
 
+import java.util.UUID;
+
 public abstract class Film extends Media {
+
     protected int durationMinutes;
     protected String director;
     protected String genre;
@@ -12,7 +15,7 @@ public abstract class Film extends Media {
         super();
     }
 
-    public Film(String mediaId, String title, String director, String publisher) {
+    public Film(UUID mediaId, String title, String director, String publisher) {
         super(mediaId, title, director, publisher);
         this.director = director;
     }

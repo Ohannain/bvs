@@ -1,13 +1,16 @@
 package de.dhbw.domain.media;
 
+import java.util.UUID;
+
 public class Book extends WrittenMedia {
+
     private boolean isDigital;
 
     public Book() {
         super();
     }
 
-    public Book(String mediaId, String title, String author, String publisher) {
+    public Book(UUID mediaId, String title, String author, String publisher) {
         super(mediaId, title, author, publisher);
     }
 
@@ -26,13 +29,25 @@ public class Book extends WrittenMedia {
 
     @Override
     public String toString() {
-        return "Book{" +
-                "mediaId='" + mediaId + '\'' +
-                ", title='" + title + '\'' +
-                ", author='" + author + '\'' +
-                ", genre='" + genre + '\'' +
-                ", pages=" + pages +
-                ", status=" + status +
-                '}';
+        return (
+            "Book{" +
+            "mediaId='" +
+            mediaId +
+            '\'' +
+            ", title='" +
+            title +
+            '\'' +
+            ", author='" +
+            author +
+            '\'' +
+            ", genre='" +
+            genre +
+            '\'' +
+            ", pages=" +
+            pages +
+            ", status=" +
+            status +
+            '}'
+        );
     }
 }

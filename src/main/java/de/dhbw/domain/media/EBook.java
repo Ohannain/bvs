@@ -1,13 +1,16 @@
 package de.dhbw.domain.media;
 
+import java.util.UUID;
+
 public class EBook extends WrittenMedia {
+
     private String fileFormat;
 
     public EBook() {
         super();
     }
 
-    public EBook(String mediaId, String title, String author, String publisher) {
+    public EBook(UUID mediaId, String title, String author, String publisher) {
         super(mediaId, title, author, publisher);
     }
 
@@ -26,14 +29,28 @@ public class EBook extends WrittenMedia {
 
     @Override
     public String toString() {
-        return "EBook{" +
-                "mediaId='" + mediaId + '\'' +
-                ", title='" + title + '\'' +
-                ", author='" + author + '\'' +
-                ", genre='" + genre + '\'' +
-                ", pages=" + pages +
-                ", format='" + fileFormat + '\'' +
-                ", status=" + status +
-                '}';
+        return (
+            "EBook{" +
+            "mediaId='" +
+            mediaId +
+            '\'' +
+            ", title='" +
+            title +
+            '\'' +
+            ", author='" +
+            author +
+            '\'' +
+            ", genre='" +
+            genre +
+            '\'' +
+            ", pages=" +
+            pages +
+            ", format='" +
+            fileFormat +
+            '\'' +
+            ", status=" +
+            status +
+            '}'
+        );
     }
 }

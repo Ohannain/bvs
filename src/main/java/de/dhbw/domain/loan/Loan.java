@@ -1,7 +1,6 @@
 package de.dhbw.domain.loan;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,7 +46,9 @@ public class Loan {
 
     /** addMediaId adds media to a loan */
     private void addMediaId(UUID mediaId) {
-        if (this.mediaIds.contains(mediaId)) { return; }
+        if (this.mediaIds.contains(mediaId)) {
+            return;
+        }
         this.mediaIds.add(mediaId);
     }
 

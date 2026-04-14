@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class JsonReservationRepository implements ReservationRepository {
@@ -60,7 +61,7 @@ public class JsonReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Optional<Reservation> findById(String reservationId) {
+    public Optional<Reservation> findById(UUID reservationId) {
         return reservations.stream()
                 .filter(r -> r.getReservationId().equals(reservationId))
                 .findFirst();
@@ -72,14 +73,14 @@ public class JsonReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public List<Reservation> findByUserId(String userId) {
+    public List<Reservation> findByUserId(UUID userId) {
         return reservations.stream()
                 .filter(r -> r.getUserId().equals(userId))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<Reservation> findByMediaId(String mediaId) {
+    public List<Reservation> findByMediaId(UUID mediaId) {
         return reservations.stream()
                 .filter(r -> r.getMediaId().equals(mediaId))
                 .collect(Collectors.toList());
@@ -98,7 +99,7 @@ public class JsonReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void delete(String reservationId) {
+    public void delete(UUID reservationId) {
         boolean removed = reservations.removeIf(r -> r.getReservationId().equals(reservationId));
         if (removed) {
             saveReservations();
@@ -107,7 +108,7 @@ public class JsonReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public boolean exists(String reservationId) {
+    public boolean exists(UUID reservationId) {
         return reservations.stream().anyMatch(r -> r.getReservationId().equals(reservationId));
     }
 }

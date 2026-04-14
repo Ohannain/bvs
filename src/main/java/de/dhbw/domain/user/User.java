@@ -3,10 +3,12 @@ package de.dhbw.domain.user;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 import de.dhbw.util.Config;
 
 public class User {
-    private String userId;
+    private UUID userId;
     private String firstName;
     private String lastName;
     private String email;
@@ -16,8 +18,8 @@ public class User {
     private LocalDate birthDate;
     private UserRole role;
     private UserStatus status;
-    private List<String> borrowedMediaIds;
-    private List<String> reservationIds;
+    private List<UUID> borrowedMediaIds;
+    private List<UUID> reservationIds;
     private double outstandingFines;
     private int maxBorrowLimit;
     private String password;
@@ -35,7 +37,7 @@ public class User {
         this.warningCount = 0;
     }
 
-    public User(String userId, String firstName, String lastName, String email) {
+    public User(UUID userId, String firstName, String lastName, String email) {
         this();
         this.userId = userId;
         this.firstName = firstName;
@@ -43,11 +45,11 @@ public class User {
         this.email = email;
     }
 
-    public String getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 
@@ -123,19 +125,19 @@ public class User {
         this.status = status;
     }
 
-    public List<String> getBorrowedMediaIds() {
+    public List<UUID> getBorrowedMediaIds() {
         return borrowedMediaIds;
     }
 
-    public void setBorrowedMediaIds(List<String> borrowedMediaIds) {
+    public void setBorrowedMediaIds(List<UUID> borrowedMediaIds) {
         this.borrowedMediaIds = borrowedMediaIds != null ? borrowedMediaIds : new ArrayList<>();
     }
 
-    public List<String> getReservationIds() {
+    public List<UUID> getReservationIds() {
         return reservationIds;
     }
 
-    public void setReservationIds(List<String> reservationIds) {
+    public void setReservationIds(List<UUID> reservationIds) {
         this.reservationIds = reservationIds != null ? reservationIds : new ArrayList<>();
     }
 
@@ -189,8 +191,8 @@ public class User {
      * Checks whether the borrow.
      */
     public boolean canBorrow() {
-        return status == UserStatus.ACTIVE && 
-               borrowedMediaIds.size() < maxBorrowLimit && 
+        return status == UserStatus.ACTIVE &&
+               borrowedMediaIds.size() < maxBorrowLimit &&
                outstandingFines < Config.MAX_OUTSTANDING_FINES;
     }
 
@@ -204,7 +206,7 @@ public class User {
     /**
      * Adds a borrowed media.
      */
-    public void addBorrowedMedia(String mediaId) {
+    public void addBorrowedMedia(UUID mediaId) {
         if (!borrowedMediaIds.contains(mediaId)) {
             borrowedMediaIds.add(mediaId);
         }
@@ -213,14 +215,14 @@ public class User {
     /**
      * Removes a borrowed media.
      */
-    public void removeBorrowedMedia(String mediaId) {
+    public void removeBorrowedMedia(UUID mediaId) {
         borrowedMediaIds.remove(mediaId);
     }
 
     /**
      * Adds a reservation.
      */
-    public void addReservation(String reservationId) {
+    public void addReservation(UUID reservationId) {
         if (!reservationIds.contains(reservationId)) {
             reservationIds.add(reservationId);
         }
@@ -229,7 +231,7 @@ public class User {
     /**
      * Removes a reservation.
      */
-    public void removeReservation(String reservationId) {
+    public void removeReservation(UUID reservationId) {
         reservationIds.remove(reservationId);
     }
 

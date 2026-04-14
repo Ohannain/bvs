@@ -9,7 +9,6 @@ import de.dhbw.persistence.media.MediaRepository;
 import de.dhbw.persistence.reservation.ReservationRepository;
 import de.dhbw.persistence.user.UserRepository;
 import de.dhbw.util.Logger;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -17,13 +16,16 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class ReservationService {
+
     private final ReservationRepository reservationRepository;
     private final MediaRepository mediaRepository;
     private final UserRepository userRepository;
 
-    public ReservationService(ReservationRepository reservationRepository,
-                            MediaRepository mediaRepository,
-                            UserRepository userRepository) {
+    public ReservationService(
+        ReservationRepository reservationRepository,
+        MediaRepository mediaRepository,
+        UserRepository userRepository
+    ) {
         this.reservationRepository = reservationRepository;
         this.mediaRepository = mediaRepository;
         this.userRepository = userRepository;
@@ -50,21 +52,32 @@ public class ReservationService {
 
         // Check if media is already available
         if (media.isAvailable()) {
-            throw new IllegalStateException("Media is available, no need for reservation");
+            throw new IllegalStateException(
+                "Media is available, no need for reservation"
+            );
         }
 
         // Check if user already has an active reservation for this media
-        List<Reservation> userReservations = reservationRepository.findByUserId(userId);
-        boolean hasActiveReservation = userReservations.stream()
-                .anyMatch(r -> r.getMediaId().equals(mediaId) && r.isActive());
+        List<Reservation> userReservations = reservationRepository.findByUserId(
+            userId
+        );
+        boolean hasActiveReservation = userReservations
+            .stream()
+            .anyMatch(r -> r.getMediaId().equals(mediaId) && r.isActive());
 
         if (hasActiveReservation) {
-            throw new IllegalStateException("User already has an active reservation for this media");
+            throw new IllegalStateException(
+                "User already has an active reservation for this media"
+            );
         }
 
         // Create reservation
-        String reservationId = generateReservationId();
-        Reservation reservation = new Reservation(reservationId, userId, mediaId);
+        UUID reservationId = generateReservationId();
+        Reservation reservation = new Reservation(
+            reservationId,
+            userId,
+            mediaId
+        );
         reservation.setStatus(ReservationStatus.ACTIVE);
 
         // Update user
@@ -78,15 +91,26 @@ public class ReservationService {
         }
 
         reservationRepository.save(reservation);
-        Logger.info("Created reservation " + reservationId + " for user " + userId + " and media " + mediaId);
+        Logger.info(
+            "Created reservation " +
+                reservationId +
+                " for user " +
+                userId +
+                " and media " +
+                mediaId
+        );
 
         return reservation;
     }
 
     public void fulfillReservation(UUID reservationId) {
-        Optional<Reservation> reservationOpt = reservationRepository.findById(reservationId);
+        Optional<Reservation> reservationOpt = reservationRepository.findById(
+            reservationId
+        );
         if (reservationOpt.isEmpty()) {
-            throw new IllegalArgumentException("Reservation not found: " + reservationId);
+            throw new IllegalArgumentException(
+                "Reservation not found: " + reservationId
+            );
         }
 
         Reservation reservation = reservationOpt.get();
@@ -99,7 +123,9 @@ public class ReservationService {
         reservationRepository.update(reservation);
 
         // Update user
-        Optional<User> userOpt = userRepository.findById(reservation.getUserId());
+        Optional<User> userOpt = userRepository.findById(
+            reservation.getUserId()
+        );
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             user.removeReservation(reservationId);
@@ -110,9 +136,13 @@ public class ReservationService {
     }
 
     public void cancelReservation(UUID reservationId) {
-        Optional<Reservation> reservationOpt = reservationRepository.findById(reservationId);
+        Optional<Reservation> reservationOpt = reservationRepository.findById(
+            reservationId
+        );
         if (reservationOpt.isEmpty()) {
-            throw new IllegalArgumentException("Reservation not found: " + reservationId);
+            throw new IllegalArgumentException(
+                "Reservation not found: " + reservationId
+            );
         }
 
         Reservation reservation = reservationOpt.get();
@@ -120,7 +150,9 @@ public class ReservationService {
         reservationRepository.update(reservation);
 
         // Update user
-        Optional<User> userOpt = userRepository.findById(reservation.getUserId());
+        Optional<User> userOpt = userRepository.findById(
+            reservation.getUserId()
+        );
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             user.removeReservation(reservationId);
@@ -128,12 +160,18 @@ public class ReservationService {
         }
 
         // Check if media should be unmarked as reserved
-        List<Reservation> mediaReservations = reservationRepository.findByMediaId(reservation.getMediaId());
-        boolean hasActiveReservations = mediaReservations.stream()
-                .anyMatch(r -> !r.getReservationId().equals(reservationId) && r.isActive());
+        List<Reservation> mediaReservations =
+            reservationRepository.findByMediaId(reservation.getMediaId());
+        boolean hasActiveReservations = mediaReservations
+            .stream()
+            .anyMatch(
+                r -> !r.getReservationId().equals(reservationId) && r.isActive()
+            );
 
         if (!hasActiveReservations) {
-            Optional<Media> mediaOpt = mediaRepository.findById(reservation.getMediaId());
+            Optional<Media> mediaOpt = mediaRepository.findById(
+                reservation.getMediaId()
+            );
             if (mediaOpt.isPresent()) {
                 Media media = mediaOpt.get();
                 if (media.getStatus() == MediaStatus.RESERVED) {
@@ -147,7 +185,8 @@ public class ReservationService {
     }
 
     public void checkExpiredReservations() {
-        List<Reservation> activeReservations = reservationRepository.findByStatus(ReservationStatus.ACTIVE);
+        List<Reservation> activeReservations =
+            reservationRepository.findByStatus(ReservationStatus.ACTIVE);
         int expiredCount = 0;
 
         for (Reservation reservation : activeReservations) {
@@ -156,7 +195,9 @@ public class ReservationService {
                 reservationRepository.update(reservation);
 
                 // Update user
-                Optional<User> userOpt = userRepository.findById(reservation.getUserId());
+                Optional<User> userOpt = userRepository.findById(
+                    reservation.getUserId()
+                );
                 if (userOpt.isPresent()) {
                     User user = userOpt.get();
                     user.removeReservation(reservation.getReservationId());
@@ -195,7 +236,7 @@ public class ReservationService {
     private UUID generateReservationId() {
         UUID reservationId;
         do {
-            reservationId = UUID.randomUUID()
+            reservationId = UUID.randomUUID();
         } while (reservationRepository.exists(reservationId));
         return reservationId;
     }

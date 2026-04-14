@@ -19,24 +19,24 @@ public class UserService {
     }
 
     public User createUser(String firstName, String lastName, String email, String phone, String address) {
-        String userId = generateUserId();
+        UUID userId = generateUserId();
         User user = new User(userId, firstName, lastName, email);
         user.setPhone(phone);
         user.setAddress(address);
         user.setRegistrationDate(LocalDate.now());
-        
+
         List<String> errors = UserValidator.validate(user);
         if (!errors.isEmpty()) {
             Logger.error("User validation failed: " + errors);
             throw new IllegalArgumentException("Invalid user data: " + String.join(", ", errors));
         }
-        
+
         userRepository.save(user);
         Logger.info("Created new user: " + userId);
         return user;
     }
 
-    public Optional<User> getUserById(String userId) {
+    public Optional<User> getUserById(UUID userId) {
         return userRepository.findById(userId);
     }
 
@@ -58,13 +58,18 @@ public class UserService {
             Logger.error("User validation failed: " + errors);
             throw new IllegalArgumentException("Invalid user data: " + String.join(", ", errors));
         }
-        
+
         userRepository.update(user);
         Logger.info("Updated user: " + user.getUserId());
     }
 
-    public void deleteUser(String userId) {
-        User user = getRequiredUser(userId);
+    public void deleteUser(UUID userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) {
+            Logger.warn("No loan found with id " + userId);
+        }
+
+        User user = userOptional.get();
         if (!user.getBorrowedMediaIds().isEmpty()) {
             throw new IllegalStateException("Cannot delete user with active loans");
         }
@@ -75,40 +80,60 @@ public class UserService {
         Logger.info("Deleted user: " + userId);
     }
 
-    public void suspendUser(String userId, String reason) {
-        User user = getRequiredUser(userId);
+    public void suspendUser(UUID userId, String reason) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) {
+            Logger.warn("No loan found with id " + userId);
+        }
+
+        User user = userOptional.get();
         user.setStatus(UserStatus.SUSPENDED);
         user.setWarningCount(user.getWarningCount() + 1);
         userRepository.update(user);
         Logger.info("Suspended user: " + userId + " - Reason: " + reason);
     }
 
-    public void activateUser(String userId) {
-        User user = getRequiredUser(userId);
+    public void activateUser(UUID userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) {
+            Logger.warn("No loan found with id " + userId);
+        }
+
+        User user = userOptional.get();
         user.setStatus(UserStatus.ACTIVE);
         userRepository.update(user);
         Logger.info("Activated user: " + userId);
     }
 
-    public void blockUser(String userId, String reason) {
-        User user = getRequiredUser(userId);
+    public void blockUser(UUID userId, String reason) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) {
+            Logger.warn("No loan found with id " + userId);
+        }
+
+        User user = userOptional.get();
         user.setStatus(UserStatus.BLOCKED);
         userRepository.update(user);
         Logger.info("Blocked user: " + userId + " - Reason: " + reason);
     }
 
-    public boolean canUserBorrow(String userId) {
+    public boolean canUserBorrow(UUID userId) {
         Optional<User> userOpt = userRepository.findById(userId);
         if (userOpt.isEmpty()) {
             return false;
         }
-        
+
         User user = userOpt.get();
         return user.canBorrow();
     }
 
-    public void addFine(String userId, double amount) {
-        User user = getRequiredUser(userId);
+    public void addFine(UUID userId, double amount) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) {
+            Logger.warn("No loan found with id " + userId);
+        }
+
+        User user = userOptional.get();
         user.setOutstandingFines(user.getOutstandingFines() + amount);
 
         if (user.getOutstandingFines() >= Config.MAX_OUTSTANDING_FINES && user.getStatus() == UserStatus.ACTIVE) {
@@ -120,8 +145,13 @@ public class UserService {
         Logger.info("Added fine of " + amount + " to user: " + userId);
     }
 
-    public void payFine(String userId, double amount) {
-        User user = getRequiredUser(userId);
+    public void payFine(UUID userId, double amount) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) {
+            Logger.warn("No loan found with id " + userId);
+        }
+
+        User user = userOptional.get();
         double newFines = Math.max(0, user.getOutstandingFines() - amount);
         user.setOutstandingFines(newFines);
 
@@ -134,16 +164,11 @@ public class UserService {
         Logger.info("Paid fine of " + amount + " for user: " + userId);
     }
 
-    private String generateUserId() {
-        String userId;
+    private UUID generateUserId() {
+        UUID userId;
         do {
-            userId = "U" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-        } while (userRepository.exists(userId));
+            userId = UUID.randomUUID();
+        } while (userRepository.findById(userId).isPresent());
         return userId;
-    }
-
-    private User getRequiredUser(String userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
     }
 }
