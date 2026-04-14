@@ -39,5 +39,9 @@ bin/
 ### Mac OS ###
 .DS_Store
 
+### Zed ###
+.zed/
+
 ### Custom ###
 .local/
+data/
