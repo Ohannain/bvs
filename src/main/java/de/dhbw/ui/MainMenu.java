@@ -18,7 +18,7 @@ public class MainMenu extends Menu {
         UserService userService,
         MediaService mediaService,
         LoanService loanService,
-        FineService fineService,
+        FineService fineService
     ) {
         super("Main Menu", inputHandler);
 

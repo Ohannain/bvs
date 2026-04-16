@@ -33,14 +33,14 @@ public class Main {
         } catch (Exception e) {
             // Fallback if UTF-8 setup fails
         }
-        
+
         Logger.setConsoleOutput(true);
         Logger.setLevel(Logger.Level.INFO);
-        
+
         OutputFormatter.printHeader("Library Management System");
         System.out.println("Welcome to the Library Management System!");
         System.out.println("Initializing...");
-        
+
         try {
             // Ensure data directory exists
             File dataDir = new File("data");
@@ -48,25 +48,25 @@ public class Main {
                 dataDir.mkdirs();
                 Logger.info("Created data directory");
             }
-            
+
             // Initialize repositories
             UserRepository userRepository = new JsonUserRepository();
             MediaRepository mediaRepository = new JsonMediaRepository();
             LoanRepository loanRepository = new JsonLoanRepository();
             FineRepository fineRepository = new JsonFineRepository();
             ReservationRepository reservationRepository = new JsonReservationRepository();
-            
+
             Logger.info("Repositories initialized");
-            
+
             // Initialize services
             UserService userService = new UserService(userRepository);
             MediaService mediaService = new MediaService(mediaRepository);
             LoanService loanService = new LoanService(loanRepository, mediaRepository, userRepository);
             FineService fineService = new FineService(fineRepository);
             ReservationService reservationService = new ReservationService(reservationRepository, mediaRepository, userRepository);
-            
+
             Logger.info("Services initialized");
-            
+
             // Initialize UI
             InputHandler inputHandler = new InputHandler();
             MainMenu mainMenu = new MainMenu(
@@ -74,27 +74,27 @@ public class Main {
                     userService,
                     mediaService,
                     loanService,
-                    fineService,
-                        reservationService
+                    fineService
+                    //reservationService
             );
-            
+
             Logger.info("UI initialized");
-            
+
             // Run scheduled tasks
             Logger.info("Running scheduled tasks...");
             reservationService.checkExpiredReservations();
-            
+
             System.out.println("System ready!");
             System.out.println();
-            
+
             // Display main menu
             mainMenu.display();
-            
+
             // Cleanup
             System.out.println("\nShutting down Library Management System...");
             inputHandler.close();
             Logger.info("System shutdown complete");
-            
+
         } catch (Exception e) {
             System.err.println("FATAL ERROR: " + e.getMessage());
             e.printStackTrace();
