@@ -4,7 +4,7 @@ import de.dhbw.domain.reservation.Reservation;
 import de.dhbw.domain.reservation.ReservationStatus;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import de.dhbw.util.UUID;
 
 public interface ReservationRepository {
     void save(Reservation reservation);

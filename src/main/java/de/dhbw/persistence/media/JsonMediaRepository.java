@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.UUID;
+import de.dhbw.util.UUID;
 import java.util.stream.Collectors;
 
 public class JsonMediaRepository implements MediaRepository {
@@ -47,6 +47,7 @@ public class JsonMediaRepository implements MediaRepository {
         return new GsonBuilder()
                 .setPrettyPrinting()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+            .registerTypeAdapter(UUID.class, new UUIDAdapter())
                 .registerTypeAdapterFactory(mediaAdapterFactory)
                 .create();
     }
@@ -206,6 +207,46 @@ public class JsonMediaRepository implements MediaRepository {
                 return null;
             }
             return LocalDate.parse(in.nextString());
+        }
+    }
+
+    private static class UUIDAdapter extends TypeAdapter<UUID> {
+        @Override
+        public void write(com.google.gson.stream.JsonWriter out, UUID value) throws IOException {
+            if (value == null) {
+                out.nullValue();
+            } else {
+                out.value(value.toString());
+            }
+        }
+
+        @Override
+        public UUID read(com.google.gson.stream.JsonReader in) throws IOException {
+            if (in.peek() == com.google.gson.stream.JsonToken.NULL) {
+                in.nextNull();
+                return null;
+            }
+
+            if (in.peek() == com.google.gson.stream.JsonToken.STRING) {
+                return UUID.fromString(in.nextString());
+            }
+
+            if (in.peek() == com.google.gson.stream.JsonToken.BEGIN_OBJECT) {
+                in.beginObject();
+                String value = null;
+                while (in.hasNext()) {
+                    String name = in.nextName();
+                    if ("value".equals(name) && in.peek() == com.google.gson.stream.JsonToken.STRING) {
+                        value = in.nextString();
+                    } else {
+                        in.skipValue();
+                    }
+                }
+                in.endObject();
+                return value == null ? null : UUID.fromString(value);
+            }
+
+            throw new JsonParseException("Invalid UUID token: " + in.peek());
         }
     }
 

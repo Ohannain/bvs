@@ -35,7 +35,7 @@ BVS is a small console-based library management system written in Java.
 1. Install a current Java JDK.
 2. Open a terminal in the project folder.
 3. Run `gradlew.bat test` to verify the setup.
-4. Run `gradlew.bat run  --continuous` to start the application.
+4. Run `gradlew.bat run` to start the application.
 
 ### Linux
 

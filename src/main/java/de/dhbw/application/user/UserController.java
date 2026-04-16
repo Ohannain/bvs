@@ -4,7 +4,7 @@ import de.dhbw.domain.user.User;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import de.dhbw.util.UUID;
 
 public class UserController {
     private final UserService userService;

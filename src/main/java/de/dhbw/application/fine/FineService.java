@@ -7,7 +7,7 @@ import de.dhbw.util.Logger;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import de.dhbw.util.UUID;
 
 public class FineService {
     private final FineRepository fineRepository;
@@ -110,7 +110,7 @@ public class FineService {
     private UUID generateFineId() {
         UUID fineId;
         do {
-            fineId = UUID.randomUUID();
+            fineId = UUID.nextFineId();
         } while (fineRepository.findById(fineId).isPresent());
         return fineId;
     }

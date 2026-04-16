@@ -1,7 +1,7 @@
 package de.dhbw.domain.reservation;
 
 import java.time.LocalDate;
-import java.util.UUID;
+import de.dhbw.util.UUID;
 
 public class Reservation {
 

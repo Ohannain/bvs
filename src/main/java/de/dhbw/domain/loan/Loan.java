@@ -3,7 +3,7 @@ package de.dhbw.domain.loan;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import de.dhbw.util.UUID;
 
 public class Loan {
 
@@ -29,11 +29,10 @@ public class Loan {
      * Every loan has an issueDate, is assigned the status ACTIVE and needs a user assigned to it.
      */
     public Loan(UUID userId) {
-        this.loanId = UUID.randomUUID();
+        this.loanId = UUID.nextLoanId();
         this.issueDate = LocalDate.now();
         this.status = LoanStatus.ACTIVE;
         this.userId = userId;
-        this.mediaIds = new ArrayList<>();
     }
 
     /** getLoanId gets the id of a loan */
@@ -43,15 +42,19 @@ public class Loan {
 
     /** getMediaIds gets the ids of the media loaned */
     public List<UUID> getMediaIds() {
+        if (this.mediaIds == null) {
+            this.mediaIds = new ArrayList<>();
+        }
         return this.mediaIds;
     }
 
     /** addMediaId adds media to a loan */
     private void addMediaId(UUID mediaId) {
-        if (this.mediaIds.contains(mediaId)) {
+        List<UUID> mediaIds = getMediaIds();
+        if (mediaIds.contains(mediaId)) {
             return;
         }
-        this.mediaIds.add(mediaId);
+        mediaIds.add(mediaId);
     }
 
     /** addMediaIds adds media to a loan */

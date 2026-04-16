@@ -9,7 +9,7 @@ import de.dhbw.ui.OutputFormatter;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import de.dhbw.util.UUID;
 
 public class FineMenu extends Menu {
     private final FineService fineService;
@@ -103,7 +103,7 @@ public class FineMenu extends Menu {
         try {
             return Optional.of(UUID.fromString(rawId));
         } catch (IllegalArgumentException e) {
-            OutputFormatter.printError("Invalid " + idLabel + " format. Please enter a UUID.");
+            OutputFormatter.printError("Invalid " + idLabel + " format. Please enter an ID (e.g. USR00001).");
             return Optional.empty();
         }
     }

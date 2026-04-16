@@ -13,6 +13,7 @@ import de.dhbw.ui.InputHandler;
 import de.dhbw.ui.Menu;
 import de.dhbw.ui.OutputFormatter;
 import de.dhbw.util.DateUtils;
+import de.dhbw.util.UUID;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -104,8 +105,8 @@ public class ReportsMenu extends Menu {
         System.out.println("Total Fines: " + fines.size());
         System.out.println("Pending Fines: " + pending);
         System.out.println("Paid Fines: " + paid);
-        System.out.println("Total Pending Amount: €" + String.format("%.2f", pendingAmount));
-        System.out.println("Total Paid Amount: €" + String.format("%.2f", paidAmount));
+        System.out.println("Total Pending Amount: â‚¬" + String.format("%.2f", pendingAmount));
+        System.out.println("Total Paid Amount: â‚¬" + String.format("%.2f", paidAmount));
     }
 
     private void generateUsageReport() {
@@ -211,7 +212,7 @@ public class ReportsMenu extends Menu {
         try {
             return Optional.of(UUID.fromString(rawId));
         } catch (IllegalArgumentException e) {
-            OutputFormatter.printError("Invalid " + idLabel + " format. Please enter a UUID.");
+            OutputFormatter.printError("Invalid " + idLabel + " format. Please enter an ID (e.g. USR00001).");
             return Optional.empty();
         }
     }

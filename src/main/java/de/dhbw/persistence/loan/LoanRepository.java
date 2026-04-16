@@ -5,7 +5,7 @@ import de.dhbw.domain.loan.LoanStatus;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import de.dhbw.util.UUID;
 
 public interface LoanRepository {
     void save(Loan loan);

@@ -9,7 +9,7 @@ import de.dhbw.domain.report.ReportType;
 import de.dhbw.domain.user.User;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
+import de.dhbw.util.UUID;
 import java.util.stream.Collectors;
 
 public class AnnualReportGenerator {
@@ -21,7 +21,7 @@ public class AnnualReportGenerator {
         List<Loan> loans,
         List<Fine> fines
     ) {
-        UUID reportId = UUID.randomUUID();
+        UUID reportId = UUID.nextReportId();
         Report report = new Report(
             reportId,
             ReportType.ANNUAL,
@@ -72,7 +72,7 @@ public class AnnualReportGenerator {
         summary.append("Total Loans: ").append(yearLoans.size()).append("\n");
         summary.append("Total Fines: ").append(yearFines.size()).append("\n");
         summary
-            .append("Total Fine Amount: €")
+            .append("Total Fine Amount: â‚¬")
             .append(String.format("%.2f", totalFineAmount));
 
         report.setSummary(summary.toString());

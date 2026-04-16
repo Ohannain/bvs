@@ -3,13 +3,14 @@ package de.dhbw.ui;
 import de.dhbw.util.DateUtils;
 
 import java.time.LocalDate;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
-public class InputHandler implements AutoCloseable {
+public class InputHandler {
     private final Scanner scanner;
 
     public InputHandler() {
-        this.scanner = new Scanner(System.in);
+        this.scanner = new Scanner(System.in, StandardCharsets.UTF_8);
     }
 
     /**

@@ -1,6 +1,6 @@
 package de.dhbw.domain.media;
 
-import java.util.UUID;
+import de.dhbw.util.UUID;
 
 public class DVD extends Film {
 
