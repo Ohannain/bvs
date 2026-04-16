@@ -7,11 +7,14 @@ import de.dhbw.domain.media.MediaStatus;
 import de.dhbw.persistence.loan.LoanRepository;
 import de.dhbw.persistence.media.MediaRepository;
 import de.dhbw.persistence.user.UserRepository;
+import de.dhbw.util.Config;
 import de.dhbw.util.Logger;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import de.dhbw.util.UUID;
 
 public class LoanService {
 
@@ -27,6 +30,69 @@ public class LoanService {
         this.loanRepository = loanRepository;
         this.mediaRepository = mediaRepository;
         this.userRepository = userRepository;
+    }
+
+    public Loan borrowMedia(UUID userId, List<UUID> mediaIds) {
+        if (mediaIds == null || mediaIds.isEmpty()) {
+            throw new IllegalArgumentException("At least one media ID is required");
+        }
+
+        Optional<de.dhbw.domain.user.User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) {
+            throw new IllegalArgumentException("User not found: " + userId);
+        }
+
+        de.dhbw.domain.user.User user = userOptional.get();
+        if (!user.canBorrow()) {
+            throw new IllegalStateException("User is not allowed to borrow media right now");
+        }
+
+        List<UUID> uniqueMediaIds = new ArrayList<>(new LinkedHashSet<>(mediaIds));
+        if (user.getBorrowedMediaIds().size() + uniqueMediaIds.size() > user.getMaxBorrowLimit()) {
+            throw new IllegalStateException("Borrow limit exceeded for user " + userId);
+        }
+
+        List<Media> mediaToBorrow = new ArrayList<>();
+        for (UUID mediaId : uniqueMediaIds) {
+            Optional<Media> mediaOptional = mediaRepository.findById(mediaId);
+            if (mediaOptional.isEmpty()) {
+                throw new IllegalArgumentException("Media not found: " + mediaId);
+            }
+
+            Media media = mediaOptional.get();
+            if (media.getStatus() != MediaStatus.AVAILABLE) {
+                throw new IllegalStateException("Media is not available: " + mediaId);
+            }
+            mediaToBorrow.add(media);
+        }
+
+        Loan loan = new Loan(userId);
+        loan.addMedia(uniqueMediaIds.toArray(UUID[]::new));
+
+        int loanDays = mediaToBorrow
+            .stream()
+            .map(Media::getMediaType)
+            .mapToInt(type -> type != null ? type.getDefaultLoanDays() : Config.DEFAULT_BOOK_LOAN_DAYS)
+            .min()
+            .orElse(Config.DEFAULT_BOOK_LOAN_DAYS);
+        LocalDate dueDate = LocalDate.now().plusDays(loanDays);
+        loan.setDueDate(dueDate);
+
+        loanRepository.save(loan);
+
+        for (Media media : mediaToBorrow) {
+            media.setStatus(MediaStatus.BORROWED);
+            media.setCurrentBorrowerId(userId.toString());
+            media.setBorrowDate(loan.getIssueDate());
+            media.setDueDate(dueDate);
+            mediaRepository.update(media);
+
+            user.addBorrowedMedia(media.getMediaId());
+        }
+        userRepository.update(user);
+
+        Logger.info("Created loan " + loan.getLoanId() + " for user " + userId + " with " + uniqueMediaIds.size() + " media item(s)");
+        return loan;
     }
 
     public void returnMedia(UUID loanId, List<UUID> mediaIds) {
@@ -128,7 +194,7 @@ public class LoanService {
     private UUID generateLoanId() {
         UUID loanId;
         do {
-            loanId = UUID.randomUUID();
+            loanId = UUID.nextLoanId();
         } while (loanRepository.findById(loanId).isPresent());
         return loanId;
     }

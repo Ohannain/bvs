@@ -5,7 +5,7 @@ import de.dhbw.domain.media.MediaStatus;
 import de.dhbw.domain.media.MediaType;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import de.dhbw.util.UUID;
 
 public class MediaController {
 

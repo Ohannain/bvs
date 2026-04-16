@@ -3,7 +3,7 @@ package de.dhbw.domain.user;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.util.UUID;
+import de.dhbw.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,8 +27,9 @@ class UserTest {
     @Test
     // how the fuck does one test random UUIDs?
     void fullConstructorSetsFields() {
-        User user = new User(UUID.randomUUID(), "Max", "Muster", "max@example.com");
-        assertEquals("U1", user.getUserId()); //this will fail, see above
+        UUID userId = UUID.randomUUID();
+        User user = new User(userId, "Max", "Muster", "max@example.com");
+        assertEquals(userId, user.getUserId());
         assertEquals("Max", user.getFirstName());
         assertEquals("Muster", user.getLastName());
         assertEquals("max@example.com", user.getEmail());
@@ -37,7 +38,8 @@ class UserTest {
     @Test
     void settersWork() {
         User user = new User();
-        user.setUserId(UUID.randomUUID());
+        UUID userId = UUID.randomUUID();
+        user.setUserId(userId);
         user.setFirstName("Anna");
         user.setLastName("Schmidt");
         user.setEmail("anna@example.com");
@@ -45,7 +47,7 @@ class UserTest {
         user.setRole(UserRole.LIBRARIAN);
         user.setStatus(UserStatus.SUSPENDED);
 
-        assertEquals("U2", user.getUserId());
+        assertEquals(userId, user.getUserId());
         assertEquals("Anna", user.getFirstName());
         assertEquals("Schmidt", user.getLastName());
         assertEquals("anna@example.com", user.getEmail());

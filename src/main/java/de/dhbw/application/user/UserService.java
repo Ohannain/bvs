@@ -9,7 +9,7 @@ import de.dhbw.util.Logger;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import de.dhbw.util.UUID;
 
 public class UserService {
     private final UserRepository userRepository;
@@ -167,7 +167,7 @@ public class UserService {
     private UUID generateUserId() {
         UUID userId;
         do {
-            userId = UUID.randomUUID();
+            userId = UUID.nextUserId();
         } while (userRepository.findById(userId).isPresent());
         return userId;
     }

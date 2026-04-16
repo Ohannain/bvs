@@ -6,10 +6,10 @@ import de.dhbw.domain.loan.Loan;
 import de.dhbw.domain.media.Media;
 import de.dhbw.domain.media.MediaType;
 import de.dhbw.persistence.media.MediaRepository;
+import de.dhbw.util.UUID;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class TrendAnalyzer {
@@ -45,9 +45,10 @@ public class TrendAnalyzer {
                 .collect(Collectors.toMap(Media::getMediaId, m -> m));
 
         return loans.stream()
-                .map(Loan::getMediaIds)
-                .filter(mediaMap::containsKey)
-                .map(id -> mediaMap.get(id).getMediaType())
+            .flatMap(loan -> loan.getMediaIds().stream())
+            .map(mediaMap::get)
+            .filter(Objects::nonNull)
+            .map(Media::getMediaType)
                 .collect(Collectors.groupingBy(type -> type, Collectors.counting()));
     }
 
@@ -56,9 +57,10 @@ public class TrendAnalyzer {
                 .collect(Collectors.toMap(Media::getMediaId, m -> m));
 
         return loans.stream()
-                .map(Loan::getMediaIds)
-                .filter(mediaMap::containsKey)
-                .map(id -> mediaMap.get(id).getCategory())
+            .flatMap(loan -> loan.getMediaIds().stream())
+            .map(mediaMap::get)
+            .filter(Objects::nonNull)
+            .map(Media::getCategory)
                 .filter(Objects::nonNull)
                 .collect(Collectors.groupingBy(genre -> genre, Collectors.counting()));
     }

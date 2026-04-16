@@ -18,6 +18,7 @@ public class JsonUtils {
     private static final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+            .registerTypeAdapter(UUID.class, new UUIDAdapter())
             .create();
     
     public static <T> String toJson(T object) {
@@ -157,6 +158,50 @@ public class JsonUtils {
             } catch (java.time.format.DateTimeParseException e) {
                 throw new JsonSyntaxException("Invalid date format: '" + dateStr + "'", e);
             }
+        }
+    }
+
+    private static class UUIDAdapter extends com.google.gson.TypeAdapter<UUID> {
+        @Override
+        public void write(com.google.gson.stream.JsonWriter out, UUID value) throws IOException {
+            if (value == null) {
+                out.nullValue();
+            } else {
+                out.value(value.toString());
+            }
+        }
+
+        @Override
+        public UUID read(com.google.gson.stream.JsonReader in) throws IOException {
+            if (in.peek() == com.google.gson.stream.JsonToken.NULL) {
+                in.nextNull();
+                return null;
+            }
+
+            if (in.peek() == com.google.gson.stream.JsonToken.STRING) {
+                return UUID.fromString(in.nextString());
+            }
+
+            if (in.peek() == com.google.gson.stream.JsonToken.BEGIN_OBJECT) {
+                in.beginObject();
+                String value = null;
+                while (in.hasNext()) {
+                    String name = in.nextName();
+                    if ("value".equals(name) && in.peek() == com.google.gson.stream.JsonToken.STRING) {
+                        value = in.nextString();
+                    } else {
+                        in.skipValue();
+                    }
+                }
+                in.endObject();
+
+                if (value == null || value.isBlank()) {
+                    throw new JsonSyntaxException("Invalid UUID object representation");
+                }
+                return UUID.fromString(value);
+            }
+
+            throw new JsonSyntaxException("Invalid UUID token: " + in.peek());
         }
     }
 }

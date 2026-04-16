@@ -4,7 +4,7 @@ import de.dhbw.domain.reservation.Reservation;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import de.dhbw.util.UUID;
 
 public class ReservationController {
     private final ReservationService reservationService;

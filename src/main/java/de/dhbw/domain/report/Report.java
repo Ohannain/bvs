@@ -3,7 +3,7 @@ package de.dhbw.domain.report;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
+import de.dhbw.util.UUID;
 
 // these might be subject to change, as different types might be needed
 public class Report {

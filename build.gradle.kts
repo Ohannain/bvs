@@ -5,6 +5,19 @@ plugins {
 
 application {
     mainClass.set("de.dhbw.Main")
+    applicationDefaultJvmArgs = listOf(
+        "-Dfile.encoding=UTF-8",
+        "-Dsun.stdout.encoding=UTF-8",
+        "-Dsun.stderr.encoding=UTF-8"
+    )
+}
+
+tasks.run.get().apply {
+    standardInput = System.`in`
+}
+
+tasks.withType<org.gradle.api.tasks.compile.JavaCompile>().configureEach {
+    options.encoding = "UTF-8"
 }
 
 group = "de.dhbw"
@@ -23,4 +36,9 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    jvmArgs(
+        "-Dfile.encoding=UTF-8",
+        "-Dsun.stdout.encoding=UTF-8",
+        "-Dsun.stderr.encoding=UTF-8"
+    )
 }

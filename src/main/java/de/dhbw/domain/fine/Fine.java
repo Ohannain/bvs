@@ -1,7 +1,7 @@
 package de.dhbw.domain.fine;
 
 import java.time.LocalDate;
-import java.util.UUID;
+import de.dhbw.util.UUID;
 
 public class Fine {
 
@@ -30,7 +30,7 @@ public class Fine {
      * Every fine has an issueDate, is assigned the status PENDING and needs a user assigned to it.
      */
     public Fine(UUID userId) {
-        this.fineId = UUID.randomUUID();
+        this.fineId = UUID.nextFineId();
         this.issueDate = LocalDate.now();
         this.status = FineStatus.PENDING;
         this.userId = userId;

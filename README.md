@@ -1,53 +1,58 @@
-# BVS – Bibliotheksverwaltungssystem für die Kommandozeile
+# BVS - Library Management System
 
-A Library Management System (BVS) for the CLI.  
+BVS is a small console-based library management system written in Java.
 
-## Technologie und Architektur
+## Technologies and Architecture
 
-- Java (Standardbibliotheken)
-- Gradle als Build-Tool
-- JSON-Dateien für Persistenz (GSON oder Jackson)
-- JUnit für Tests
-- Textbasierte Konsolenanwendung (kein GUI)
+- Java (standard library)
+- Gradle as build tool
+- JSON files for persistence (Gson or Jackson)
+- JUnit for tests
+- Text-based console application (no GUI)
 
 ## Features
 
-### Feature 1: Nutzerverwaltung
-- Nutzer anlegen, suchen, anzeigen, bearbeiten, löschen, sperren und Ausleihberechtigungen prüfen.
+- User management: create, edit, search, list, block, and delete users.
+- Media management: maintain books, DVDs, and CDs with status tracking.
+- Lending: borrow, return, and extend loans.
+- Reservations: create and manage reservations.
+- Fines: calculate and track overdue fines.
+- Reports: annual, monthly, usage, popularity, trend, overdue, and fine statistics.
+- Persistence: stores data as JSON files.
+- CLI: runs as a text-based application without a GUI.
 
-### Feature 2: Medienverwaltung
-- Medien erfassen, ändern, löschen, bearbeiten
-- Zustand verwalten (aktiv, inaktiv, beschädigt, verloren, ...)
-- Suchfunktionen/Filteroptionen
+## Quick Use
 
-### Feature 3: Ausleih- und Rückgabe-System
-- Medien ausleihen und verlängern
-- Rückgaben erfassen und Fristen überwachen
-- Verfügbarkeitsprüfung – automatisches Prüfen, ob ein Medium ausgeliehen, reserviert oder defekt ist
-- Dynamische Leihdauer – Leihzeit hängt vom Medientyp oder Nutzerstatus ab (z. B. DVD = 7 Tage, Buch = 30 Tage)
+1. Start the application.
+2. Follow the console menu.
+3. Select a module and enter the requested data.
+4. Close the program from the menu when you are done.
 
-### Feature 4: Reservierungen
-- Reservierungen erstellen und verwalten
+## Installation
 
-### Feature 5: Mahnungen / Strafen
-- Fristüberschreitungen erkennen
-- Mahnungen erstellen/verwalten (automatisch anhand des Zustandes)
-- Gebühren berechnen
-- Nutzer mit offenen Mahnungen oder zu vielen Medien werden automatisch gesperrt.
+### Windows
 
-### Feature 6: Benutzeroberfläche (CLI)
-- Menüs anzeigen, Eingaben verarbeiten und Systemfunktionen ausführen.
+1. Install a current Java JDK.
+2. Open a terminal in the project folder.
+3. Run `gradlew.bat test` to verify the setup.
+4. Run `gradlew.bat run` to start the application.
 
-### Feature 7: Statistiken & Reports
-- Mahnstatistik – Analyse, wie oft Mahnungen pro Monat oder pro Nutzergruppe auftreten
-- Auslastungsbericht (optional) – Berichte zur Bibliotheksauslastung generieren
-- Beliebtheitsanalyse – Ranking der meist ausgeliehenen Medien oder Genres
-- Trendermittlung – welche Genres, Medien oder Autoren sind aktuell „im Trend“
-- Jahresabschluss / Berichtsmodul – Automatische Erstellung eines Jahresberichts mit Kennzahlen zu Ausleihen, Reservierungen, Mahnungen und Medienbestand
+### Linux
 
-### Feature 8 (optional): Verlängerungs-Management
-- Laufende Ausleihen prüfen und automatisch verlängern, sofern keine Reservierungen oder Limits bestehen
+1. Install a current Java JDK.
+2. Open a terminal in the project folder.
+3. Run `./gradlew test` to verify the setup.
+4. Run `./gradlew run` to start the application.
 
-### Feature 9 (optional): Empfehlungssystem
-- Medienvorschläge für Nutzer basierend auf deren bisherigen Ausleihen oder bevorzugten Genres generieren
+### macOS
+
+1. Install a current Java JDK.
+2. Open a terminal in the project folder.
+3. Run `./gradlew test` to verify the setup.
+4. Run `./gradlew run` to start the application.
+
+## Notes
+
+- The first start creates the `data` directory automatically if it does not exist.
+- The project uses Gradle Wrapper, so no separate Gradle installation is required.
 
