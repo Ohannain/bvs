@@ -10,15 +10,21 @@ import de.dhbw.domain.user.User;
 import de.dhbw.util.DateUtils;
 
 import java.util.List;
+import java.util.Scanner;
+import de.dhbw.util.UUID;
+import java.util.function.Consumer;
 
 public class OutputFormatter {
     private static final int SEPARATOR_LENGTH = 80;
+    private static final int PAGE_SIZE = 10;
+    private static final int CONTROL_SECTION_WIDTH = 30;
 
     /**
      * printHeader prints out the header of a menu
      * @param title the title of the menu
      */
     public static void printHeader(String title) {
+        ConsoleUI.clearScreen();
         System.out.println();
         System.out.println("=".repeat(SEPARATOR_LENGTH));
         System.out.println(centerText(title));
@@ -37,7 +43,7 @@ public class OutputFormatter {
      * @param message description of the successful action
      */
     public static void printSuccess(String message) {
-        System.out.println("✓ SUCCESS: " + message);
+        System.out.println("[SUCCESS] " + message);
     }
 
     /**
@@ -45,7 +51,7 @@ public class OutputFormatter {
      * @param message description of the error
      */
     public static void printError(String message) {
-        System.out.println("✗ ERROR: " + message);
+        System.out.println("[ERROR] " + message);
     }
 
     /**
@@ -53,7 +59,7 @@ public class OutputFormatter {
      * @param message the warning
      */
     public static void printWarning(String message) {
-        System.out.println("⚠ WARNING: " + message);
+        System.out.println("[WARNING] " + message);
     }
 
     /**
@@ -61,7 +67,7 @@ public class OutputFormatter {
      * @param message the information
      */
     public static void printInfo(String message) {
-        System.out.println("ℹ INFO: " + message);
+        System.out.println("[INFO] " + message);
     }
 
     /**
@@ -77,7 +83,7 @@ public class OutputFormatter {
         System.out.println("Status: " +  (user.getStatus() != null ? user.getStatus() : "N/A"));
         System.out.println("Registration Date: " + (user.getRegistrationDate() != null ? DateUtils.format(user.getRegistrationDate()) : "N/A"));
         System.out.println("Loaned Media: " + user.getBorrowedMediaIds().size());
-        System.out.println("Outstanding fines: €" + String.format("%.2f", user.getOutstandingFines()));
+        System.out.println("Outstanding fines: â‚¬" + String.format("%.2f", user.getOutstandingFines()));
     }
 
     /**
@@ -86,20 +92,22 @@ public class OutputFormatter {
      */
     public static void printUserList(List<User> users) {
         if (users.isEmpty()) {
-            System.out.println("No users found.");
+            printInfo("No users found.");
             return;
         }
-        System.out.printf("%-15s %-25s %-30s %-15s %-10s%n",
-                "User ID", "Name", "Email", "Status", "Borrowed");
-        printSeparator();
-        for (User user : users) {
-            System.out.printf("%-15s %-25s %-30s %-15s %-10s%n",
-                    user.getUserId(),
-                    truncate(user.getFullName(), 25),
-                    truncate(user.getEmail(), 30),
-                    user.getStatus(),
-                    user.getBorrowedMediaIds().size() + "/" + user.getMaxBorrowLimit());
-        }
+        printPaginatedTable(
+            users,
+            "Users",
+            99,
+            () -> System.out.printf("%-15s %-25s %-30s %-15s %-10s%n",
+                "User ID", "Name", "Email", "Status", "Borrowed"),
+            user -> System.out.printf("%-15s %-25s %-30s %-15s %-10s%n",
+                formatUuid(user.getUserId()),
+                truncate(user.getFullName(), 25),
+                truncate(user.getEmail(), 30),
+                user.getStatus(),
+                user.getBorrowedMediaIds().size() + "/" + user.getMaxBorrowLimit())
+        );
     }
 
     /**
@@ -126,20 +134,22 @@ public class OutputFormatter {
      */
     public static void printMediaList(List<Media> mediaList) {
         if (mediaList.isEmpty()) {
-            System.out.println("No media found.");
+            printInfo("No media found.");
             return;
         }
-        System.out.printf("%-12s %-8s %-35s %-25s %-15s%n",
-                "Media ID", "Type", "Title", "Author/Artist", "Status");
-        printSeparator();
-        for (Media media : mediaList) {
-            System.out.printf("%-12s %-8s %-35s %-25s %-15s%n",
-                    media.getMediaId(),
-                    media.getMediaType(),
-                    truncate(media.getTitle(), 35),
-                    truncate(media.getAuthor(), 25),
-                    media.getStatus());
-        }
+        printPaginatedTable(
+            mediaList,
+            "Media",
+            99,
+            () -> System.out.printf("%-15s %-8s %-35s %-25s %-12s%n",
+                "Media ID", "Type", "Title", "Author/Artist", "Status"),
+            media -> System.out.printf("%-15s %-8s %-35s %-25s %-12s%n",
+                formatUuid(media.getMediaId()),
+                media.getMediaType(),
+                truncate(media.getTitle(), 35),
+                truncate(media.getAuthor(), 25),
+                media.getStatus())
+        );
     }
 
     /**
@@ -164,20 +174,22 @@ public class OutputFormatter {
      */
     public static void printLoanList(List<Loan> loans) {
         if (loans.isEmpty()) {
-            System.out.println("No loans found.");
+            printInfo("No loans found.");
             return;
         }
-        System.out.printf("%-12s %-12s %-12s %-12s %-10s%n",
-                "Loan ID", "User ID", "Loan Date", "Due Date", "Status");
-        printSeparator();
-        for (Loan loan : loans) {
-            System.out.printf("%-12s %-12s %-12s %-12s %-10s%n",
-                    loan.getLoanId(),
-                    loan.getUserId(),
-                    DateUtils.format(loan.getIssueDate()),
-                    DateUtils.format(loan.getDueDate()),
-                    loan.getStatus());
-        }
+        printPaginatedTable(
+            loans,
+            "Loans",
+            67,
+            () -> System.out.printf("%-15s %-15s %-12s %-12s %-10s%n",
+                "Loan ID", "User ID", "Loan Date", "Due Date", "Status"),
+            loan -> System.out.printf("%-15s %-15s %-12s %-12s %-10s%n",
+                formatUuid(loan.getLoanId()),
+                formatUuid(loan.getUserId()),
+                DateUtils.format(loan.getIssueDate()),
+                DateUtils.format(loan.getDueDate()),
+                loan.getStatus())
+        );
     }
 
     /**
@@ -188,7 +200,7 @@ public class OutputFormatter {
         System.out.println("Fine ID: " + fine.getFineId());
         System.out.println("User ID: " + (fine.getUserId() != null ? fine.getUserId() : "N/A"));
         System.out.println("Loan ID: " + (fine.getLoanId() != null ? fine.getLoanId() : "N/A"));
-        System.out.println("Amount: €" + String.format("%.2f", fine.getAmount()));
+        System.out.println("Amount: â‚¬" + String.format("%.2f", fine.getAmount()));
         System.out.println("Issue Date: " + (fine.getIssueDate() != null ? DateUtils.format(fine.getIssueDate()) : "N/A"));
         System.out.println("Status: " +  (fine.getStatus() != null ? fine.getStatus() : "N/A"));
         System.out.println("Note: " +  (fine.getNote() != null ? fine.getNote() : "No note added."));
@@ -203,21 +215,23 @@ public class OutputFormatter {
      */
     public static void printFineList(List<Fine> fines) {
         if (fines.isEmpty()) {
-            System.out.println("No fines found.");
+            printInfo("No fines found.");
             return;
         }
-        System.out.printf("%-12s %-12s %-12s %-10s %-12s %-10s%n",
-                "Fine ID", "User ID", "Loan ID", "Amount", "Issue Date", "Status");
-        printSeparator();
-        for (Fine fine : fines) {
-            System.out.printf("%-12s %-12s %-12s €%-9.2f %-12s %-10s%n",
-                    fine.getFineId(),
-                    fine.getUserId(),
-                    fine.getLoanId(),
-                    fine.getAmount(),
-                    DateUtils.format(fine.getIssueDate()),
-                    fine.getStatus());
-        }
+        printPaginatedTable(
+            fines,
+            "Fines",
+            90,
+            () -> System.out.printf("%-15s %-15s %-15s %-10s %-12s %-10s%n",
+                "Fine ID", "User ID", "Loan ID", "Amount", "Issue Date", "Status"),
+            fine -> System.out.printf("%-15s %-15s %-15s â‚¬%-9.2f %-12s %-10s%n",
+                formatUuid(fine.getFineId()),
+                formatUuid(fine.getUserId()),
+                formatUuid(fine.getLoanId()),
+                fine.getAmount(),
+                DateUtils.format(fine.getIssueDate()),
+                fine.getStatus())
+        );
     }
 
     /**
@@ -257,5 +271,145 @@ public class OutputFormatter {
             return "";
         }
         return text.length() <= maxLength ? text : text.substring(0, maxLength - 3) + "...";
+    }
+
+    private static String formatUuid(UUID id) {
+        if (id == null) {
+            return "N/A";
+        }
+        String value = id.toString();
+        if (value.length() <= 15) {
+            return value;
+        }
+        return value.substring(0, 8) + "..." + value.substring(value.length() - 4);
+    }
+
+    public static void clearScreen() {
+        try {
+            System.out.print("\033[H\033[2J\033[3J");
+            System.out.flush();
+        } catch (Exception e) {
+            for (int i = 0; i < 100; i++) System.out.println();
+        }
+    }
+
+    private static <T> void printPaginatedTable(List<T> rows,
+                                                String tableName,
+                                                int tableWidth,
+                                                Runnable headerPrinter,
+                                                Consumer<T> rowPrinter) {
+        if (rows.isEmpty()) {
+            return;
+        }
+
+        int totalPages = (rows.size() + PAGE_SIZE - 1) / PAGE_SIZE;
+        int currentPage = 0;
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            // Clear screen and print current page
+            clearScreen();
+            printPage(rows, currentPage, totalPages, tableName, tableWidth, headerPrinter, rowPrinter);
+
+            // Show navigation info
+            System.out.println();
+            printTableSeparator(tableWidth);
+            System.out.println(formatPagingControls(tableWidth));
+            printTableSeparator(tableWidth);
+            System.out.printf("Page %d/%d | Enter page number (1-%d) or command: ", currentPage + 1, totalPages, totalPages);
+
+            String input = scanner.nextLine().trim().toLowerCase();
+
+            if (input.isEmpty()) {
+                continue;
+            }
+
+            if (input.equals("n") || input.equals("next")) {
+                if (currentPage < totalPages - 1) {
+                    currentPage++;
+                } else {
+                    System.out.println("Already on the last page.");
+                }
+                continue;
+            }
+
+            if (input.equals("p") || input.equals("previous") || input.equals("prev")) {
+                if (currentPage > 0) {
+                    currentPage--;
+                } else {
+                    System.out.println("Already on the first page.");
+                }
+                continue;
+            }
+
+            if (input.equals("b") || input.equals("back") || input.equals("q") || input.equals("quit") || input.equals("0")) {
+                return;
+            }
+
+            try {
+                int pageNum = Integer.parseInt(input);
+                if (pageNum >= 1 && pageNum <= totalPages) {
+                    currentPage = pageNum - 1;
+                } else {
+                    System.out.printf("Invalid page. Please enter a number between 1 and %d.%n", totalPages);
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid command. Use p (previous), b (back), n (next), or a page number.");
+            }
+        }
+    }
+
+    private static <T> void printPage(List<T> rows,
+                                      int pageIndex,
+                                      int totalPages,
+                                      String tableName,
+                                      int tableWidth,
+                                      Runnable headerPrinter,
+                                      Consumer<T> rowPrinter) {
+        int start = pageIndex * PAGE_SIZE;
+        int end = Math.min(start + PAGE_SIZE, rows.size());
+
+        int effectiveWidth = Math.max(SEPARATOR_LENGTH, tableWidth);
+        System.out.println("=".repeat(effectiveWidth));
+        System.out.println(centerTextToWidth(tableName, effectiveWidth));
+        System.out.println("=".repeat(effectiveWidth));
+        System.out.printf("Entries %d-%d of %d | Page %d/%d%n",
+            start + 1,
+            end,
+            rows.size(),
+            pageIndex + 1,
+            totalPages);
+        printTableSeparator(tableWidth);
+        headerPrinter.run();
+        printTableSeparator(tableWidth);
+
+        for (int i = start; i < end; i++) {
+            rowPrinter.accept(rows.get(i));
+        }
+    }
+
+    private static void printTableSeparator(int width) {
+        System.out.println("-".repeat(Math.max(SEPARATOR_LENGTH, width)));
+    }
+
+    private static String centerTextToWidth(String text, int width) {
+        int padding = Math.max(0, (width - text.length()) / 2);
+        return " ".repeat(padding) + text;
+    }
+
+    private static String formatPagingControls(int totalWidth) {
+        int width = Math.max(SEPARATOR_LENGTH, totalWidth);
+        String left = "p (previous page)";
+        String middle = "b (back)";
+        String right = "n (next page)";
+
+        if (width <= (CONTROL_SECTION_WIDTH * 3)) {
+            return left + " | " + middle + " | " + right;
+        }
+
+        return String.format("%-" + CONTROL_SECTION_WIDTH + "s%-" + CONTROL_SECTION_WIDTH + "s%-" + CONTROL_SECTION_WIDTH + "s",
+                left,
+                middle,
+                right);
     }
 }
