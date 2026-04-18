@@ -145,20 +145,25 @@ private void generateMahnReport() {
         );
         OutputFormatter.printHeader(report.getTitle());
 
-        System.out.println("Year: " + report.getDataPoint("year"));
-        System.out.println("Total Users: " + report.getDataPoint("total_users"));
+        System.out.println("\nAll Time Data::");
+        System.out.println("-".repeat(60));
+
+        System.out.println("Users: " + report.getDataPoint("total_users"));
+        System.out.println("Media: " + report.getDataPoint("total_media"));
+        System.out.println("Loans: " + report.getDataPoint("total_loans"));
+
+        System.out.println("\n" + "=".repeat(60) + "\n");
+
+        System.out.println("Year Data for " + report.getDataPoint("year") + ":");
+        System.out.println("-".repeat(60));
+
         System.out.println("New Users: " + report.getDataPoint("new_users"));
+        System.out.println("Loans: " + report.getDataPoint("year_loans"));
 
-        System.out.println("Total Media: " + report.getDataPoint("total_media"));
-
-        System.out.println("Total Loans: " + report.getDataPoint("total_loans"));
-        System.out.println("Loans this Year: " + report.getDataPoint("year_loans"));
         System.out.println("Overdue Loans: " + report.getDataPoint("overdue_loans"));
 
-        System.out.println("Total Fines: " + report.getDataPoint("total_fines"));
-        System.out.println(
-            "Total Fine Amount: €" + String.format("%.2f", report.getDataPoint("total_fine_amount"))
-        );
+        System.out.println("Fines: " + report.getDataPoint("year_fines"));
+        System.out.println("Fine Amount: €" + String.format("%.2f", report.getDataPoint("total_fine_amount")));
     }
 
 //    private void generateFineStatistics() {
@@ -242,6 +247,4 @@ private void generateMahnReport() {
 //        OutputFormatter.printHeader("Overdue Items Report");
 //        System.out.println("Overdue Items Count: " + overdueCount);
 //    }
-//
-
 }
