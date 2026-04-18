@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Optional;
+import de.dhbw.ui.OutputFormatter;
 
 /**
  * Human-readable ID value object used across the application.
@@ -123,5 +125,14 @@ public final class UUID implements Comparable<UUID>, Serializable {
         }
 
         return normalized;
+    }
+
+    public static Optional<UUID> parseUuid(String rawId, String idLabel) {
+        try {
+            return Optional.of(UUID.fromString(rawId));
+        } catch (IllegalArgumentException e) {
+            OutputFormatter.printError("Invalid " + idLabel + " format. Please enter an ID (e.g. USR00001).");
+            return Optional.empty();
+        }
     }
 }

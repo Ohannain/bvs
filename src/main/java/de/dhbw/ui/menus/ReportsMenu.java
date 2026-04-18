@@ -15,6 +15,7 @@ import de.dhbw.ui.OutputFormatter;
 import de.dhbw.util.DateUtils;
 import de.dhbw.util.UUID;
 import de.dhbw.application.report.MahnDataCollector;
+import de.dhbw.application.report.AnnualDataCollector;
 import de.dhbw.domain.report.Report;
 
 import java.time.LocalDate;
@@ -45,16 +46,16 @@ public class ReportsMenu extends Menu {
 
     private void initializeMenuItems() {
         addMenuItem("Annual Report", this::generateAnnualReport);
-        addMenuItem("Fine Statistics", this::generateFineStatistics);
-        addMenuItem("Usage Report", this::generateUsageReport);
-        addMenuItem("Popular Media Report", this::generatePopularityReport);
-        addMenuItem("Overdue Items Report", this::generateOverdueReport);
+//        addMenuItem("Fine Statistics", this::generateFineStatistics);
+//        addMenuItem("Usage Report", this::generateUsageReport);
+//        addMenuItem("Popular Media Report", this::generatePopularityReport);
+//        addMenuItem("Overdue Items Report", this::generateOverdueReport);
         addMenuItem("Generate Mahn Report", this::generateMahnReport);
     }
 
 private void generateMahnReport() {
     String rawUserId = inputHandler.readString("Enter User ID: ");
-    Optional<UUID> userIdOpt = parseUuid(rawUserId, "user ID");
+    Optional<UUID> userIdOpt = UUID.parseUuid(rawUserId, "user ID");
     if (userIdOpt.isEmpty()) {
         return;
     }
@@ -135,168 +136,112 @@ private void generateMahnReport() {
     private void generateAnnualReport() {
         int year = inputHandler.readInt("Enter Year: ", 2000, 2100);
 
-        OutputFormatter.printHeader("Annual Report " + year);
-        long totalLoans = loanService
-                .getAllLoans()
-                .stream()
-                .filter(l -> l.getIssueDate() != null && l.getIssueDate().getYear() == year)
-                .count();
-        long totalUsers = userService
-                .getAllUsers()
-                .stream()
-                .filter(
-                        u ->
-                                u.getRegistrationDate() != null &&
-                                        u.getRegistrationDate().getYear() == year
-                )
-                .count();
-        long totalMedia = mediaService.getAllMedia().size();
-        long totalFines = fineService
-                .getAllFines()
-                .stream()
-                .filter(f -> f.getIssueDate() != null && f.getIssueDate().getYear() == year)
-                .count();
-
-        System.out.println("Total Loans: " + totalLoans);
-        System.out.println("Total Users: " + totalUsers);
-        System.out.println("Total Media: " + totalMedia);
-        System.out.println("Total Fines: " + totalFines);
-    }
-
-    private void generateFineStatistics() {
-        List<Fine> fines = fineService.getAllFines();
-        long pending = fines
-                .stream()
-                .filter(f -> f.getStatus() == FineStatus.PENDING)
-                .count();
-        long paid = fines
-                .stream()
-                .filter(f -> f.getStatus() == FineStatus.PAID)
-                .count();
-        double pendingAmount = fines
-                .stream()
-                .filter(f -> f.getStatus() == FineStatus.PENDING)
-                .mapToDouble(Fine::getAmount)
-                .sum();
-        double paidAmount = fines
-                .stream()
-                .filter(f -> f.getStatus() == FineStatus.PAID)
-                .mapToDouble(Fine::getAmount)
-                .sum();
-
-        OutputFormatter.printHeader("Fine Statistics");
-        System.out.println("Total Fines: " + fines.size());
-        System.out.println("Pending Fines: " + pending);
-        System.out.println("Paid Fines: " + paid);
-        System.out.println("Total Pending Amount: â‚¬" + String.format("%.2f", pendingAmount));
-        System.out.println("Total Paid Amount: â‚¬" + String.format("%.2f", paidAmount));
-    }
-
-    private void generateUsageReport() {
-        LocalDate startDate = inputHandler.readDate("Start Date");
-        LocalDate endDate = inputHandler.readDate("End Date");
-
-        long periodLoans = loanService
-                .getAllLoans()
-                .stream()
-                .filter(
-                        l ->
-                                l.getIssueDate() != null &&
-                                        !l.getIssueDate().isBefore(startDate) &&
-                                        !l.getIssueDate().isAfter(endDate)
-                )
-                .count();
-        long activeLoans = loanService
-                .getAllLoans()
-                .stream()
-                .filter(l -> l.getStatus() == LoanStatus.ACTIVE)
-                .count();
-        long overdueLoans = loanService
-                .getAllLoans()
-                .stream()
-                .filter(
-                        l ->
-                                l.getStatus() == LoanStatus.OVERDUE ||
-                                        (l.getDueDate() != null &&
-                                                l.getDueDate().isBefore(LocalDate.now()) &&
-                                                l.getStatus() != LoanStatus.RETURNED)
-                )
-                .count();
-
-        OutputFormatter.printHeader("Usage Report");
-        System.out.println(
-                "Period: " + DateUtils.format(startDate) + " to " + DateUtils.format(endDate)
+        Report report = AnnualDataCollector.generate(
+            year,
+            userService.getAllUsers(),
+            mediaService.getAllMedia(),
+            loanService.getAllLoans(),
+            fineService.getAllFines()
         );
-        System.out.println("Period Loans: " + periodLoans);
-        System.out.println("Active Loans: " + activeLoans);
-        System.out.println("Overdue Loans: " + overdueLoans);
+        OutputFormatter.printHeader(report.getTitle());
+
+        System.out.println("Year: " + report.getDataPoint("year"));
+        System.out.println("Total Users: " + report.getDataPoint("total_users"));
+        System.out.println("New Users: " + report.getDataPoint("new_users"));
+
+        System.out.println("Total Media: " + report.getDataPoint("total_media"));
+
+        System.out.println("Total Loans: " + report.getDataPoint("total_loans"));
+        System.out.println("Loans this Year: " + report.getDataPoint("year_loans"));
+        System.out.println("Overdue Loans: " + report.getDataPoint("overdue_loans"));
+
+        System.out.println("Total Fines: " + report.getDataPoint("total_fines"));
+        System.out.println(
+            "Total Fine Amount: €" + String.format("%.2f", report.getDataPoint("total_fine_amount"))
+        );
     }
 
-    private void generatePopularityReport() {
-        OutputFormatter.printHeader("Most Popular Media");
+//    private void generateFineStatistics() {
+//        OutputFormatter.printHeader("Fine Statistics");
+//        System.out.println("Total Fines: " + fines.size());
+//        System.out.println("Pending Fines: " + pending);
+//        System.out.println("Paid Fines: " + paid);
+//        System.out.println("Total Pending Amount: â‚¬" + String.format("%.2f", pendingAmount));
+//        System.out.println("Total Paid Amount: â‚¬" + String.format("%.2f", paidAmount));
+//    }
 
-        Map<UUID, Long> borrowCounts = new LinkedHashMap<>();
-        for (Loan loan : loanService.getAllLoans()) {
-            for (UUID mediaId : loan.getMediaIds()) {
-                borrowCounts.merge(mediaId, 1L, Long::sum);
-            }
-        }
+//    private void generateUsageReport() {
+//        LocalDate startDate = inputHandler.readDate("Start Date");
+//        LocalDate endDate = inputHandler.readDate("End Date");
+//
+//
+//        OutputFormatter.printHeader("Usage Report");
+//        System.out.println(
+//                "Period: " + DateUtils.format(startDate) + " to " + DateUtils.format(endDate)
+//        );
+//        System.out.println("Period Loans: " + periodLoans);
+//        System.out.println("Active Loans: " + activeLoans);
+//        System.out.println("Overdue Loans: " + overdueLoans);
+//    }
+//
+//    private void generatePopularityReport() {
+//        OutputFormatter.printHeader("Most Popular Media");
+//
+//        Map<UUID, Long> borrowCounts = new LinkedHashMap<>();
+//        for (Loan loan : loanService.getAllLoans()) {
+//            for (UUID mediaId : loan.getMediaIds()) {
+//                borrowCounts.merge(mediaId, 1L, Long::sum);
+//            }
+//        }
+//
+//        if (borrowCounts.isEmpty()) {
+//            OutputFormatter.printWarning("No loan data available for popularity report.");
+//            return;
+//        }
+//
+//        List<Map.Entry<UUID, Long>> topMedia = borrowCounts
+//                .entrySet()
+//                .stream()
+//                .sorted((a, b) -> Long.compare(b.getValue(), a.getValue()))
+//                .limit(10)
+//                .toList();
+//
+//        System.out.println("\nTop Borrowed Media Items:");
+//        System.out.println("-".repeat(60));
+//
+//        int rank = 1;
+//        for (Map.Entry<UUID, Long> entry : topMedia) {
+//            Optional<Media> media = mediaService.getMediaById(entry.getKey());
+//            if (media.isPresent()) {
+//                System.out.printf(
+//                        "%d. %s (%s) - %d borrows%n",
+//                        rank,
+//                        media.get().getTitle(),
+//                        media.get().getMediaType(),
+//                        entry.getValue()
+//                );
+//                rank++;
+//            }
+//        }
+//        System.out.println("-".repeat(60));
+//    }
+//
+//    private void generateOverdueReport() {
+//        long overdueCount = loanService
+//                .getAllLoans()
+//                .stream()
+//                .filter(
+//                        l ->
+//                                l.getStatus() == LoanStatus.OVERDUE ||
+//                                        (l.getDueDate() != null &&
+//                                                l.getDueDate().isBefore(LocalDate.now()) &&
+//                                                l.getStatus() != LoanStatus.RETURNED)
+//                )
+//                .count();
+//
+//        OutputFormatter.printHeader("Overdue Items Report");
+//        System.out.println("Overdue Items Count: " + overdueCount);
+//    }
+//
 
-        if (borrowCounts.isEmpty()) {
-            OutputFormatter.printWarning("No loan data available for popularity report.");
-            return;
-        }
-
-        List<Map.Entry<UUID, Long>> topMedia = borrowCounts
-                .entrySet()
-                .stream()
-                .sorted((a, b) -> Long.compare(b.getValue(), a.getValue()))
-                .limit(10)
-                .toList();
-
-        System.out.println("\nTop Borrowed Media Items:");
-        System.out.println("-".repeat(60));
-
-        int rank = 1;
-        for (Map.Entry<UUID, Long> entry : topMedia) {
-            Optional<Media> media = mediaService.getMediaById(entry.getKey());
-            if (media.isPresent()) {
-                System.out.printf(
-                        "%d. %s (%s) - %d borrows%n",
-                        rank,
-                        media.get().getTitle(),
-                        media.get().getMediaType(),
-                        entry.getValue()
-                );
-                rank++;
-            }
-        }
-        System.out.println("-".repeat(60));
-    }
-
-    private void generateOverdueReport() {
-        long overdueCount = loanService
-                .getAllLoans()
-                .stream()
-                .filter(
-                        l ->
-                                l.getStatus() == LoanStatus.OVERDUE ||
-                                        (l.getDueDate() != null &&
-                                                l.getDueDate().isBefore(LocalDate.now()) &&
-                                                l.getStatus() != LoanStatus.RETURNED)
-                )
-                .count();
-
-        OutputFormatter.printHeader("Overdue Items Report");
-        System.out.println("Overdue Items Count: " + overdueCount);
-    }
-
-    private Optional<UUID> parseUuid(String rawId, String idLabel) {
-        try {
-            return Optional.of(UUID.fromString(rawId));
-        } catch (IllegalArgumentException e) {
-            OutputFormatter.printError("Invalid " + idLabel + " format. Please enter an ID (e.g. USR00001).");
-            return Optional.empty();
-        }
-    }
 }
