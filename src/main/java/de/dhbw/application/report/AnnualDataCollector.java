@@ -12,7 +12,7 @@ import java.util.List;
 import de.dhbw.util.UUID;
 import java.util.stream.Collectors;
 
-public class AnnualReportGenerator {
+public class AnnualDataCollector {
 
     public static Report generate(
         int year,
@@ -63,19 +63,6 @@ public class AnnualReportGenerator {
 
         long overdueLoans = yearLoans.stream().filter(l -> l.getStatus() == LoanStatus.OVERDUE).count();
         report.addDataPoint("overdue_loans", overdueLoans);
-
-        // Build summary
-        StringBuilder summary = new StringBuilder();
-        summary.append("Annual Report for ").append(year).append("\n");
-        summary.append("Total Users: ").append(users.size()).append("\n");
-        summary.append("Total Media Items: ").append(media.size()).append("\n");
-        summary.append("Total Loans: ").append(yearLoans.size()).append("\n");
-        summary.append("Total Fines: ").append(yearFines.size()).append("\n");
-        summary
-            .append("Total Fine Amount: â‚¬")
-            .append(String.format("%.2f", totalFineAmount));
-
-        report.setSummary(summary.toString());
 
         return report;
     }

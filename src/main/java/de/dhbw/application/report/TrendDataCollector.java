@@ -12,10 +12,10 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class TrendAnalyzer {
+public class TrendDataCollector {
     private final MediaRepository mediaRepository;
 
-    public TrendAnalyzer(MediaRepository mediaRepository) {
+    public TrendDataCollector(MediaRepository mediaRepository) {
             this.mediaRepository = mediaRepository;
     }
 

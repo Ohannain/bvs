@@ -14,6 +14,8 @@ import de.dhbw.ui.Menu;
 import de.dhbw.ui.OutputFormatter;
 import de.dhbw.util.DateUtils;
 import de.dhbw.util.UUID;
+import de.dhbw.application.report.MahnDataCollector;
+import de.dhbw.domain.report.Report;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -47,7 +49,88 @@ public class ReportsMenu extends Menu {
         addMenuItem("Usage Report", this::generateUsageReport);
         addMenuItem("Popular Media Report", this::generatePopularityReport);
         addMenuItem("Overdue Items Report", this::generateOverdueReport);
+        addMenuItem("Generate Mahn Report", this::generateMahnReport);
     }
+
+private void generateMahnReport() {
+    String rawUserId = inputHandler.readString("Enter User ID: ");
+    Optional<UUID> userIdOpt = parseUuid(rawUserId, "user ID");
+    if (userIdOpt.isEmpty()) {
+        return;
+    }
+
+    Optional<de.dhbw.domain.user.User> userOpt = userService.getUserById(userIdOpt.get());
+    if (userOpt.isEmpty()) {
+        OutputFormatter.printError("User not found.");
+        return;
+    }
+
+    Report report = MahnDataCollector.generate(userOpt.get(), fineService.getAllFines());
+
+    OutputFormatter.printHeader(report.getTitle());
+
+    Object userNameObj = report.getDataPoint("user_name");
+    Object totalFinesObj = report.getDataPoint("total_fines");
+    Object totalFineAmountObj = report.getDataPoint("total_fine_amount");
+
+        String userName = userNameObj != null ? userNameObj.toString() : "Unknown User";
+        int totalFines = totalFinesObj instanceof Number ? ((Number) totalFinesObj).intValue() : 0;
+        double totalFineAmount = totalFineAmountObj instanceof Number ? ((Number) totalFineAmountObj).doubleValue() : 0.0;
+
+    System.out.println("User: " + userName);
+    System.out.println("Total Fine Count: " + totalFines);
+    System.out.println("Total Fine Amount: €" + String.format("%.2f", totalFineAmount));
+
+    System.out.println();
+    System.out.println("Fine Details:");
+    System.out.println("-".repeat(36));
+
+    if (totalFines == 0) {
+        System.out.println("No fines found for this user.");
+    } else {
+        List<Fine> fineDetails = new ArrayList<>();
+        for (Map.Entry<String, Object> entry : report.getDataPoints().entrySet()) {
+            if (!entry.getKey().startsWith("fine ")) {
+                continue;
+            }
+            if (entry.getValue() instanceof Fine fine) {
+                fineDetails.add(fine);
+            }
+        }
+
+        Map<FineStatus, Integer> statusOrder = new HashMap<>();
+        statusOrder.put(FineStatus.OVERDUE, 0);
+        statusOrder.put(FineStatus.PENDING, 1);
+        statusOrder.put(FineStatus.WAIVED, 2);
+        statusOrder.put(FineStatus.PAID, 3);
+
+        fineDetails.sort(Comparator
+            .comparingInt((Fine f) -> statusOrder.getOrDefault(f.getStatus(), Integer.MAX_VALUE))
+            .thenComparing(Fine::getIssueDate, Comparator.nullsLast(Comparator.naturalOrder())));
+
+        String headerFormat = "%-3s | %-10s | %-7s | %-7s%n";
+        String rowFormat = "%03d | %-10s | %-7s | %7s%n";
+
+        System.out.printf(headerFormat, "No.", "Date", "Status", "Amount");
+        System.out.println("-".repeat(36));
+
+        int index = 1;
+        for (Fine fine : fineDetails) {
+            String date = fine.getIssueDate() != null ? DateUtils.format(fine.getIssueDate()) : "N/A";
+            String status = fine.getStatus() != null ? fine.getStatus().name() : "UNKNOWN";
+            String amount = "€" + String.format("%.2f", fine.getAmount());
+
+            System.out.printf(rowFormat,
+                index++,
+                date,
+                status,
+                amount
+            );
+        }
+    }
+    System.out.println("-".repeat(36));
+}
+
 
     private void generateAnnualReport() {
         int year = inputHandler.readInt("Enter Year: ", 2000, 2100);

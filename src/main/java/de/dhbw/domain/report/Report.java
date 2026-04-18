@@ -1,8 +1,10 @@
 package de.dhbw.domain.report;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
 import de.dhbw.util.UUID;
 
 // these might be subject to change, as different types might be needed
@@ -28,6 +30,7 @@ public class Report {
         this.reportId = reportId;
         this.type = type;
         this.title = title;
+        this.generatedDate = LocalDate.now();
     }
 
     // Getters and Setters
@@ -109,5 +112,9 @@ public class Report {
 
     public Object getDataPoint(String key) {
         return this.data.get(key);
+    }
+
+    public Map<String, Object> getDataPoints() {
+        return Collections.unmodifiableMap(this.data);
     }
 }
