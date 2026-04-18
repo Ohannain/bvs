@@ -16,6 +16,7 @@ import de.dhbw.util.DateUtils;
 import de.dhbw.util.UUID;
 import de.dhbw.application.report.MahnDataCollector;
 import de.dhbw.application.report.AnnualDataCollector;
+import de.dhbw.application.report.FineDataCollector;
 import de.dhbw.domain.report.Report;
 
 import java.time.LocalDate;
@@ -46,7 +47,7 @@ public class ReportsMenu extends Menu {
 
     private void initializeMenuItems() {
         addMenuItem("Annual Report", this::generateAnnualReport);
-//        addMenuItem("Fine Statistics", this::generateFineStatistics);
+        addMenuItem("Fine Statistics", this::generateFineReport);
 //        addMenuItem("Usage Report", this::generateUsageReport);
 //        addMenuItem("Popular Media Report", this::generatePopularityReport);
 //        addMenuItem("Overdue Items Report", this::generateOverdueReport);
@@ -147,7 +148,6 @@ private void generateMahnReport() {
 
         System.out.println("\nAll Time Data::");
         System.out.println("-".repeat(60));
-
         System.out.println("Users: " + report.getDataPoint("total_users"));
         System.out.println("Media: " + report.getDataPoint("total_media"));
         System.out.println("Loans: " + report.getDataPoint("total_loans"));
@@ -156,24 +156,37 @@ private void generateMahnReport() {
 
         System.out.println("Year Data for " + report.getDataPoint("year") + ":");
         System.out.println("-".repeat(60));
-
         System.out.println("New Users: " + report.getDataPoint("new_users"));
         System.out.println("Loans: " + report.getDataPoint("year_loans"));
-
         System.out.println("Overdue Loans: " + report.getDataPoint("overdue_loans"));
-
         System.out.println("Fines: " + report.getDataPoint("year_fines"));
         System.out.println("Fine Amount: €" + String.format("%.2f", report.getDataPoint("total_fine_amount")));
     }
 
-//    private void generateFineStatistics() {
-//        OutputFormatter.printHeader("Fine Statistics");
-//        System.out.println("Total Fines: " + fines.size());
-//        System.out.println("Pending Fines: " + pending);
-//        System.out.println("Paid Fines: " + paid);
-//        System.out.println("Total Pending Amount: â‚¬" + String.format("%.2f", pendingAmount));
-//        System.out.println("Total Paid Amount: â‚¬" + String.format("%.2f", paidAmount));
-//    }
+    private void generateFineReport() {
+        Report report = FineDataCollector.generate(
+            fineService.getAllFines()
+        );
+        OutputFormatter.printHeader(report.getTitle());
+
+        System.out.println("Total Fines: " + report.getDataPoint("total_fines"));
+        System.out.println("Total Fine Amount: €" + String.format("%.2f", report.getDataPoint("total_fine_amount")) + "\n");
+
+        System.out.println("Average Fine Amount: €" + String.format("%.2f", report.getDataPoint("average_fine_amount")));
+        System.out.println("Max Fine Amount: €" + String.format("%.2f", report.getDataPoint("max_fine_amount")) + "\n");
+
+        System.out.println("Overdue Fines: " + report.getDataPoint("overdue_fines"));
+        System.out.println("Overdue Fine Amount: €" + String.format("%.2f", report.getDataPoint("overdue_fine_amount")) + "\n");
+
+        System.out.println("Pending Fines: " + report.getDataPoint("unpaid_fines"));
+        System.out.println("Pending Fine Amount: €" + String.format("%.2f", report.getDataPoint("unpaid_fine_amount")) + "\n");
+
+        System.out.println("Paid Fines: " + report.getDataPoint("paid_fines"));
+        System.out.println("Paid Fine Amount: €" + String.format("%.2f", report.getDataPoint("paid_fine_amount")) + "\n");
+
+        System.out.println("Waived Fines: " + report.getDataPoint("waived_fines"));
+        System.out.println("Waived Fine Amount: €" + String.format("%.2f", report.getDataPoint("waived_fine_amount")));
+    }
 
 //    private void generateUsageReport() {
 //        LocalDate startDate = inputHandler.readDate("Start Date");
