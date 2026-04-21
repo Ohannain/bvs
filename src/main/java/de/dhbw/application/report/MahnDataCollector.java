@@ -11,7 +11,10 @@ import java.util.stream.Collectors;
 
 public class MahnDataCollector {
 
-    public static Report generate(User user, List<Fine> fines) {
+    public static Report generate(
+        User user,
+        List<Fine> fines
+    ) {
         UUID reportId = UUID.nextReportId();
         Report report = new Report(
             reportId,

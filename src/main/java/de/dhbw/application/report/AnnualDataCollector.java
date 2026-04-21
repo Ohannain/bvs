@@ -8,13 +8,11 @@ import de.dhbw.domain.report.Report;
 import de.dhbw.domain.report.ReportType;
 import de.dhbw.domain.user.User;
 import java.time.LocalDate;
-import java.time.Year;
 import java.util.List;
 import de.dhbw.util.UUID;
 import java.util.stream.Collectors;
 
 public class AnnualDataCollector {
-
     public static Report generate(
         int year,
         List<User> users,
@@ -26,7 +24,7 @@ public class AnnualDataCollector {
         Report report = new Report(
             reportId,
             ReportType.ANNUAL,
-            "Annual Report " + year
+            "Annual Report - " + year
         );
 
         report.addDataPoint("year", year);
