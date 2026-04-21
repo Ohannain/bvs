@@ -17,6 +17,7 @@ import de.dhbw.util.UUID;
 import de.dhbw.application.report.MahnDataCollector;
 import de.dhbw.application.report.AnnualDataCollector;
 import de.dhbw.application.report.FineDataCollector;
+import de.dhbw.application.report.TrendDataCollector;
 import de.dhbw.domain.report.Report;
 
 import java.time.LocalDate;
@@ -49,7 +50,7 @@ public class ReportsMenu extends Menu {
         addMenuItem("Annual Report", this::generateAnnualReport);
         addMenuItem("Fine Statistics", this::generateFineReport);
 //        addMenuItem("Usage Report", this::generateUsageReport);
-//        addMenuItem("Popular Media Report", this::generatePopularityReport);
+        addMenuItem("Media Trend Report", this::generateTrendReport);
 //        addMenuItem("Overdue Items Report", this::generateOverdueReport);
         addMenuItem("Generate Mahn Report", this::generateMahnReport);
     }
@@ -188,6 +189,40 @@ private void generateMahnReport() {
         System.out.println("Waived Fine Amount: €" + String.format("%.2f", report.getDataPoint("waived_fine_amount")));
     }
 
+    void generateTrendReport() {
+        int year = inputHandler.readInt("Enter Year: ", 2000, 2100);
+        int month = inputHandler.readInt("Enter Month (1-12): ", 1, 12);
+
+        Report report = TrendDataCollector.generate(
+            year,
+            month,
+            mediaService.getAllMedia(),
+            loanService.getAllLoans()
+        );
+
+        OutputFormatter.printHeader(report.getTitle());
+
+        List<Map.Entry<UUID, Long>> topBooks = (List<Map.Entry<UUID, Long>>) report.getDataPoint("top_books");
+        if (topBooks == null || topBooks.isEmpty()) {
+            System.out.println("No book borrowing data found for this period.");
+            return;
+        }
+
+        System.out.println("Top Borrowed Books:");
+        System.out.println("-".repeat(40));
+        String format = "%-30s | %5s%n";
+        System.out.printf(format, "Title", "Borrows");
+        System.out.println("-".repeat(40));
+
+        for (Map.Entry<UUID, Long> entry : topBooks) {
+            Media m = mediaService.getMediaById(entry.getKey()).orElse(null);
+            String title = m != null ? m.getTitle() : "Unknown Media";
+            System.out.printf(format, title, entry.getValue());
+        }
+    }
+
+
+
 //    private void generateUsageReport() {
 //        LocalDate startDate = inputHandler.readDate("Start Date");
 //        LocalDate endDate = inputHandler.readDate("End Date");
@@ -202,47 +237,6 @@ private void generateMahnReport() {
 //        System.out.println("Overdue Loans: " + overdueLoans);
 //    }
 //
-//    private void generatePopularityReport() {
-//        OutputFormatter.printHeader("Most Popular Media");
-//
-//        Map<UUID, Long> borrowCounts = new LinkedHashMap<>();
-//        for (Loan loan : loanService.getAllLoans()) {
-//            for (UUID mediaId : loan.getMediaIds()) {
-//                borrowCounts.merge(mediaId, 1L, Long::sum);
-//            }
-//        }
-//
-//        if (borrowCounts.isEmpty()) {
-//            OutputFormatter.printWarning("No loan data available for popularity report.");
-//            return;
-//        }
-//
-//        List<Map.Entry<UUID, Long>> topMedia = borrowCounts
-//                .entrySet()
-//                .stream()
-//                .sorted((a, b) -> Long.compare(b.getValue(), a.getValue()))
-//                .limit(10)
-//                .toList();
-//
-//        System.out.println("\nTop Borrowed Media Items:");
-//        System.out.println("-".repeat(60));
-//
-//        int rank = 1;
-//        for (Map.Entry<UUID, Long> entry : topMedia) {
-//            Optional<Media> media = mediaService.getMediaById(entry.getKey());
-//            if (media.isPresent()) {
-//                System.out.printf(
-//                        "%d. %s (%s) - %d borrows%n",
-//                        rank,
-//                        media.get().getTitle(),
-//                        media.get().getMediaType(),
-//                        entry.getValue()
-//                );
-//                rank++;
-//            }
-//        }
-//        System.out.println("-".repeat(60));
-//    }
 //
 //    private void generateOverdueReport() {
 //        long overdueCount = loanService
