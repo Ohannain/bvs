@@ -40,6 +40,15 @@ public class TrendDataCollector {
         report.addDataPoint("window_start", startDate);
         report.addDataPoint("window_end", endDate);
 
+        //System.out.println("loans in collector:" + loans);
+        System.out.println("startDate: " + startDate + ", endDate: " + endDate);
+
+
+        loans.stream().filter(l -> l.getIssueDate() != null)
+//            && !l.getIssueDate().isBefore(startDate)
+//            && !l.getIssueDate().isAfter(endDate))
+            .forEach(l -> System.out.println("Loan in window: " + l.getLoanId() + ", issueDate: " + l.getIssueDate()));
+
         long total_window_loans = loans
             .stream()
             .filter(l -> l.getIssueDate() != null

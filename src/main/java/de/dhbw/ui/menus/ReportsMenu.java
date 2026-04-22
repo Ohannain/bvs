@@ -200,9 +200,9 @@ private void generateMahnReport() {
             loanService.getAllLoans()
         );
 
-        OutputFormatter.printHeader(report.getTitle());
+        //OutputFormatter.printHeader(report.getTitle());
 
-        System.out.println(loanService.getAllLoans());
+        System.out.println("report: " + report.getDataPoints());
 
 
         System.out.println("Window: " + report.getDataPoint("window_start") + " to " + report.getDataPoint("window_end"));
