@@ -189,7 +189,7 @@ private void generateMahnReport() {
         System.out.println("Waived Fine Amount: €" + String.format("%.2f", report.getDataPoint("waived_fine_amount")));
     }
 
-    void generateTrendReport() {
+    private void generateTrendReport() {
         int year = inputHandler.readInt("Enter Year: ", 2000, 2100);
         int month = inputHandler.readInt("Enter Month (1-12): ", 1, 12);
 
@@ -202,22 +202,57 @@ private void generateMahnReport() {
 
         OutputFormatter.printHeader(report.getTitle());
 
-        List<Map.Entry<UUID, Long>> topBooks = (List<Map.Entry<UUID, Long>>) report.getDataPoint("top_books");
-        if (topBooks == null || topBooks.isEmpty()) {
-            System.out.println("No book borrowing data found for this period.");
-            return;
-        }
+        System.out.println(loanService.getAllLoans());
 
-        System.out.println("Top Borrowed Books:");
-        System.out.println("-".repeat(40));
-        String format = "%-30s | %5s%n";
-        System.out.printf(format, "Title", "Borrows");
-        System.out.println("-".repeat(40));
 
-        for (Map.Entry<UUID, Long> entry : topBooks) {
-            Media m = mediaService.getMediaById(entry.getKey()).orElse(null);
-            String title = m != null ? m.getTitle() : "Unknown Media";
-            System.out.printf(format, title, entry.getValue());
+        System.out.println("Window: " + report.getDataPoint("window_start") + " to " + report.getDataPoint("window_end"));
+        System.out.println("Total loans in window: " + report.getDataPoint("total_window_loans"));
+        System.out.println();
+
+        String headerFormat = "%-7s | %-36s | %-24s | %7s%n";
+        String rowFormat = "%-7s | %-36s | %-24s | %7d%n";
+
+        for (int i = 0; i < 6; i++) {
+            LocalDate currentMonth = LocalDate.of(year, month, 1).minusMonths(5 - i);
+            String monthKey = currentMonth.getYear() + "_" + currentMonth.getMonthValue();
+
+            Object totalLoansObj = report.getDataPoint("total_loans_month_" + monthKey);
+            int totalLoans = totalLoansObj instanceof Number ? ((Number) totalLoansObj).intValue() : 0;
+
+            System.out.println("Month: " + currentMonth.getYear() + "-" + String.format("%02d", currentMonth.getMonthValue()));
+            System.out.println("Loans: " + totalLoans);
+
+            Object topObj = report.getDataPoint("top5_media_month_" + monthKey);
+            List<?> topList = topObj instanceof List<?> list ? list : Collections.emptyList();
+
+            //if (!(topObj instanceof List<?> topList) || topList.isEmpty()) {
+            //    System.out.println("No media loans for this month.");
+            //    System.out.println("-".repeat(85));
+            //    continue;
+            //}
+
+            System.out.printf(headerFormat, "Rank", "Title", "Media ID", "Count");
+            System.out.println("-".repeat(85));
+
+            int rank = 1;
+            for (Object item : topList) {
+                if (!(item instanceof Map<?, ?> row)) {
+                    continue;
+                }
+
+                Object titleObj = row.get("title");
+                Object mediaIdObj = row.get("mediaId");
+                Object loanCountObj = row.get("loanCount");
+
+                String title = titleObj != null ? titleObj.toString() : "Unknown";
+                String mediaId = mediaIdObj != null ? mediaIdObj.toString() : "N/A";
+                int loanCount = loanCountObj instanceof Number ? ((Number) loanCountObj).intValue() : 0;
+
+                System.out.printf(rowFormat, "#" + rank, title, mediaId, loanCount);
+                rank++;
+            }
+
+            System.out.println("-".repeat(85));
         }
     }
 
