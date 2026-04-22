@@ -39,7 +39,7 @@ public class FineMenu extends Menu {
 
     private void payFine() {
         String fineId = inputHandler.readNonEmptyString("Enter Fine ID: ");
-        Optional<UUID> fineUuid = UUID.parseUuid(fineId, "Fine ID");
+        Optional<UUID> fineUuid = UUID.parseUuid(fineId);
         if (fineUuid.isEmpty()) {
             return;
         }
@@ -66,7 +66,7 @@ public class FineMenu extends Menu {
     private void waiveFine() {
         String fineId = inputHandler.readNonEmptyString("Enter Fine ID: ");
         String reason = inputHandler.readNonEmptyString("Reason for waiving: ");
-        Optional<UUID> fineUuid = UUID.parseUuid(fineId, "Fine ID");
+        Optional<UUID> fineUuid = UUID.parseUuid(fineId);
         if (fineUuid.isEmpty()) {
             return;
         }
@@ -91,7 +91,7 @@ public class FineMenu extends Menu {
 
     private void viewUserFines() {
         String userId = inputHandler.readNonEmptyString("Enter User ID: ");
-        Optional<UUID> userUuid = UUID.parseUuid(userId, "User ID");
+        Optional<UUID> userUuid = UUID.parseUuid(userId);
         if (userUuid.isEmpty()) {
             return;
         }

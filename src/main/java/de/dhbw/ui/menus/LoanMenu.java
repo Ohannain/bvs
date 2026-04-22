@@ -35,7 +35,7 @@ public class LoanMenu extends Menu {
         OutputFormatter.printHeader("Borrow Media");
 
         String userId = inputHandler.readNonEmptyString("Enter User ID: ");
-        Optional<UUID> userUuid = UUID.parseUuid(userId, "User ID");
+        Optional<UUID> userUuid = UUID.parseUuid(userId);
         if (userUuid.isEmpty()) {
             return;
         }
@@ -43,7 +43,7 @@ public class LoanMenu extends Menu {
         String mediaIdsInput = inputHandler.readNonEmptyString(
             "Enter Media ID(s) (comma-separated): "
         );
-        Optional<List<UUID>> mediaIds = UUID.parseUuidList(mediaIdsInput, "Media ID");
+        Optional<List<UUID>> mediaIds = UUID.parseUuidList(mediaIdsInput);
         if (mediaIds.isEmpty()) {
             return;
         }
@@ -59,7 +59,7 @@ public class LoanMenu extends Menu {
 
     private void returnMedia() {
         String loanId = inputHandler.readNonEmptyString("Enter Loan ID: ");
-        Optional<UUID> loanUuid = UUID.parseUuid(loanId, "Loan ID");
+        Optional<UUID> loanUuid = UUID.parseUuid(loanId);
         if (loanUuid.isEmpty()) {
             return;
         }
@@ -81,7 +81,7 @@ public class LoanMenu extends Menu {
 
     private void renewLoan() {
         String loanId = inputHandler.readNonEmptyString("Enter Loan ID: ");
-        Optional<UUID> loanUuid = UUID.parseUuid(loanId, "Loan ID");
+        Optional<UUID> loanUuid = UUID.parseUuid(loanId);
         if (loanUuid.isEmpty()) {
             return;
         }
@@ -117,7 +117,7 @@ public class LoanMenu extends Menu {
 
     private void viewUserLoans() {
         String userId = inputHandler.readNonEmptyString("Enter User ID: ");
-        Optional<UUID> userUuid = UUID.parseUuid(userId, "User ID");
+        Optional<UUID> userUuid = UUID.parseUuid(userId);
         if (userUuid.isEmpty()) {
             return;
         }

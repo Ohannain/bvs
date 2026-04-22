@@ -4,7 +4,6 @@ import de.dhbw.domain.media.Media;
 import de.dhbw.domain.media.MediaStatus;
 import de.dhbw.domain.media.MediaType;
 import java.util.List;
-import java.util.Optional;
 import de.dhbw.util.UUID;
 
 public class MediaController {
@@ -109,7 +108,7 @@ public class MediaController {
         );
     }
 
-    public Optional<Media> findMedia(UUID mediaId) {
+    public List<Media> findMedia(UUID mediaId) {
         return mediaService.getMediaById(mediaId);
     }
 

@@ -5,7 +5,6 @@ import de.dhbw.persistence.media.MediaRepository;
 import de.dhbw.util.Logger;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import de.dhbw.util.UUID;
 import java.util.stream.Collectors;
 
@@ -121,7 +120,7 @@ public class MediaService {
         return cd;
     }
 
-    public Optional<Media> getMediaById(UUID mediaId) {
+    public List<Media> getMediaById(UUID mediaId) {
         return mediaRepository.findById(mediaId);
     }
 
@@ -158,34 +157,35 @@ public class MediaService {
     }
 
     public void deleteMedia(UUID mediaId) {
-        Optional<Media> mediaOpt = mediaRepository.findById(mediaId);
-        if (mediaOpt.isPresent()) {
-            Media media = mediaOpt.get();
-            if (media.getStatus() == MediaStatus.BORROWED) {
-                throw new IllegalStateException("Cannot delete borrowed media");
-            }
-            mediaRepository.delete(mediaId);
-            Logger.info("Deleted media: " + mediaId);
-        } else {
+        List<Media> mediaMatches = mediaRepository.findById(mediaId);
+        if (mediaMatches.isEmpty()) {
             throw new IllegalArgumentException("Media not found: " + mediaId);
         }
+    
+        Media media = mediaMatches.get(0);
+        if (media.getStatus() == MediaStatus.BORROWED) {
+            throw new IllegalStateException("Cannot delete borrowed media");
+        }
+    
+        mediaRepository.delete(mediaId);
+        Logger.info("Deleted media: " + mediaId);
     }
 
     public void setMediaStatus(UUID mediaId, MediaStatus status) {
-        Optional<Media> mediaOpt = mediaRepository.findById(mediaId);
-        if (mediaOpt.isPresent()) {
-            Media media = mediaOpt.get();
-            media.setStatus(status);
-            mediaRepository.update(media);
-            Logger.info("Set media " + mediaId + " status to " + status);
-        } else {
+        List<Media> mediaMatches = mediaRepository.findById(mediaId);
+        if (mediaMatches.isEmpty()) {
             throw new IllegalArgumentException("Media not found: " + mediaId);
         }
+    
+        Media media = mediaMatches.get(0);
+        media.setStatus(status);
+        mediaRepository.update(media);
+        Logger.info("Set media " + mediaId + " status to " + status);
     }
 
     public boolean isMediaAvailable(UUID mediaId) {
-        Optional<Media> mediaOpt = mediaRepository.findById(mediaId);
-        return mediaOpt.map(Media::isAvailable).orElse(false);
+        List<Media> mediaMatches = mediaRepository.findById(mediaId);
+        return !mediaMatches.isEmpty() && mediaMatches.get(0).isAvailable();
     }
 
     public List<Media> searchMedia(String searchTerm) {
@@ -230,7 +230,7 @@ public class MediaService {
         UUID fineId;
         do {
             fineId = UUID.nextMediaId();
-        } while (mediaRepository.findById(fineId).isPresent());
+        } while (!mediaRepository.findById(fineId).isEmpty());
         return fineId;
     }
 }

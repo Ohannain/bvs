@@ -54,12 +54,12 @@ public class LoanService {
 
         List<Media> mediaToBorrow = new ArrayList<>();
         for (UUID mediaId : uniqueMediaIds) {
-            Optional<Media> mediaOptional = mediaRepository.findById(mediaId);
-            if (mediaOptional.isEmpty()) {
+            List<Media> mediaList = mediaRepository.findById(mediaId);
+            if (mediaList.isEmpty()) {
                 throw new IllegalArgumentException("Media not found: " + mediaId);
             }
 
-            Media media = mediaOptional.get();
+            Media media = mediaList.getFirst();
             if (media.getStatus() != MediaStatus.AVAILABLE) {
                 throw new IllegalStateException("Media is not available: " + mediaId);
             }
@@ -106,9 +106,9 @@ public class LoanService {
 
         for (UUID mediaId : mediaIds) {
             currentLoanedMediaIds.remove(mediaId);
-            Optional<Media> mediaOptional = mediaRepository.findById(mediaId);
-            if (mediaOptional.isPresent()) {
-                Media media = mediaOptional.get();
+            List<Media> mediaList = mediaRepository.findById(mediaId);
+            if (!mediaList.isEmpty()) {
+                Media media = mediaList.getFirst();
                 media.setStatus(MediaStatus.AVAILABLE);
                 media.setCurrentBorrowerId(null);
                 media.setBorrowDate(null);
@@ -135,13 +135,13 @@ public class LoanService {
         Loan loan = loanOptional.get();
         UUID[] mediaIds = loan.getMediaIds().toArray(UUID[]::new);
         for (UUID mediaId : mediaIds) {
-            Optional<Media> mediaOptional = mediaRepository.findById(mediaId);
-            if (mediaOptional.isEmpty()) {
+            List<Media> mediaList = mediaRepository.findById(mediaId);
+            if (mediaList.isEmpty()) {
                 Logger.warn("No media found with id " + mediaId);
                 continue;
             }
 
-            Media media = mediaOptional.get();
+            Media media = mediaList.getFirst();
             media.setDueDate(newDate);
             mediaRepository.update(media);
         }

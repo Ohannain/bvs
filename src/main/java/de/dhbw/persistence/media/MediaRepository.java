@@ -4,12 +4,11 @@ import de.dhbw.domain.media.Media;
 import de.dhbw.domain.media.MediaStatus;
 import de.dhbw.domain.media.MediaType;
 import java.util.List;
-import java.util.Optional;
 import de.dhbw.util.UUID;
 
 public interface MediaRepository {
     void save(Media media);
-    Optional<Media> findById(UUID mediaId);
+    List<Media> findById(UUID mediaId);
     List<Media> findAll();
     List<Media> findByTitle(String title);
     List<Media> findByAuthor(String author);

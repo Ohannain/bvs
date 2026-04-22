@@ -65,7 +65,7 @@ public class UserMenu extends Menu {
 
     private void updateUser() {
         String userId = inputHandler.readNonEmptyString("Enter User ID: ");
-        Optional<UUID> userUuid = UUID.parseUuid(userId, "User ID");
+        Optional<UUID> userUuid = UUID.parseUuid(userId);
         if (userUuid.isEmpty()) {
             return;
         }
@@ -101,7 +101,7 @@ public class UserMenu extends Menu {
     private void suspendUser() {
         String userId = inputHandler.readNonEmptyString("Enter User ID: ");
         String reason = inputHandler.readNonEmptyString("Reason for suspension: ");
-        Optional<UUID> userUuid = UUID.parseUuid(userId, "User ID");
+        Optional<UUID> userUuid = UUID.parseUuid(userId);
         if (userUuid.isEmpty()) {
             return;
         }
@@ -116,7 +116,7 @@ public class UserMenu extends Menu {
 
     private void activateUser() {
         String userId = inputHandler.readNonEmptyString("Enter User ID: ");
-        Optional<UUID> userUuid = UUID.parseUuid(userId, "User ID");
+        Optional<UUID> userUuid = UUID.parseUuid(userId);
         if (userUuid.isEmpty()) {
             return;
         }
@@ -131,7 +131,7 @@ public class UserMenu extends Menu {
 
     private void deleteUser() {
         String userId = inputHandler.readNonEmptyString("Enter User ID: ");
-        Optional<UUID> userUuid = UUID.parseUuid(userId, "User ID");
+        Optional<UUID> userUuid = UUID.parseUuid(userId);
         if (userUuid.isEmpty()) {
             return;
         }

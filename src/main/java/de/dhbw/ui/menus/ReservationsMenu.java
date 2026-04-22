@@ -37,8 +37,8 @@ public class ReservationsMenu extends Menu {
 
         String userId = inputHandler.readNonEmptyString("Enter User ID: ");
         String mediaId = inputHandler.readNonEmptyString("Enter Media ID: ");
-        Optional<UUID> userUuid = UUID.parseUuid(userId, "User ID");
-        Optional<UUID> mediaUuid = UUID.parseUuid(mediaId, "Media ID");
+        Optional<UUID> userUuid = UUID.parseUuid(userId);
+        Optional<UUID> mediaUuid = UUID.parseUuid(mediaId);
         if (userUuid.isEmpty() || mediaUuid.isEmpty()) {
             return;
         }
@@ -57,7 +57,7 @@ public class ReservationsMenu extends Menu {
 
     private void fulfillReservation() {
         String reservationId = inputHandler.readNonEmptyString("Enter Reservation ID: ");
-        Optional<UUID> reservationUuid = UUID.parseUuid(reservationId, "Reservation ID");
+        Optional<UUID> reservationUuid = UUID.parseUuid(reservationId);
         if (reservationUuid.isEmpty()) {
             return;
         }
@@ -72,7 +72,7 @@ public class ReservationsMenu extends Menu {
 
     private void cancelReservation() {
         String reservationId = inputHandler.readNonEmptyString("Enter Reservation ID: ");
-        Optional<UUID> reservationUuid = UUID.parseUuid(reservationId, "Reservation ID");
+        Optional<UUID> reservationUuid = UUID.parseUuid(reservationId);
         if (reservationUuid.isEmpty()) {
             return;
         }
@@ -92,7 +92,7 @@ public class ReservationsMenu extends Menu {
 
     private void viewUserReservations() {
         String userId = inputHandler.readNonEmptyString("Enter User ID: ");
-        Optional<UUID> userUuid = UUID.parseUuid(userId, "User ID");
+        Optional<UUID> userUuid = UUID.parseUuid(userId);
         if (userUuid.isEmpty()) {
             return;
         }

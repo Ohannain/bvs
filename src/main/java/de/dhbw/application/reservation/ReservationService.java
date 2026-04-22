@@ -42,11 +42,11 @@ public class ReservationService {
         }
 
         // Validate media
-        Optional<Media> mediaOpt = mediaRepository.findById(mediaId);
-        if (mediaOpt.isEmpty()) {
+        List<Media> mediaList = mediaRepository.findById(mediaId);
+        if (mediaList.isEmpty()) {
             throw new IllegalArgumentException("Media not found: " + mediaId);
         }
-        Media media = mediaOpt.get();
+        Media media = mediaList.getFirst();
 
         // Check if media is already available
         if (media.isAvailable()) {
@@ -167,11 +167,11 @@ public class ReservationService {
             );
 
         if (!hasActiveReservations) {
-            Optional<Media> mediaOpt = mediaRepository.findById(
+            List<Media> mediaList = mediaRepository.findById(
                 reservation.getMediaId()
             );
-            if (mediaOpt.isPresent()) {
-                Media media = mediaOpt.get();
+            if (!mediaList.isEmpty()) {
+                Media media = mediaList.getFirst();
                 if (media.getStatus() == MediaStatus.RESERVED) {
                     media.setStatus(MediaStatus.AVAILABLE);
                     mediaRepository.update(media);

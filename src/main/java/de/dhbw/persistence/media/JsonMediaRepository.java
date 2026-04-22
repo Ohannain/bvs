@@ -12,7 +12,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import de.dhbw.util.UUID;
 import java.util.stream.Collectors;
 
@@ -108,13 +107,13 @@ public class JsonMediaRepository implements MediaRepository {
     }
 
     @Override
-    public Optional<Media> findById(UUID mediaId) {
+    public List<Media> findById(UUID mediaId) {
         if (mediaId == null) {
-            return Optional.empty();
+            return List.of();
         }
         return mediaList.stream()
                 .filter(m -> mediaId.equals(m.getMediaId()))
-                .findFirst();
+                .collect(Collectors.toList());
     }
 
     @Override

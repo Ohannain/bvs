@@ -55,7 +55,7 @@ public class ReportsMenu extends Menu {
 
 private void generateMahnReport() {
     String rawUserId = inputHandler.readString("Enter User ID: ");
-    Optional<UUID> userIdOpt = UUID.parseUuid(rawUserId, "user ID");
+    Optional<UUID> userIdOpt = UUID.parseUuid(rawUserId);
     if (userIdOpt.isEmpty()) {
         return;
     }

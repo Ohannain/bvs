@@ -9,6 +9,9 @@ import de.dhbw.ui.OutputFormatter;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import de.dhbw.util.UUID;
 
 public class MediaMenu extends Menu {
@@ -132,11 +135,18 @@ public class MediaMenu extends Menu {
     }
 
     private void searchMedia() {
-        String searchString = inputHandler.readNonEmptyString("Enter Title (or part of title): ");
-        List<Media> mediaList = mediaService.searchByTitle(searchString);
-        // make searchUser able to accept a media id
-//        Optional<Media> mediaById = mediaService.getMediaById(searchString);
-
+        String searchString = inputHandler.readNonEmptyString("Search title or id: ");
+                
+        List<Media> mediaById = UUID.parseUuid(searchString)
+            .map(mediaService::getMediaById)
+            .orElseGet(List::of);
+        
+        List<Media> mediaByTitle = mediaService.searchByTitle(searchString);
+        
+        List<Media> mediaList = Stream.concat(mediaByTitle.stream(), mediaById.stream())
+            .distinct()
+            .collect(Collectors.toList());
+        
         OutputFormatter.printMediaList(mediaList);
     }
 
@@ -152,19 +162,18 @@ public class MediaMenu extends Menu {
 
     private void updateMedia() {
         String mediaId = inputHandler.readNonEmptyString("Enter Media ID: ");
-        Optional<UUID> mediaUuid = UUID.parseUuid(mediaId, "Media ID");
+        Optional<UUID> mediaUuid = UUID.parseUuid(mediaId);
         if (mediaUuid.isEmpty()) {
             return;
         }
-        Optional<Media> mediaOpt = mediaService.getMediaById(mediaUuid.get());
+        List<Media> mediaList = mediaService.getMediaById(mediaUuid.get());
 
-        if (mediaOpt.isEmpty()) {
+        if (mediaList.isEmpty()) {
             OutputFormatter.printWarning("Media not found.");
             return;
         }
 
-        Media media = mediaOpt.get();
-        System.out.println("Current Status: " + media.getStatus());
+        System.out.println("Current Status: " + mediaList.getFirst().getStatus());
         System.out.println("1. AVAILABLE");
         System.out.println("2. DAMAGED");
         System.out.println("3. LOST");
@@ -180,7 +189,7 @@ public class MediaMenu extends Menu {
                 case 3 -> MediaStatus.LOST;
                 case 4 -> MediaStatus.IN_REPAIR;
                 case 5 -> MediaStatus.ARCHIVED;
-                default -> media.getStatus();
+                default -> mediaList.getFirst().getStatus();
             };
 
             try {
@@ -194,7 +203,7 @@ public class MediaMenu extends Menu {
 
     private void deleteMedia() {
         String mediaId = inputHandler.readNonEmptyString("Enter Media ID: ");
-        Optional<UUID> mediaUuid = UUID.parseUuid(mediaId, "Media ID");
+        Optional<UUID> mediaUuid = UUID.parseUuid(mediaId);
         if (mediaUuid.isEmpty()) {
             return;
         }

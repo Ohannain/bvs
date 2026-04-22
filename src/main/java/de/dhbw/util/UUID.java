@@ -129,16 +129,16 @@ public final class UUID implements Comparable<UUID>, Serializable {
         return normalized;
     }
 
-    public static Optional<UUID> parseUuid(String rawId, String idLabel) {
+    public static Optional<UUID> parseUuid(String rawId) {
         try {
             return Optional.of(UUID.fromString(rawId));
         } catch (IllegalArgumentException e) {
-            OutputFormatter.printError("Invalid " + idLabel + " format. Please enter an ID (e.g. USR00001).");
+            OutputFormatter.printError("Invalid ID format. Please enter an ID (e.g. USR00001).");
             return Optional.empty();
         }
     }
     
-    public static Optional<List<UUID>> parseUuidList(String rawIds, String idLabel) {
+    public static Optional<List<UUID>> parseUuidList(String rawIds) {
         String[] parts = rawIds.split(",");
         List<UUID> ids = new ArrayList<>();
 
@@ -148,7 +148,7 @@ public final class UUID implements Comparable<UUID>, Serializable {
                 continue;
             }
 
-            Optional<UUID> parsedId = UUID.parseUuid(trimmed, idLabel);
+            Optional<UUID> parsedId = UUID.parseUuid(trimmed);
             if (parsedId.isEmpty()) {
                 return Optional.empty();
             }
@@ -156,7 +156,7 @@ public final class UUID implements Comparable<UUID>, Serializable {
         }
 
         if (ids.isEmpty()) {
-            OutputFormatter.printError("Please provide at least one valid " + idLabel + ".");
+            OutputFormatter.printError("Please provide at least one valid id.");
             return Optional.empty();
         }
 
