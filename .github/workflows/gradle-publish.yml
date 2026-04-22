@@ -5,17 +5,18 @@ on:
     branches:
       - main
   release:
-    types: [created]
+    types: [published]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
 
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up JDK 25
         uses: actions/setup-java@v4
         with:
@@ -28,10 +29,12 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
-    # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
-    # the publishing section of your build.gradle
-    # - name: Publish to GitHub Packages
-    #   run: ./gradlew publish
-    #   env:
-    #     USERNAME: ${{ github.actor }}
-    #     TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload Release Assets
+        if: github.event_name == "release"
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            build/distributions/*.zip
+            build/distributions/*.tar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
