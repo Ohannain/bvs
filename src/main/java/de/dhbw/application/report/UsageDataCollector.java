@@ -4,7 +4,6 @@ import de.dhbw.domain.loan.Loan;
 import de.dhbw.domain.loan.LoanStatus;
 import de.dhbw.domain.report.Report;
 import de.dhbw.domain.report.ReportType;
-import de.dhbw.util.DateUtils;
 import de.dhbw.util.UUID;
 
 import java.time.LocalDate;

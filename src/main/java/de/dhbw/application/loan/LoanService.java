@@ -185,17 +185,4 @@ public class LoanService {
     public List<Loan> getLoansByStatus(LoanStatus status) {
         return loanRepository.findByStatus(status);
     }
-
-    /**
-     * generateLoanId generates a unique id for a loan.
-     *
-     * @return {UUID} loanId - the generated unique id.
-     */
-    private UUID generateLoanId() {
-        UUID loanId;
-        do {
-            loanId = UUID.nextLoanId();
-        } while (loanRepository.findById(loanId).isPresent());
-        return loanId;
-    }
 }

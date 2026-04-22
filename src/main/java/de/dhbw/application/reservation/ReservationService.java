@@ -9,11 +9,9 @@ import de.dhbw.persistence.media.MediaRepository;
 import de.dhbw.persistence.reservation.ReservationRepository;
 import de.dhbw.persistence.user.UserRepository;
 import de.dhbw.util.Logger;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import de.dhbw.util.UUID;
-import java.util.stream.Collectors;
 
 public class ReservationService {
 

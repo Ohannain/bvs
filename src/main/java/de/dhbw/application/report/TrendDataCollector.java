@@ -2,7 +2,6 @@ package de.dhbw.application.report;
 
 import de.dhbw.domain.loan.Loan;
 import de.dhbw.domain.media.Media;
-import de.dhbw.domain.media.MediaType;
 import de.dhbw.domain.report.Report;
 import de.dhbw.domain.report.ReportType;
 import de.dhbw.util.UUID;

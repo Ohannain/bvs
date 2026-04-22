@@ -101,17 +101,4 @@ public class FineService {
     public List<Fine> getFinesByStatus(FineStatus status) {
         return fineRepository.findByStatus(status);
     }
-
-    /**
-     * Generates a unique id for a fine.
-     *
-     * @return {UUID} fineId - the generated unique id.
-     */
-    private UUID generateFineId() {
-        UUID fineId;
-        do {
-            fineId = UUID.nextFineId();
-        } while (fineRepository.findById(fineId).isPresent());
-        return fineId;
-    }
 }
