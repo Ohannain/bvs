@@ -6,9 +6,6 @@ import de.dhbw.application.media.MediaService;
 import de.dhbw.application.user.UserService;
 import de.dhbw.domain.fine.Fine;
 import de.dhbw.domain.fine.FineStatus;
-import de.dhbw.domain.loan.Loan;
-import de.dhbw.domain.loan.LoanStatus;
-import de.dhbw.domain.media.Media;
 import de.dhbw.ui.InputHandler;
 import de.dhbw.ui.Menu;
 import de.dhbw.ui.OutputFormatter;
@@ -18,6 +15,7 @@ import de.dhbw.application.report.MahnDataCollector;
 import de.dhbw.application.report.AnnualDataCollector;
 import de.dhbw.application.report.FineDataCollector;
 import de.dhbw.application.report.TrendDataCollector;
+import de.dhbw.application.report.UsageDataCollector;
 import de.dhbw.domain.report.Report;
 
 import java.time.LocalDate;
@@ -49,7 +47,7 @@ public class ReportsMenu extends Menu {
     private void initializeMenuItems() {
         addMenuItem("Annual Report", this::generateAnnualReport);
         addMenuItem("Fine Statistics", this::generateFineReport);
-//        addMenuItem("Usage Report", this::generateUsageReport);
+        addMenuItem("Usage Report", this::generateUsageReport);
         addMenuItem("Media Trend Report", this::generateTrendReport);
 //        addMenuItem("Overdue Items Report", this::generateOverdueReport);
         addMenuItem("Generate Mahn Report", this::generateMahnReport);
@@ -201,7 +199,7 @@ private void generateMahnReport() {
         );
 
         OutputFormatter.printHeader(report.getTitle());
-        System.out.println("Window: " + report.getDataPoint("window_start") + " to " + report.getDataPoint("window_end"));
+        System.out.println("Time Window: " + report.getDataPoint("window_start") + " to " + report.getDataPoint("window_end"));
         System.out.println("Total loans in window: " + report.getDataPoint("total_window_loans"));
         System.out.println();
 
@@ -255,35 +253,25 @@ private void generateMahnReport() {
         }
     }
 
-//    private void generateUsageReport() {
-//        LocalDate startDate = inputHandler.readDate("Start Date");
-//        LocalDate endDate = inputHandler.readDate("End Date");
-//
-//
-//        OutputFormatter.printHeader("Usage Report");
-//        System.out.println(
-//                "Period: " + DateUtils.format(startDate) + " to " + DateUtils.format(endDate)
-//        );
-//        System.out.println("Period Loans: " + periodLoans);
-//        System.out.println("Active Loans: " + activeLoans);
-//        System.out.println("Overdue Loans: " + overdueLoans);
-//    }
-//
-//
-//    private void generateOverdueReport() {
-//        long overdueCount = loanService
-//                .getAllLoans()
-//                .stream()
-//                .filter(
-//                        l ->
-//                                l.getStatus() == LoanStatus.OVERDUE ||
-//                                        (l.getDueDate() != null &&
-//                                                l.getDueDate().isBefore(LocalDate.now()) &&
-//                                                l.getStatus() != LoanStatus.RETURNED)
-//                )
-//                .count();
-//
-//        OutputFormatter.printHeader("Overdue Items Report");
-//        System.out.println("Overdue Items Count: " + overdueCount);
-//    }
+    private void generateUsageReport() {
+        LocalDate startDate = inputHandler.readDate("Start Date");
+        LocalDate endDate = inputHandler.readDate("End Date");
+
+        Report report = UsageDataCollector.generate(
+            startDate,
+            endDate,
+            loanService.getAllLoans()
+        );
+
+        OutputFormatter.printHeader(report.getTitle());
+
+        String periodStart = report.getStartDate() != null ? DateUtils.format(report.getStartDate()) : "N/A";
+        String periodEnd = report.getEndDate() != null ? DateUtils.format(report.getEndDate()) : "N/A";
+
+        System.out.println("Time Window: " + periodStart + " to " + periodEnd);
+        System.out.println("-".repeat(80));
+        System.out.println("Period Loans : " + report.getDataPoint("period_loans"));
+        System.out.println("Active Loans : " + report.getDataPoint("active_loans"));
+        System.out.println("Overdue Loans: " + report.getDataPoint("overdue_loans"));
+    }
 }

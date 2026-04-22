@@ -30,10 +30,12 @@ public class UsageDataCollector {
                 !l.getIssueDate().isAfter(endDate)
             )
             .count();
+        report.addDataPoint("period_loans", periodLoans);
 
         long activeLoans = loans.stream()
             .filter(l -> l.getStatus() == LoanStatus.ACTIVE)
             .count();
+        report.addDataPoint("active_loans", activeLoans);
 
         long overdueLoans = loans.stream()
             .filter(l ->
@@ -43,23 +45,8 @@ public class UsageDataCollector {
                  l.getStatus() != LoanStatus.RETURNED)
             )
             .count();
-
-        report.addDataPoint("period_loans", periodLoans);
-        report.addDataPoint("active_loans", activeLoans);
         report.addDataPoint("overdue_loans", overdueLoans);
 
-        StringBuilder summary = new StringBuilder();
-        summary.append("Usage Report\n");
-        summary.append("Period: ")
-            .append(DateUtils.format(startDate))
-            .append(" to ")
-            .append(DateUtils.format(endDate))
-            .append("\n");
-        summary.append("Period Loans: ").append(periodLoans).append("\n");
-        summary.append("Active Loans: ").append(activeLoans).append("\n");
-        summary.append("Overdue Loans: ").append(overdueLoans);
-
-        report.setSummary(summary.toString());
         return report;
     }
 }
