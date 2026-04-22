@@ -200,17 +200,14 @@ private void generateMahnReport() {
             loanService.getAllLoans()
         );
 
-        //OutputFormatter.printHeader(report.getTitle());
-
-        System.out.println("report: " + report.getDataPoints());
-
-
+        OutputFormatter.printHeader(report.getTitle());
         System.out.println("Window: " + report.getDataPoint("window_start") + " to " + report.getDataPoint("window_end"));
         System.out.println("Total loans in window: " + report.getDataPoint("total_window_loans"));
         System.out.println();
 
-        String headerFormat = "%-7s | %-36s | %-24s | %7s%n";
-        String rowFormat = "%-7s | %-36s | %-24s | %7d%n";
+        // column layout       rank | count | title | type | ID
+        String headerFormat = "%-4s | %5s | %-40s | %-6s | %-8s" + "\n";
+        String rowFormat =    "%-4s | %5d | %-40s | %-6s | %-8s" + "\n";
 
         for (int i = 0; i < 6; i++) {
             LocalDate currentMonth = LocalDate.of(year, month, 1).minusMonths(5 - i);
@@ -219,20 +216,20 @@ private void generateMahnReport() {
             Object totalLoansObj = report.getDataPoint("total_loans_month_" + monthKey);
             int totalLoans = totalLoansObj instanceof Number ? ((Number) totalLoansObj).intValue() : 0;
 
-            System.out.println("Month: " + currentMonth.getYear() + "-" + String.format("%02d", currentMonth.getMonthValue()));
+            System.out.println("Month: " + currentMonth.getYear() + "/" + String.format("%02d", currentMonth.getMonthValue()));
             System.out.println("Loans: " + totalLoans);
 
             Object topObj = report.getDataPoint("top5_media_month_" + monthKey);
             List<?> topList = topObj instanceof List<?> list ? list : Collections.emptyList();
 
-            //if (!(topObj instanceof List<?> topList) || topList.isEmpty()) {
-            //    System.out.println("No media loans for this month.");
-            //    System.out.println("-".repeat(85));
-            //    continue;
-            //}
+            if (topList.isEmpty()) {
+                System.out.println("No media loans for this month.");
+                System.out.println("-".repeat(75) + "\n");
+                continue;
+            }
 
-            System.out.printf(headerFormat, "Rank", "Title", "Media ID", "Count");
-            System.out.println("-".repeat(85));
+            System.out.printf(headerFormat, "Rank", "Loans", "Title", "Type", "Media ID");
+            System.out.println("-".repeat(75));
 
             int rank = 1;
             for (Object item : topList) {
@@ -240,23 +237,23 @@ private void generateMahnReport() {
                     continue;
                 }
 
-                Object titleObj = row.get("title");
-                Object mediaIdObj = row.get("mediaId");
-                Object loanCountObj = row.get("loanCount");
+                String title = row.get("title").toString();
+                String mediaId = row.get("media_id").toString();
+                String mediaType = row.get("type").toString();
+                long loanCount = (long)row.get("loan_count");
 
-                String title = titleObj != null ? titleObj.toString() : "Unknown";
-                String mediaId = mediaIdObj != null ? mediaIdObj.toString() : "N/A";
-                int loanCount = loanCountObj instanceof Number ? ((Number) loanCountObj).intValue() : 0;
+                // cut media title if too long
+                if (title.length() > 40) {
+                    title = title.substring(0, 37) + "...";
+                }
 
-                System.out.printf(rowFormat, "#" + rank, title, mediaId, loanCount);
+                System.out.printf(rowFormat, "#" + rank, loanCount, title, mediaType, mediaId);
                 rank++;
             }
 
-            System.out.println("-".repeat(85));
+            System.out.println("-".repeat(75) + "\n");
         }
     }
-
-
 
 //    private void generateUsageReport() {
 //        LocalDate startDate = inputHandler.readDate("Start Date");

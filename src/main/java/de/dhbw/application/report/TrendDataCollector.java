@@ -24,7 +24,7 @@ public class TrendDataCollector {
         Report report = new Report(
             reportId,
             ReportType.TREND_ANALYSIS,
-            "Trend Report - " + year + "/" + month
+            "Trend Report - " + year + "/" + String.format("%02d", month)
         );
 
         LocalDate inputMonth = LocalDate.of(year, month, 1);
@@ -39,15 +39,6 @@ public class TrendDataCollector {
         report.addDataPoint("month", month);
         report.addDataPoint("window_start", startDate);
         report.addDataPoint("window_end", endDate);
-
-        //System.out.println("loans in collector:" + loans);
-        System.out.println("startDate: " + startDate + ", endDate: " + endDate);
-
-
-        loans.stream().filter(l -> l.getIssueDate() != null)
-//            && !l.getIssueDate().isBefore(startDate)
-//            && !l.getIssueDate().isAfter(endDate))
-            .forEach(l -> System.out.println("Loan in window: " + l.getLoanId() + ", issueDate: " + l.getIssueDate()));
 
         long total_window_loans = loans
             .stream()
@@ -86,7 +77,9 @@ public class TrendDataCollector {
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
             // Top 5 most loaned media for this month
-            List<Map<String, Object>> top5MostLoaned = loanCountByMediaId.entrySet().stream()
+            List<Map<String, Object>> top5MostLoaned = loanCountByMediaId
+                .entrySet()
+                .stream()
                 .sorted(Map.Entry.<UUID, Long>comparingByValue(Comparator.reverseOrder()))
                 .limit(5)
                 .map(entry -> {
@@ -95,10 +88,10 @@ public class TrendDataCollector {
                     Media m = mediaById.get(mediaId);
 
                     Map<String, Object> row = new LinkedHashMap<>();
-                    row.put("mediaId", mediaId);
+                    row.put("media_id", mediaId);
                     row.put("title", m != null ? m.getTitle() : "Unknown");
                     row.put("type", m != null ? m.getMediaType() : null);
-                    row.put("loanCount", loanCount);
+                    row.put("loan_count", loanCount);
                     return row;
                 })
                 .toList();
