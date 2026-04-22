@@ -152,7 +152,7 @@ public class MediaMenu extends Menu {
 
     private void updateMedia() {
         String mediaId = inputHandler.readNonEmptyString("Enter Media ID: ");
-        Optional<UUID> mediaUuid = parseUuid(mediaId, "Media ID");
+        Optional<UUID> mediaUuid = UUID.parseUuid(mediaId, "Media ID");
         if (mediaUuid.isEmpty()) {
             return;
         }
@@ -194,7 +194,7 @@ public class MediaMenu extends Menu {
 
     private void deleteMedia() {
         String mediaId = inputHandler.readNonEmptyString("Enter Media ID: ");
-        Optional<UUID> mediaUuid = parseUuid(mediaId, "Media ID");
+        Optional<UUID> mediaUuid = UUID.parseUuid(mediaId, "Media ID");
         if (mediaUuid.isEmpty()) {
             return;
         }
@@ -209,15 +209,6 @@ public class MediaMenu extends Menu {
             } catch (Exception e) {
                 OutputFormatter.printError(e.getMessage());
             }
-        }
-    }
-
-    private Optional<UUID> parseUuid(String rawId, String idLabel) {
-        try {
-            return Optional.of(UUID.fromString(rawId));
-        } catch (IllegalArgumentException e) {
-            OutputFormatter.printError("Invalid " + idLabel + " format. Please enter an ID (e.g. USR00001).");
-            return Optional.empty();
         }
     }
 }

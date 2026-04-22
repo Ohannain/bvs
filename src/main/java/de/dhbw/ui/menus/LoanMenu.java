@@ -6,14 +6,13 @@ import de.dhbw.domain.loan.LoanStatus;
 import de.dhbw.ui.InputHandler;
 import de.dhbw.ui.Menu;
 import de.dhbw.ui.OutputFormatter;
-
+import de.dhbw.util.UUID;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import de.dhbw.util.UUID;
 
 public class LoanMenu extends Menu {
+
     private final LoanService loanService;
 
     public LoanMenu(String title, InputHandler inputHandler, LoanService loanService) {
@@ -36,13 +35,15 @@ public class LoanMenu extends Menu {
         OutputFormatter.printHeader("Borrow Media");
 
         String userId = inputHandler.readNonEmptyString("Enter User ID: ");
-        Optional<UUID> userUuid = parseUuid(userId, "User ID");
+        Optional<UUID> userUuid = UUID.parseUuid(userId, "User ID");
         if (userUuid.isEmpty()) {
             return;
         }
 
-        String mediaIdsInput = inputHandler.readNonEmptyString("Enter Media ID(s) (comma-separated): ");
-        Optional<List<UUID>> mediaIds = parseUuidList(mediaIdsInput, "Media ID");
+        String mediaIdsInput = inputHandler.readNonEmptyString(
+            "Enter Media ID(s) (comma-separated): "
+        );
+        Optional<List<UUID>> mediaIds = UUID.parseUuidList(mediaIdsInput, "Media ID");
         if (mediaIds.isEmpty()) {
             return;
         }
@@ -58,7 +59,7 @@ public class LoanMenu extends Menu {
 
     private void returnMedia() {
         String loanId = inputHandler.readNonEmptyString("Enter Loan ID: ");
-        Optional<UUID> loanUuid = parseUuid(loanId, "Loan ID");
+        Optional<UUID> loanUuid = UUID.parseUuid(loanId, "Loan ID");
         if (loanUuid.isEmpty()) {
             return;
         }
@@ -80,7 +81,7 @@ public class LoanMenu extends Menu {
 
     private void renewLoan() {
         String loanId = inputHandler.readNonEmptyString("Enter Loan ID: ");
-        Optional<UUID> loanUuid = parseUuid(loanId, "Loan ID");
+        Optional<UUID> loanUuid = UUID.parseUuid(loanId, "Loan ID");
         if (loanUuid.isEmpty()) {
             return;
         }
@@ -101,60 +102,26 @@ public class LoanMenu extends Menu {
 
     private void viewOverdueLoans() {
         List<Loan> loans = loanService
-                .getAllLoans()
-                .stream()
-                .filter(
-                        loan ->
-                                loan.getStatus() == LoanStatus.OVERDUE ||
-                                        (loan.getDueDate() != null &&
-                                                loan.getDueDate().isBefore(LocalDate.now()) &&
-                                                loan.getStatus() != LoanStatus.RETURNED)
-                )
-                .toList();
+            .getAllLoans()
+            .stream()
+            .filter(
+                loan ->
+                    loan.getStatus() == LoanStatus.OVERDUE ||
+                    (loan.getDueDate() != null &&
+                        loan.getDueDate().isBefore(LocalDate.now()) &&
+                        loan.getStatus() != LoanStatus.RETURNED)
+            )
+            .toList();
         OutputFormatter.printLoanList(loans);
     }
 
     private void viewUserLoans() {
         String userId = inputHandler.readNonEmptyString("Enter User ID: ");
-        Optional<UUID> userUuid = parseUuid(userId, "User ID");
+        Optional<UUID> userUuid = UUID.parseUuid(userId, "User ID");
         if (userUuid.isEmpty()) {
             return;
         }
         List<Loan> loans = loanService.getLoansByUserId(userUuid.get());
         OutputFormatter.printLoanList(loans);
-    }
-
-    private Optional<UUID> parseUuid(String rawId, String idLabel) {
-        try {
-            return Optional.of(UUID.fromString(rawId));
-        } catch (IllegalArgumentException e) {
-            OutputFormatter.printError("Invalid " + idLabel + " format. Please enter an ID (e.g. USR00001).");
-            return Optional.empty();
-        }
-    }
-
-    private Optional<List<UUID>> parseUuidList(String rawIds, String idLabel) {
-        String[] parts = rawIds.split(",");
-        List<UUID> ids = new ArrayList<>();
-
-        for (String part : parts) {
-            String trimmed = part.trim();
-            if (trimmed.isEmpty()) {
-                continue;
-            }
-
-            Optional<UUID> parsedId = parseUuid(trimmed, idLabel);
-            if (parsedId.isEmpty()) {
-                return Optional.empty();
-            }
-            ids.add(parsedId.get());
-        }
-
-        if (ids.isEmpty()) {
-            OutputFormatter.printError("Please provide at least one valid " + idLabel + ".");
-            return Optional.empty();
-        }
-
-        return Optional.of(ids);
     }
 }

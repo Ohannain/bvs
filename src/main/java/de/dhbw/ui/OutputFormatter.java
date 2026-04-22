@@ -18,6 +18,7 @@ public class OutputFormatter {
     private static final int SEPARATOR_LENGTH = 80;
     private static final int PAGE_SIZE = 10;
     private static final int CONTROL_SECTION_WIDTH = 30;
+    private static final Scanner SCANNER = new Scanner(System.in);
 
     /**
      * printHeader prints out the header of a menu
@@ -294,17 +295,15 @@ public class OutputFormatter {
     }
 
     private static <T> void printPaginatedTable(List<T> rows,
-                                                String tableName,
-                                                int tableWidth,
-                                                Runnable headerPrinter,
-                                                Consumer<T> rowPrinter) {
-        if (rows.isEmpty()) {
-            return;
-        }
+        String tableName,
+        int tableWidth,
+        Runnable headerPrinter,
+        Consumer<T> rowPrinter
+    ) {
+        if (rows.isEmpty()) { return; }
 
         int totalPages = (rows.size() + PAGE_SIZE - 1) / PAGE_SIZE;
         int currentPage = 0;
-        Scanner scanner = new Scanner(System.in);
 
         while (true) {
             // Clear screen and print current page
@@ -318,11 +317,9 @@ public class OutputFormatter {
             printTableSeparator(tableWidth);
             System.out.printf("Page %d/%d | Enter page number (1-%d) or command: ", currentPage + 1, totalPages, totalPages);
 
-            String input = scanner.nextLine().trim().toLowerCase();
+            String input = SCANNER.nextLine().trim().toLowerCase();
 
-            if (input.isEmpty()) {
-                continue;
-            }
+            if (input.isEmpty()) { continue; }
 
             if (input.equals("n") || input.equals("next")) {
                 if (currentPage < totalPages - 1) {

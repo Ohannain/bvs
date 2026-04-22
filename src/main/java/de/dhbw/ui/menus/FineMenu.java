@@ -39,7 +39,7 @@ public class FineMenu extends Menu {
 
     private void payFine() {
         String fineId = inputHandler.readNonEmptyString("Enter Fine ID: ");
-        Optional<UUID> fineUuid = parseUuid(fineId, "Fine ID");
+        Optional<UUID> fineUuid = UUID.parseUuid(fineId, "Fine ID");
         if (fineUuid.isEmpty()) {
             return;
         }
@@ -66,7 +66,7 @@ public class FineMenu extends Menu {
     private void waiveFine() {
         String fineId = inputHandler.readNonEmptyString("Enter Fine ID: ");
         String reason = inputHandler.readNonEmptyString("Reason for waiving: ");
-        Optional<UUID> fineUuid = parseUuid(fineId, "Fine ID");
+        Optional<UUID> fineUuid = UUID.parseUuid(fineId, "Fine ID");
         if (fineUuid.isEmpty()) {
             return;
         }
@@ -91,20 +91,11 @@ public class FineMenu extends Menu {
 
     private void viewUserFines() {
         String userId = inputHandler.readNonEmptyString("Enter User ID: ");
-        Optional<UUID> userUuid = parseUuid(userId, "User ID");
+        Optional<UUID> userUuid = UUID.parseUuid(userId, "User ID");
         if (userUuid.isEmpty()) {
             return;
         }
         List<Fine> fines = fineService.getFinesByUserId(userUuid.get());
         OutputFormatter.printFineList(fines);
-    }
-
-    private Optional<UUID> parseUuid(String rawId, String idLabel) {
-        try {
-            return Optional.of(UUID.fromString(rawId));
-        } catch (IllegalArgumentException e) {
-            OutputFormatter.printError("Invalid " + idLabel + " format. Please enter an ID (e.g. USR00001).");
-            return Optional.empty();
-        }
     }
 }

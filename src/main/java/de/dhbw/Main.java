@@ -74,8 +74,8 @@ public class Main {
                     userService,
                     mediaService,
                     loanService,
+                    reservationService,
                     fineService
-                    //reservationService
             );
 
             Logger.info("UI initialized");

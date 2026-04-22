@@ -2,6 +2,8 @@ package de.dhbw.util;
 
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -134,5 +136,30 @@ public final class UUID implements Comparable<UUID>, Serializable {
             OutputFormatter.printError("Invalid " + idLabel + " format. Please enter an ID (e.g. USR00001).");
             return Optional.empty();
         }
+    }
+    
+    public static Optional<List<UUID>> parseUuidList(String rawIds, String idLabel) {
+        String[] parts = rawIds.split(",");
+        List<UUID> ids = new ArrayList<>();
+
+        for (String part : parts) {
+            String trimmed = part.trim();
+            if (trimmed.isEmpty()) {
+                continue;
+            }
+
+            Optional<UUID> parsedId = UUID.parseUuid(trimmed, idLabel);
+            if (parsedId.isEmpty()) {
+                return Optional.empty();
+            }
+            ids.add(parsedId.get());
+        }
+
+        if (ids.isEmpty()) {
+            OutputFormatter.printError("Please provide at least one valid " + idLabel + ".");
+            return Optional.empty();
+        }
+
+        return Optional.of(ids);
     }
 }

@@ -65,7 +65,7 @@ public class UserMenu extends Menu {
 
     private void updateUser() {
         String userId = inputHandler.readNonEmptyString("Enter User ID: ");
-        Optional<UUID> userUuid = parseUuid(userId, "User ID");
+        Optional<UUID> userUuid = UUID.parseUuid(userId, "User ID");
         if (userUuid.isEmpty()) {
             return;
         }
@@ -101,7 +101,7 @@ public class UserMenu extends Menu {
     private void suspendUser() {
         String userId = inputHandler.readNonEmptyString("Enter User ID: ");
         String reason = inputHandler.readNonEmptyString("Reason for suspension: ");
-        Optional<UUID> userUuid = parseUuid(userId, "User ID");
+        Optional<UUID> userUuid = UUID.parseUuid(userId, "User ID");
         if (userUuid.isEmpty()) {
             return;
         }
@@ -116,7 +116,7 @@ public class UserMenu extends Menu {
 
     private void activateUser() {
         String userId = inputHandler.readNonEmptyString("Enter User ID: ");
-        Optional<UUID> userUuid = parseUuid(userId, "User ID");
+        Optional<UUID> userUuid = UUID.parseUuid(userId, "User ID");
         if (userUuid.isEmpty()) {
             return;
         }
@@ -131,7 +131,7 @@ public class UserMenu extends Menu {
 
     private void deleteUser() {
         String userId = inputHandler.readNonEmptyString("Enter User ID: ");
-        Optional<UUID> userUuid = parseUuid(userId, "User ID");
+        Optional<UUID> userUuid = UUID.parseUuid(userId, "User ID");
         if (userUuid.isEmpty()) {
             return;
         }
@@ -146,21 +146,6 @@ public class UserMenu extends Menu {
             } catch (Exception e) {
                 OutputFormatter.printError(e.getMessage());
             }
-        }
-    }
-
-    /**
-     * NOTE!! Move to different file
-     * @param rawId
-     * @param idLabel
-     * @return
-     */
-    private Optional<UUID> parseUuid(String rawId, String idLabel) {
-        try {
-            return Optional.of(UUID.fromString(rawId));
-        } catch (IllegalArgumentException e) {
-            OutputFormatter.printError("Invalid " + idLabel + " format. Please enter an ID (e.g. USR00001).");
-            return Optional.empty();
         }
     }
 }
