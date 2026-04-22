@@ -6,7 +6,7 @@ import de.dhbw.util.Logger;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.UUID;
+import de.dhbw.util.UUID;
 import java.util.stream.Collectors;
 
 public class MediaService {
@@ -229,7 +229,7 @@ public class MediaService {
     private UUID generateMediaId() {
         UUID fineId;
         do {
-            fineId = UUID.randomUUID();
+            fineId = UUID.nextMediaId();
         } while (mediaRepository.findById(fineId).isPresent());
         return fineId;
     }

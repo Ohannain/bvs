@@ -4,7 +4,7 @@ import de.dhbw.domain.fine.Fine;
 import de.dhbw.domain.fine.FineStatus;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import de.dhbw.util.UUID;
 
 public interface FineRepository {
     void save(Fine fine);

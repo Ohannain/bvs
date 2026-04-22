@@ -12,7 +12,7 @@ import de.dhbw.util.Logger;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import de.dhbw.util.UUID;
 import java.util.stream.Collectors;
 
 public class ReservationService {
@@ -236,7 +236,7 @@ public class ReservationService {
     private UUID generateReservationId() {
         UUID reservationId;
         do {
-            reservationId = UUID.randomUUID();
+            reservationId = UUID.nextReservationId();
         } while (reservationRepository.exists(reservationId));
         return reservationId;
     }

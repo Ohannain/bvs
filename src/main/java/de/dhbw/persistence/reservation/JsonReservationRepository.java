@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import de.dhbw.util.UUID;
 import java.util.stream.Collectors;
 
 public class JsonReservationRepository implements ReservationRepository {

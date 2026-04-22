@@ -7,5 +7,6 @@ public enum ReportType {
     USAGE,
     TREND_ANALYSIS,
     POPULARITY,
-    OVERDUE_ITEMS
+    OVERDUE_ITEMS,
+    MAHN
 }

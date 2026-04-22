@@ -3,7 +3,7 @@ package de.dhbw.persistence.user;
 import de.dhbw.domain.user.User;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import de.dhbw.util.UUID;
 
 public interface UserRepository {
     void save(User user);

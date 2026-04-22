@@ -3,7 +3,7 @@ package de.dhbw.domain.user;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import de.dhbw.util.UUID;
 
 import de.dhbw.util.Config;
 
