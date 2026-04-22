@@ -8,6 +8,7 @@ import de.dhbw.ui.Menu;
 import de.dhbw.ui.OutputFormatter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import de.dhbw.util.UUID;
@@ -34,12 +35,25 @@ public class LoanMenu extends Menu {
     private void borrowMedia() {
         OutputFormatter.printHeader("Borrow Media");
 
-        OutputFormatter.printWarning(
-                "Borrow workflow is not available in the current service implementation."
-        );
-        OutputFormatter.printInfo(
-                "Use Reservation Management or seed loans via data files until LoanService adds borrow support."
-        );
+        String userId = inputHandler.readNonEmptyString("Enter User ID: ");
+        Optional<UUID> userUuid = parseUuid(userId, "User ID");
+        if (userUuid.isEmpty()) {
+            return;
+        }
+
+        String mediaIdsInput = inputHandler.readNonEmptyString("Enter Media ID(s) (comma-separated): ");
+        Optional<List<UUID>> mediaIds = parseUuidList(mediaIdsInput, "Media ID");
+        if (mediaIds.isEmpty()) {
+            return;
+        }
+
+        try {
+            Loan loan = loanService.borrowMedia(userUuid.get(), mediaIds.get());
+            OutputFormatter.printSuccess("Media borrowed successfully!");
+            OutputFormatter.printLoan(loan);
+        } catch (Exception e) {
+            OutputFormatter.printError(e.getMessage());
+        }
     }
 
     private void returnMedia() {
@@ -117,5 +131,30 @@ public class LoanMenu extends Menu {
             OutputFormatter.printError("Invalid " + idLabel + " format. Please enter an ID (e.g. USR00001).");
             return Optional.empty();
         }
+    }
+
+    private Optional<List<UUID>> parseUuidList(String rawIds, String idLabel) {
+        String[] parts = rawIds.split(",");
+        List<UUID> ids = new ArrayList<>();
+
+        for (String part : parts) {
+            String trimmed = part.trim();
+            if (trimmed.isEmpty()) {
+                continue;
+            }
+
+            Optional<UUID> parsedId = parseUuid(trimmed, idLabel);
+            if (parsedId.isEmpty()) {
+                return Optional.empty();
+            }
+            ids.add(parsedId.get());
+        }
+
+        if (ids.isEmpty()) {
+            OutputFormatter.printError("Please provide at least one valid " + idLabel + ".");
+            return Optional.empty();
+        }
+
+        return Optional.of(ids);
     }
 }

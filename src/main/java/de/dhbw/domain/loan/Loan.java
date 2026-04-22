@@ -29,8 +29,13 @@ public class Loan {
      * Every loan has an issueDate, is assigned the status ACTIVE and needs a user assigned to it.
      */
     public Loan(UUID userId) {
+        this(userId, LocalDate.now());
+    }
+
+    /** Creates a new loan with a specific issue date. */
+    public Loan(UUID userId, LocalDate issueDate) {
         this.loanId = UUID.nextLoanId();
-        this.issueDate = LocalDate.now();
+        this.issueDate = issueDate;
         this.status = LoanStatus.ACTIVE;
         this.userId = userId;
     }

@@ -30,8 +30,13 @@ public class Fine {
      * Every fine has an issueDate, is assigned the status PENDING and needs a user assigned to it.
      */
     public Fine(UUID userId) {
+        this(userId, LocalDate.now());
+    }
+
+    /** Creates a new Fine with a specific issue date. */
+    public Fine(UUID userId, LocalDate issueDate) {
         this.fineId = UUID.nextFineId();
-        this.issueDate = LocalDate.now();
+        this.issueDate = issueDate;
         this.status = FineStatus.PENDING;
         this.userId = userId;
     }
