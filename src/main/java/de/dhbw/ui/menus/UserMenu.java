@@ -8,6 +8,9 @@ import de.dhbw.ui.OutputFormatter;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import de.dhbw.util.UUID;
 
 public class UserMenu extends Menu {
@@ -51,11 +54,18 @@ public class UserMenu extends Menu {
 
     private void searchUser() {
         String searchString = inputHandler.readNonEmptyString("Enter Name (or part of name): ");
+        
+        List<User> userById = UUID.parseUuid(searchString)
+            .map(userService::getUserById)
+            .orElseGet(List::of);
+        
         List<User> usersByName = userService.searchUsersByName(searchString);
-        // Make searchUser able to accept a user id (DEV MODE)
-        // List<User> userById = userService.getUserById();
-        List<User> users = usersByName;
-        OutputFormatter.printUserList(users);
+        
+        List<User> userList = Stream.concat(usersByName.stream(), userById.stream())
+            .distinct()
+            .collect(Collectors.toList());
+        
+        OutputFormatter.printUserList(userList);
     }
 
     private void listAllUsers() {
@@ -69,14 +79,14 @@ public class UserMenu extends Menu {
         if (userUuid.isEmpty()) {
             return;
         }
-        Optional<User> userOpt = userService.getUserById(userUuid.get());
+        List<User> userList = userService.getUserById(userUuid.get());
 
-        if (userOpt.isEmpty()) {
+        if (userList.isEmpty()) {
             OutputFormatter.printWarning("User not found.");
             return;
         }
 
-        User user = userOpt.get();
+        User user = userList.getFirst();
         System.out.println("Leave blank to keep current value");
 
         String firstName = inputHandler.readString(

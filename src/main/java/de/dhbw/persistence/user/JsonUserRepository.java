@@ -16,17 +16,17 @@ import java.util.stream.Collectors;
 
 public class JsonUserRepository implements UserRepository {
     private final String filePath;
-    private List<User> users;
+    private List<User> userList;
 
     public JsonUserRepository() {
         this.filePath = Config.USERS_FILE;
-        this.users = new ArrayList<>();
+        this.userList = new ArrayList<>();
         loadUsers();
     }
 
     public JsonUserRepository(String filePath) {
         this.filePath = filePath;
-        this.users = new ArrayList<>();
+        this.userList = new ArrayList<>();
         loadUsers();
     }
 
@@ -34,23 +34,23 @@ public class JsonUserRepository implements UserRepository {
         try {
             File file = new File(filePath);
             if (!file.exists()) {
-                this.users = new ArrayList<>();
+                this.userList = new ArrayList<>();
                 saveUsers();
                 Logger.info("User file not found. Created new file at " + filePath);
                 return;
             }
-            this.users = JsonUtils.readListFromFile(filePath, User.class);
-            Logger.info("Loaded " + users.size() + " users from " + filePath);
+            this.userList = JsonUtils.readListFromFile(filePath, User.class);
+            Logger.info("Loaded " + userList.size() + " users from " + filePath);
         } catch (IOException e) {
             Logger.warn("Could not load users from file: " + e.getMessage());
-            this.users = new ArrayList<>();
+            this.userList = new ArrayList<>();
         }
     }
 
     private void saveUsers() {
         try {
-            JsonUtils.writeListToFile(filePath, users);
-            Logger.debug("Saved " + users.size() + " users to " + filePath);
+            JsonUtils.writeListToFile(filePath, userList);
+            Logger.debug("Saved " + userList.size() + " users to " + filePath);
         } catch (IOException e) {
             Logger.error("Failed to save users: " + e.getMessage());
         }
@@ -62,25 +62,25 @@ public class JsonUserRepository implements UserRepository {
             Logger.error("Cannot save null user or user with null ID");
             return;
         }
-        users.removeIf(u -> u.getUserId().equals(user.getUserId()));
-        users.add(user);
+        userList.removeIf(u -> u.getUserId().equals(user.getUserId()));
+        userList.add(user);
         saveUsers();
         Logger.info("Saved user: " + user.getUserId());
     }
 
     @Override
-    public Optional<User> findById(UUID userId) {
+    public List<User> findById(UUID userId) {
         if (userId == null) {
-            return Optional.empty();
+            return List.of();
         }
-        return users.stream()
-                .filter(u -> userId.equals(u.getUserId()))
-                .findFirst();
+        return userList.stream()
+                .filter(m -> userId.equals(m.getUserId()))
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<User> findAll() {
-        return new ArrayList<>(users);
+        return new ArrayList<>(userList);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class JsonUserRepository implements UserRepository {
             return List.of();
         }
         String searchTerm = name.trim().toLowerCase(Locale.ROOT);
-        return users.stream()
+        return userList.stream()
                 .filter(u -> u.getFullName().toLowerCase(Locale.ROOT).contains(searchTerm))
                 .collect(Collectors.toList());
     }
@@ -99,7 +99,7 @@ public class JsonUserRepository implements UserRepository {
         if (email == null || email.isBlank()) {
             return Optional.empty();
         }
-        return users.stream()
+        return userList.stream()
                 .filter(u -> u.getEmail() != null && u.getEmail().equalsIgnoreCase(email))
                 .findFirst();
     }
@@ -111,7 +111,7 @@ public class JsonUserRepository implements UserRepository {
 
     @Override
     public void delete(UUID userId) {
-        boolean removed = users.removeIf(u -> userId != null && userId.equals(u.getUserId()));
+        boolean removed = userList.removeIf(u -> userId != null && userId.equals(u.getUserId()));
         if (removed) {
             saveUsers();
             Logger.info("Deleted user: " + userId);
@@ -123,6 +123,6 @@ public class JsonUserRepository implements UserRepository {
         if (userId == null) {
             return false;
         }
-        return users.stream().anyMatch(u -> userId.equals(u.getUserId()));
+        return userList.stream().anyMatch(u -> userId.equals(u.getUserId()));
     }
 }

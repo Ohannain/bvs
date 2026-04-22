@@ -36,7 +36,7 @@ public class UserService {
         return user;
     }
 
-    public Optional<User> getUserById(UUID userId) {
+    public List<User> getUserById(UUID userId) {
         return userRepository.findById(userId);
     }
 
@@ -64,12 +64,12 @@ public class UserService {
     }
 
     public void deleteUser(UUID userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isEmpty()) {
+        List<User> userList = userRepository.findById(userId);
+        if (userList.isEmpty()) {
             Logger.warn("No loan found with id " + userId);
         }
 
-        User user = userOptional.get();
+        User user = userList.getFirst();
         if (!user.getBorrowedMediaIds().isEmpty()) {
             throw new IllegalStateException("Cannot delete user with active loans");
         }
@@ -81,12 +81,12 @@ public class UserService {
     }
 
     public void suspendUser(UUID userId, String reason) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isEmpty()) {
+        List<User> userList = userRepository.findById(userId);
+        if (userList.isEmpty()) {
             Logger.warn("No loan found with id " + userId);
         }
 
-        User user = userOptional.get();
+        User user = userList.getFirst();
         user.setStatus(UserStatus.SUSPENDED);
         user.setWarningCount(user.getWarningCount() + 1);
         userRepository.update(user);
@@ -94,46 +94,46 @@ public class UserService {
     }
 
     public void activateUser(UUID userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isEmpty()) {
+        List<User> userList = userRepository.findById(userId);
+        if (userList.isEmpty()) {
             Logger.warn("No loan found with id " + userId);
         }
 
-        User user = userOptional.get();
+        User user = userList.getFirst();
         user.setStatus(UserStatus.ACTIVE);
         userRepository.update(user);
         Logger.info("Activated user: " + userId);
     }
 
     public void blockUser(UUID userId, String reason) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isEmpty()) {
+        List<User> userList = userRepository.findById(userId);
+        if (userList.isEmpty()) {
             Logger.warn("No loan found with id " + userId);
         }
 
-        User user = userOptional.get();
+        User user = userList.getFirst();
         user.setStatus(UserStatus.BLOCKED);
         userRepository.update(user);
         Logger.info("Blocked user: " + userId + " - Reason: " + reason);
     }
 
     public boolean canUserBorrow(UUID userId) {
-        Optional<User> userOpt = userRepository.findById(userId);
+        List<User> userOpt = userRepository.findById(userId);
         if (userOpt.isEmpty()) {
             return false;
         }
 
-        User user = userOpt.get();
+        User user = userOpt.getFirst();
         return user.canBorrow();
     }
 
     public void addFine(UUID userId, double amount) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isEmpty()) {
+        List<User> userList = userRepository.findById(userId);
+        if (userList.isEmpty()) {
             Logger.warn("No loan found with id " + userId);
         }
 
-        User user = userOptional.get();
+        User user = userList.getFirst();
         user.setOutstandingFines(user.getOutstandingFines() + amount);
 
         if (user.getOutstandingFines() >= Config.MAX_OUTSTANDING_FINES && user.getStatus() == UserStatus.ACTIVE) {
@@ -146,12 +146,12 @@ public class UserService {
     }
 
     public void payFine(UUID userId, double amount) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isEmpty()) {
+        List<User> userList = userRepository.findById(userId);
+        if (userList.isEmpty()) {
             Logger.warn("No loan found with id " + userId);
         }
 
-        User user = userOptional.get();
+        User user = userList.getFirst();
         double newFines = Math.max(0, user.getOutstandingFines() - amount);
         user.setOutstandingFines(newFines);
 
@@ -168,7 +168,7 @@ public class UserService {
         UUID userId;
         do {
             userId = UUID.nextUserId();
-        } while (userRepository.findById(userId).isPresent());
+        } while (userRepository.findById(userId).isEmpty());
         return userId;
     }
 }

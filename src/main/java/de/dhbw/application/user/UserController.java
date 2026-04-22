@@ -3,7 +3,6 @@ package de.dhbw.application.user;
 import de.dhbw.domain.user.User;
 
 import java.util.List;
-import java.util.Optional;
 import de.dhbw.util.UUID;
 
 public class UserController {
@@ -17,7 +16,7 @@ public class UserController {
         return userService.createUser(firstName, lastName, email, phone, address);
     }
 
-    public Optional<User> findUser(UUID userId) {
+    public List<User> findUser(UUID userId) {
         return userService.getUserById(userId);
     }
 

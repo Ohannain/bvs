@@ -4,6 +4,7 @@ import de.dhbw.domain.loan.Loan;
 import de.dhbw.domain.loan.LoanStatus;
 import de.dhbw.domain.media.Media;
 import de.dhbw.domain.media.MediaStatus;
+import de.dhbw.domain.user.User;
 import de.dhbw.persistence.loan.LoanRepository;
 import de.dhbw.persistence.media.MediaRepository;
 import de.dhbw.persistence.user.UserRepository;
@@ -37,12 +38,12 @@ public class LoanService {
             throw new IllegalArgumentException("At least one media ID is required");
         }
 
-        Optional<de.dhbw.domain.user.User> userOptional = userRepository.findById(userId);
-        if (userOptional.isEmpty()) {
+        List<User> userList = userRepository.findById(userId);
+        if (userList.isEmpty()) {
             throw new IllegalArgumentException("User not found: " + userId);
         }
 
-        de.dhbw.domain.user.User user = userOptional.get();
+        User user = userList.getFirst();
         if (!user.canBorrow()) {
             throw new IllegalStateException("User is not allowed to borrow media right now");
         }

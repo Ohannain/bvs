@@ -30,12 +30,11 @@ public class ReservationService {
     }
 
     public Reservation createReservation(UUID userId, UUID mediaId) {
-        // Validate user
-        Optional<User> userOpt = userRepository.findById(userId);
-        if (userOpt.isEmpty()) {
+        List<User> userList = userRepository.findById(userId);
+        if (userList.isEmpty()) {
             throw new IllegalArgumentException("User not found: " + userId);
         }
-        User user = userOpt.get();
+        User user = userList.getFirst();
 
         if (user.getStatus() != de.dhbw.domain.user.UserStatus.ACTIVE) {
             throw new IllegalStateException("User is not active");
@@ -121,11 +120,11 @@ public class ReservationService {
         reservationRepository.update(reservation);
 
         // Update user
-        Optional<User> userOpt = userRepository.findById(
+        List<User> userList = userRepository.findById(
             reservation.getUserId()
         );
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
+        if (!userList.isEmpty()) {
+            User user = userList.getFirst();
             user.removeReservation(reservationId);
             userRepository.update(user);
         }
@@ -148,11 +147,11 @@ public class ReservationService {
         reservationRepository.update(reservation);
 
         // Update user
-        Optional<User> userOpt = userRepository.findById(
+        List<User> userList = userRepository.findById(
             reservation.getUserId()
         );
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
+        if (!userList.isEmpty()) {
+            User user = userList.getFirst();
             user.removeReservation(reservationId);
             userRepository.update(user);
         }
@@ -192,12 +191,11 @@ public class ReservationService {
                 reservation.markAsExpired();
                 reservationRepository.update(reservation);
 
-                // Update user
-                Optional<User> userOpt = userRepository.findById(
+                List<User> userList = userRepository.findById(
                     reservation.getUserId()
                 );
-                if (userOpt.isPresent()) {
-                    User user = userOpt.get();
+                if (!userList.isEmpty()) {
+                    User user = userList.getFirst();
                     user.removeReservation(reservation.getReservationId());
                     userRepository.update(user);
                 }

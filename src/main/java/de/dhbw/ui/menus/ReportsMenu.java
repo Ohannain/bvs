@@ -17,6 +17,7 @@ import de.dhbw.application.report.FineDataCollector;
 import de.dhbw.application.report.TrendDataCollector;
 import de.dhbw.application.report.UsageDataCollector;
 import de.dhbw.domain.report.Report;
+import de.dhbw.domain.user.User;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -60,13 +61,13 @@ private void generateMahnReport() {
         return;
     }
 
-    Optional<de.dhbw.domain.user.User> userOpt = userService.getUserById(userIdOpt.get());
-    if (userOpt.isEmpty()) {
+    List<User> userList = userService.getUserById(userIdOpt.get());
+    if (userList.isEmpty()) {
         OutputFormatter.printError("User not found.");
         return;
     }
 
-    Report report = MahnDataCollector.generate(userOpt.get(), fineService.getAllFines());
+    Report report = MahnDataCollector.generate(userList.getFirst(), fineService.getAllFines());
 
     OutputFormatter.printHeader(report.getTitle());
 

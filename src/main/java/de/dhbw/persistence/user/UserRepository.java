@@ -7,7 +7,7 @@ import de.dhbw.util.UUID;
 
 public interface UserRepository {
     void save(User user);
-    Optional<User> findById(UUID userId);
+    List<User> findById(UUID userId);
     List<User> findAll();
     List<User> findByName(String name);
     Optional<User> findByEmail(String email);
