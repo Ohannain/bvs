@@ -29,6 +29,7 @@ public class ReservationsMenu extends Menu {
         addMenuItem("Fulfill Reservation", this::fulfillReservation);
         addMenuItem("Cancel Reservation", this::cancelReservation);
         addMenuItem("View All Reservations", this::viewAllReservations);
+        addMenuItem("Search Reservation", this::searchReservation);
         addMenuItem("View User Reservations", this::viewUserReservations);
     }
 
@@ -100,5 +101,21 @@ public class ReservationsMenu extends Menu {
             userUuid.get()
         );
         OutputFormatter.printReservationList(reservations);
+    }
+
+    private void searchReservation() {
+        String reservationId = inputHandler.readNonEmptyString("Enter Reservation ID: ");
+        Optional<UUID> reservationUuid = UUID.parseUuid(reservationId);
+        if (reservationUuid.isEmpty()) {
+            return;
+        }
+
+        Optional<Reservation> resOpt = reservationService.getReservationById(reservationUuid.get());
+        if (resOpt.isEmpty()) {
+            OutputFormatter.printInfo("Reservation not found.");
+            return;
+        }
+
+        OutputFormatter.printReservation(resOpt.get());
     }
 }

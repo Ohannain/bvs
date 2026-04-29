@@ -124,4 +124,12 @@ public class JsonFineRepository implements FineRepository {
     public List<Fine> findByStatus(FineStatus status) {
         return fines.stream().filter(f -> f.getStatus() == status).collect(Collectors.toList());
     }
+
+    /**
+     * findByLoanId returns fines associated with a specific loan id.
+     */
+    @Override
+    public List<Fine> findByLoanId(UUID loanId) {
+        return fines.stream().filter(f -> f.getLoanId() != null && f.getLoanId().equals(loanId)).collect(Collectors.toList());
+    }
 }

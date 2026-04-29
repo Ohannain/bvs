@@ -14,4 +14,5 @@ public interface FineRepository {
     List<Fine> findAll();
     List<Fine> findByUserId(UUID userId);
     List<Fine> findByStatus(FineStatus status);
+    List<Fine> findByLoanId(UUID loanId);
 }

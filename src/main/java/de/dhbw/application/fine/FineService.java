@@ -3,6 +3,13 @@ package de.dhbw.application.fine;
 import de.dhbw.domain.fine.Fine;
 import de.dhbw.domain.fine.FineStatus;
 import de.dhbw.persistence.fine.FineRepository;
+import de.dhbw.application.loan.LoanService;
+import de.dhbw.domain.loan.Loan;
+import de.dhbw.domain.loan.LoanStatus;
+import de.dhbw.application.fine.FineCalculator;
+import de.dhbw.domain.fine.Fine;
+import de.dhbw.util.Config;
+import java.time.LocalDate;
 import de.dhbw.util.Logger;
 
 import java.util.List;
@@ -11,10 +18,13 @@ import de.dhbw.util.UUID;
 
 public class FineService {
     private final FineRepository fineRepository;
+    private final LoanService loanService;
 
     public FineService(
+        LoanService loanService,
         FineRepository fineRepository
     ) {
+        this.loanService = loanService;
         this.fineRepository = fineRepository;
     }
 
@@ -72,6 +82,40 @@ public class FineService {
     public void createFine(Fine fine) {
         fineRepository.save(fine);
         Logger.info("Fine created with id " + fine.getFineId() + "!");
+    }
+
+    /**
+     * generateFines scans loans and creates fines for overdue loans where no fine exists yet.
+     * Returns the number of fines created.
+     */
+    public int generateFines() {
+        int created = 0;
+        if (loanService == null) {
+            Logger.warn("LoanService not available, cannot generate fines.");
+            return created;
+        }
+
+        List<Loan> loans = loanService.getAllLoans();
+        for (Loan loan : loans) {
+            if (loan.getStatus() != LoanStatus.OVERDUE) continue;
+
+            List<Fine> existing = fineRepository.findByLoanId(loan.getLoanId());
+            if (existing != null && !existing.isEmpty()) continue;
+
+            double amount = FineCalculator.calculateOverdueFine(loan);
+            if (amount <= 0.0) continue;
+
+            Fine fine = new Fine(loan.getUserId());
+            fine.setLoanId(loan.getLoanId());
+            fine.setAmount(amount);
+            fine.setDueDate(LocalDate.now().plusDays(30));
+            fineRepository.save(fine);
+            created++;
+            Logger.info("Generated fine " + fine.getFineId() + " for overdue loan " + loan.getLoanId());
+        }
+
+        Logger.info("Finished generating fines. Created: " + created);
+        return created;
     }
 
     /**

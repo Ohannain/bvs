@@ -241,6 +241,18 @@ public class OutputFormatter {
      */
     public static void printReservation(Reservation reservation) {
 
+        if (reservation == null) {
+            printInfo("No reservation to display.");
+            return;
+        }
+
+        System.out.println("Reservation ID: " + reservation.getReservationId());
+        System.out.println("User ID: " + (reservation.getUserId() != null ? reservation.getUserId() : "N/A"));
+        System.out.println("Media ID: " + (reservation.getMediaId() != null ? reservation.getMediaId() : "N/A"));
+        System.out.println("Reservation Date: " + (reservation.getReservationDate() != null ? DateUtils.format(reservation.getReservationDate()) : "N/A"));
+        System.out.println("Expiry Date: " + (reservation.getExpiryDate() != null ? DateUtils.format(reservation.getExpiryDate()) : "N/A"));
+        System.out.println("Status: " + (reservation.getStatus() != null ? reservation.getStatus() : "N/A"));
+        System.out.println("Priority: " + reservation.getPriority());
     }
 
     /**
@@ -249,6 +261,26 @@ public class OutputFormatter {
      */
     public static void printReservationList(List<Reservation> reservationList) {
 
+        if (reservationList == null || reservationList.isEmpty()) {
+            printInfo("No reservations found.");
+            return;
+        }
+
+        printPaginatedTable(
+            reservationList,
+            "Reservations",
+            120,
+            () -> System.out.printf("%-15s %-15s %-15s %-12s %-12s %-10s %-8s%n",
+                "Reservation ID", "User ID", "Media ID", "Res. Date", "Expiry", "Status", "Priority"),
+            r -> System.out.printf("%-15s %-15s %-15s %-12s %-12s %-10s %-8d%n",
+                formatUuid(r.getReservationId()),
+                formatUuid(r.getUserId()),
+                formatUuid(r.getMediaId()),
+                r.getReservationDate() != null ? DateUtils.format(r.getReservationDate()) : "N/A",
+                r.getExpiryDate() != null ? DateUtils.format(r.getExpiryDate()) : "N/A",
+                r.getStatus(),
+                r.getPriority())
+        );
     }
 
     /**

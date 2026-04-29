@@ -32,9 +32,16 @@ public class FineMenu extends Menu {
     }
 
     private void generateFines() {
-        OutputFormatter.printWarning(
-                "Automatic fine generation is not available in the current FineService implementation."
-        );
+        try {
+            int created = fineService.generateFines();
+            if (created == 0) {
+                OutputFormatter.printInfo("No new fines generated.");
+            } else {
+                OutputFormatter.printSuccess("Generated " + created + " fine(s) for overdue loans.");
+            }
+        } catch (Exception e) {
+            OutputFormatter.printError("Failed to generate fines: " + e.getMessage());
+        }
     }
 
     private void payFine() {

@@ -62,7 +62,7 @@ public class Main {
             UserService userService = new UserService(userRepository);
             MediaService mediaService = new MediaService(mediaRepository);
             LoanService loanService = new LoanService(loanRepository, mediaRepository, userRepository);
-            FineService fineService = new FineService(fineRepository);
+            FineService fineService = new FineService(loanService, fineRepository);
             ReservationService reservationService = new ReservationService(reservationRepository, mediaRepository, userRepository);
 
             Logger.info("Services initialized");
