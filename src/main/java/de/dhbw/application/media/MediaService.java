@@ -3,6 +3,7 @@ package de.dhbw.application.media;
 import de.dhbw.domain.media.*;
 import de.dhbw.persistence.media.MediaRepository;
 import de.dhbw.util.Logger;
+import de.dhbw.util.IsbnUtils;
 import java.util.List;
 import java.util.Locale;
 import de.dhbw.util.UUID;
@@ -26,7 +27,12 @@ public class MediaService {
     ) {
         UUID mediaId = generateMediaId();
         Book book = new Book(mediaId, title, author, publisher);
-        book.setIsbn(isbn);
+        if (isbn != null && !isbn.isBlank()) {
+            if (!IsbnUtils.isValidIsbn(isbn)) {
+                throw new IllegalArgumentException("Invalid ISBN: " + isbn);
+            }
+            book.setIsbn(isbn);
+        }
         book.setPages(pages);
         book.setGenre(genre);
         book.setStatus(MediaStatus.AVAILABLE);
@@ -89,7 +95,12 @@ public class MediaService {
     ) {
         UUID mediaId = generateMediaId();
         EBook eBook = new EBook(mediaId, title, author, publisher);
-        eBook.setIsbn(isbn);
+        if (isbn != null && !isbn.isBlank()) {
+            if (!IsbnUtils.isValidIsbn(isbn)) {
+                throw new IllegalArgumentException("Invalid ISBN: " + isbn);
+            }
+            eBook.setIsbn(isbn);
+        }
         eBook.setPages(pages);
         eBook.setGenre(genre);
         eBook.setFileFormat(fileFormat);

@@ -34,6 +34,22 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
+sourceSets {
+    val main by getting {
+        resources.srcDir("data")
+    }
+}
+
+distributions {
+    named("main") {
+        contents {
+            from("data") {
+                into("bin/data")
+            }
+        }
+    }
+}
+
 tasks.test {
     useJUnitPlatform()
     jvmArgs(

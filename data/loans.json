@@ -1,0 +1,660 @@
+[
+  {
+    "loanId": "LON00001",
+    "mediaIds": [
+      "MED00197"
+    ],
+    "userId": "USR00001",
+    "issueDate": "2018-05-01",
+    "dueDate": "2018-05-31",
+    "returnDate": "2018-05-14",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00002",
+    "mediaIds": [
+      "MED00086"
+    ],
+    "userId": "USR00003",
+    "issueDate": "2018-07-02",
+    "dueDate": "2018-08-01",
+    "returnDate": "2018-08-01",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00003",
+    "mediaIds": [
+      "MED00007"
+    ],
+    "userId": "USR00005",
+    "issueDate": "2018-09-01",
+    "dueDate": "2018-10-01",
+    "returnDate": "2018-09-07",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00004",
+    "mediaIds": [
+      "MED00189"
+    ],
+    "userId": "USR00003",
+    "issueDate": "2018-11-02",
+    "dueDate": "2018-12-02",
+    "returnDate": "2018-11-24",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00005",
+    "mediaIds": [
+      "MED00192"
+    ],
+    "userId": "USR00003",
+    "issueDate": "2019-01-02",
+    "dueDate": "2019-02-01",
+    "returnDate": "2019-02-17",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00006",
+    "mediaIds": [
+      "MED00067"
+    ],
+    "userId": "USR00003",
+    "issueDate": "2019-03-05",
+    "dueDate": "2019-04-04",
+    "returnDate": "2019-03-11",
+    "status": "RETURNED",
+    "note": "Renewed once"
+  },
+  {
+    "loanId": "LON00007",
+    "mediaIds": [
+      "MED00036"
+    ],
+    "userId": "USR00003",
+    "issueDate": "2019-05-05",
+    "dueDate": "2019-05-19",
+    "returnDate": "2019-05-19",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00008",
+    "mediaIds": [
+      "MED00024"
+    ],
+    "userId": "USR00003",
+    "issueDate": "2019-07-06",
+    "dueDate": "2019-07-20",
+    "returnDate": "2019-07-12",
+    "status": "RETURNED",
+    "note": "Renewed once"
+  },
+  {
+    "loanId": "LON00009",
+    "mediaIds": [
+      "MED00064"
+    ],
+    "userId": "USR00002",
+    "issueDate": "2019-09-05",
+    "dueDate": "2019-09-12",
+    "returnDate": "2019-09-11",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00010",
+    "mediaIds": [
+      "MED00034"
+    ],
+    "userId": "USR00002",
+    "issueDate": "2019-11-06",
+    "dueDate": "2019-12-06",
+    "returnDate": "2019-12-10",
+    "status": "RETURNED",
+    "note": "Renewed once"
+  },
+  {
+    "loanId": "LON00011",
+    "mediaIds": [
+      "MED00028"
+    ],
+    "userId": "USR00005",
+    "issueDate": "2020-01-06",
+    "dueDate": "2020-02-05",
+    "returnDate": "2020-01-27",
+    "status": "RETURNED",
+    "note": "Renewed once"
+  },
+  {
+    "loanId": "LON00012",
+    "mediaIds": [
+      "MED00012"
+    ],
+    "userId": "USR00001",
+    "issueDate": "2020-03-08",
+    "dueDate": "2020-04-07",
+    "returnDate": "2020-04-07",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00013",
+    "mediaIds": [
+      "MED00076"
+    ],
+    "userId": "USR00008",
+    "issueDate": "2020-05-08",
+    "dueDate": "2020-06-07",
+    "returnDate": "2020-05-24",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00014",
+    "mediaIds": [
+      "MED00117"
+    ],
+    "userId": "USR00008",
+    "issueDate": "2020-07-09",
+    "dueDate": "2020-08-08",
+    "returnDate": "2020-08-07",
+    "status": "RETURNED",
+    "note": "Renewed once"
+  },
+  {
+    "loanId": "LON00015",
+    "mediaIds": [
+      "MED00142"
+    ],
+    "userId": "USR00006",
+    "issueDate": "2020-09-08",
+    "dueDate": "2020-10-08",
+    "returnDate": "2020-10-02",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00016",
+    "mediaIds": [
+      "MED00179"
+    ],
+    "userId": "USR00005",
+    "issueDate": "2020-11-09",
+    "dueDate": "2020-12-09",
+    "returnDate": "2020-11-16",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00017",
+    "mediaIds": [
+      "MED00142"
+    ],
+    "userId": "USR00006",
+    "issueDate": "2021-01-10",
+    "dueDate": "2021-02-09",
+    "returnDate": "2021-02-25",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00018",
+    "mediaIds": [
+      "MED00083"
+    ],
+    "userId": "USR00001",
+    "issueDate": "2021-03-12",
+    "dueDate": "2021-04-11",
+    "returnDate": "2021-04-02",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00019",
+    "mediaIds": [
+      "MED00033"
+    ],
+    "userId": "USR00008",
+    "issueDate": "2021-05-13",
+    "dueDate": "2021-05-20",
+    "returnDate": "2021-05-21",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00020",
+    "mediaIds": [
+      "MED00099"
+    ],
+    "userId": "USR00009",
+    "issueDate": "2021-07-13",
+    "dueDate": "2021-08-12",
+    "returnDate": "2021-08-21",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00021",
+    "mediaIds": [
+      "MED00197"
+    ],
+    "userId": "USR00011",
+    "issueDate": "2021-09-13",
+    "dueDate": "2021-10-13",
+    "returnDate": "2021-09-25",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00022",
+    "mediaIds": [
+      "MED00011"
+    ],
+    "userId": "USR00003",
+    "issueDate": "2021-11-13",
+    "dueDate": "2021-12-13",
+    "returnDate": "2021-12-24",
+    "status": "RETURNED",
+    "note": "Renewed once"
+  },
+  {
+    "loanId": "LON00023",
+    "mediaIds": [
+      "MED00190"
+    ],
+    "userId": "USR00002",
+    "issueDate": "2022-01-14",
+    "dueDate": "2022-01-28",
+    "returnDate": "2022-02-17",
+    "status": "RETURNED",
+    "note": "Renewed once"
+  },
+  {
+    "loanId": "LON00024",
+    "mediaIds": [
+      "MED00013"
+    ],
+    "userId": "USR00010",
+    "issueDate": "2022-03-16",
+    "dueDate": "2022-04-15",
+    "returnDate": "2022-04-16",
+    "status": "LOST"
+  },
+  {
+    "loanId": "LON00025",
+    "mediaIds": [
+      "MED00065"
+    ],
+    "userId": "USR00007",
+    "issueDate": "2022-05-17",
+    "dueDate": "2022-06-16",
+    "returnDate": "2022-05-31",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00026",
+    "mediaIds": [
+      "MED00114"
+    ],
+    "userId": "USR00001",
+    "issueDate": "2022-07-17",
+    "dueDate": "2022-07-24",
+    "returnDate": "2022-07-23",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00027",
+    "mediaIds": [
+      "MED00009"
+    ],
+    "userId": "USR00001",
+    "issueDate": "2022-09-17",
+    "dueDate": "2022-09-24",
+    "returnDate": "2022-09-22",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00028",
+    "mediaIds": [
+      "MED00191"
+    ],
+    "userId": "USR00011",
+    "issueDate": "2022-11-17",
+    "dueDate": "2022-12-17",
+    "returnDate": "2022-12-08",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00029",
+    "mediaIds": [
+      "MED00152"
+    ],
+    "userId": "USR00002",
+    "issueDate": "2023-01-18",
+    "dueDate": "2023-01-25",
+    "returnDate": "2023-01-20",
+    "status": "RETURNED",
+    "note": "Renewed once"
+  },
+  {
+    "loanId": "LON00030",
+    "mediaIds": [
+      "MED00009"
+    ],
+    "userId": "USR00012",
+    "issueDate": "2023-03-20",
+    "dueDate": "2023-03-27",
+    "returnDate": "2023-03-27",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00031",
+    "mediaIds": [
+      "MED00094"
+    ],
+    "userId": "USR00014",
+    "issueDate": "2023-05-21",
+    "dueDate": "2023-06-20",
+    "returnDate": "2023-07-05",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00032",
+    "mediaIds": [
+      "MED00174"
+    ],
+    "userId": "USR00012",
+    "issueDate": "2023-07-21",
+    "dueDate": "2023-08-20",
+    "returnDate": "2023-07-25",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00033",
+    "mediaIds": [
+      "MED00078"
+    ],
+    "userId": "USR00007",
+    "issueDate": "2023-09-21",
+    "dueDate": "2023-09-28",
+    "returnDate": "2023-10-02",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00034",
+    "mediaIds": [
+      "MED00188"
+    ],
+    "userId": "USR00009",
+    "issueDate": "2023-11-22",
+    "dueDate": "2023-12-06",
+    "returnDate": "2023-11-27",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00035",
+    "mediaIds": [
+      "MED00071"
+    ],
+    "userId": "USR00008",
+    "issueDate": "2024-01-22",
+    "dueDate": "2024-02-21",
+    "returnDate": "2024-02-29",
+    "status": "LOST"
+  },
+  {
+    "loanId": "LON00036",
+    "mediaIds": [
+      "MED00059"
+    ],
+    "userId": "USR00003",
+    "issueDate": "2024-03-24",
+    "dueDate": "2024-04-23",
+    "returnDate": "2024-05-04",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00037",
+    "mediaIds": [
+      "MED00003"
+    ],
+    "userId": "USR00006",
+    "issueDate": "2024-05-24",
+    "dueDate": "2024-06-07",
+    "returnDate": "2024-06-22",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00038",
+    "mediaIds": [
+      "MED00075"
+    ],
+    "userId": "USR00013",
+    "issueDate": "2024-07-25",
+    "dueDate": "2024-08-24",
+    "returnDate": "2024-08-17",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00039",
+    "mediaIds": [
+      "MED00171"
+    ],
+    "userId": "USR00009",
+    "issueDate": "2024-09-24",
+    "dueDate": "2024-10-24",
+    "returnDate": "2024-10-05",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00040",
+    "mediaIds": [
+      "MED00169"
+    ],
+    "userId": "USR00005",
+    "issueDate": "2024-11-25",
+    "dueDate": "2024-12-25",
+    "returnDate": "2024-11-28",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00041",
+    "mediaIds": [
+      "MED00110"
+    ],
+    "userId": "USR00006",
+    "issueDate": "2025-01-25",
+    "dueDate": "2025-02-24",
+    "returnDate": "2025-02-15",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00042",
+    "mediaIds": [
+      "MED00142"
+    ],
+    "userId": "USR00014",
+    "issueDate": "2025-03-28",
+    "dueDate": "2025-04-27",
+    "returnDate": "2025-05-16",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00043",
+    "mediaIds": [
+      "MED00034"
+    ],
+    "userId": "USR00016",
+    "issueDate": "2025-05-28",
+    "dueDate": "2025-06-27",
+    "returnDate": "2025-06-22",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00044",
+    "mediaIds": [
+      "MED00063"
+    ],
+    "userId": "USR00005",
+    "issueDate": "2025-07-29",
+    "dueDate": "2025-08-28",
+    "returnDate": "2025-08-29",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00045",
+    "mediaIds": [
+      "MED00127"
+    ],
+    "userId": "USR00005",
+    "issueDate": "2025-09-28",
+    "dueDate": "2025-10-12",
+    "returnDate": "2025-09-30",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00046",
+    "mediaIds": [
+      "MED00033"
+    ],
+    "userId": "USR00001",
+    "issueDate": "2025-11-29",
+    "dueDate": "2025-12-06",
+    "returnDate": "2025-12-23",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00047",
+    "mediaIds": [
+      "MED00069"
+    ],
+    "userId": "USR00015",
+    "issueDate": "2026-01-29",
+    "dueDate": "2026-02-28",
+    "returnDate": "2026-03-12",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00048",
+    "mediaIds": [
+      "MED00160"
+    ],
+    "userId": "USR00013",
+    "issueDate": "2026-04-01",
+    "dueDate": "2026-05-01",
+    "returnDate": "2026-05-06",
+    "status": "RETURNED"
+  },
+  {
+    "loanId": "LON00049",
+    "mediaIds": [
+      "MED00133"
+    ],
+    "userId": "USR00004",
+    "issueDate": "2026-04-02",
+    "dueDate": "2026-05-16",
+    "status": "RENEWED",
+    "note": "Renewed once"
+  },
+  {
+    "loanId": "LON00050",
+    "mediaIds": [
+      "MED00004"
+    ],
+    "userId": "USR00009",
+    "issueDate": "2026-04-21",
+    "dueDate": "2026-06-04",
+    "status": "RENEWED",
+    "note": "Renewed once"
+  },
+  {
+    "loanId": "LON00051",
+    "mediaIds": [
+      "MED00057"
+    ],
+    "userId": "USR00019",
+    "issueDate": "2026-05-11",
+    "dueDate": "2026-06-10",
+    "status": "ACTIVE"
+  },
+  {
+    "loanId": "LON00052",
+    "mediaIds": [
+      "MED00125"
+    ],
+    "userId": "USR00013",
+    "issueDate": "2026-05-30",
+    "dueDate": "2026-06-29",
+    "status": "ACTIVE"
+  },
+  {
+    "loanId": "LON00053",
+    "mediaIds": [
+      "MED00010"
+    ],
+    "userId": "USR00016",
+    "issueDate": "2026-06-18",
+    "dueDate": "2026-07-18",
+    "status": "ACTIVE"
+  },
+  {
+    "loanId": "LON00054",
+    "mediaIds": [
+      "MED00100"
+    ],
+    "userId": "USR00002",
+    "issueDate": "2026-07-08",
+    "dueDate": "2026-08-07",
+    "status": "ACTIVE"
+  },
+  {
+    "loanId": "LON00055",
+    "mediaIds": [
+      "MED00042"
+    ],
+    "userId": "USR00001",
+    "issueDate": "2026-07-27",
+    "dueDate": "2026-08-26",
+    "status": "ACTIVE"
+  },
+  {
+    "loanId": "LON00056",
+    "mediaIds": [
+      "MED00035"
+    ],
+    "userId": "USR00008",
+    "issueDate": "2026-08-16",
+    "dueDate": "2026-09-15",
+    "status": "ACTIVE"
+  },
+  {
+    "loanId": "LON00057",
+    "mediaIds": [
+      "MED00143"
+    ],
+    "userId": "USR00002",
+    "issueDate": "2026-09-04",
+    "dueDate": "2026-09-18",
+    "status": "ACTIVE"
+  },
+  {
+    "loanId": "LON00058",
+    "mediaIds": [
+      "MED00072"
+    ],
+    "userId": "USR00013",
+    "issueDate": "2026-09-23",
+    "dueDate": "2026-10-23",
+    "status": "ACTIVE"
+  },
+  {
+    "loanId": "LON00059",
+    "mediaIds": [
+      "MED00034"
+    ],
+    "userId": "USR00005",
+    "issueDate": "2026-10-13",
+    "dueDate": "2026-11-12",
+    "status": "ACTIVE"
+  },
+  {
+    "loanId": "LON00060",
+    "mediaIds": [
+      "MED00165"
+    ],
+    "userId": "USR00020",
+    "issueDate": "2026-11-01",
+    "dueDate": "2026-12-01",
+    "status": "ACTIVE"
+  }
+]

@@ -1,6 +1,7 @@
 package de.dhbw.ui.menus;
 
 import de.dhbw.application.user.UserService;
+import de.dhbw.application.user.UserValidator;
 import de.dhbw.domain.user.User;
 import de.dhbw.ui.InputHandler;
 import de.dhbw.ui.Menu;
@@ -99,6 +100,16 @@ public class UserMenu extends Menu {
 
         String email = inputHandler.readString("Email [" + user.getEmail() + "]: ");
         if (!email.isEmpty()) user.setEmail(email);
+
+        String phone = inputHandler.readString("Phone [" + (user.getPhone() == null ? "" : user.getPhone()) + "]: ");
+        while (!phone.isEmpty() && !UserValidator.isValidPhone(phone)) {
+            System.out.println("Invalid phone format. Enter a valid phone or press Enter to skip.");
+            phone = inputHandler.readString("Phone [" + (user.getPhone() == null ? "" : user.getPhone()) + "]: ");
+        }
+        if (!phone.isEmpty()) user.setPhone(phone);
+
+        String address = inputHandler.readString("Address [" + (user.getAddress() == null ? "" : user.getAddress()) + "]: ");
+        if (!address.isEmpty()) user.setAddress(address);
 
         try {
             userService.updateUser(user);

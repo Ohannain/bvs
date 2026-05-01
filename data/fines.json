@@ -1,0 +1,143 @@
+[
+  {
+    "fineId": "FIN00001",
+    "userId": "USR00010",
+    "loanId": "LON00024",
+    "amount": 25.0,
+    "issueDate": "2022-05-01",
+    "dueDate": "2022-05-31",
+    "status": "PENDING",
+    "note": "Reason: LOST"
+  },
+  {
+    "fineId": "FIN00002",
+    "userId": "USR00008",
+    "loanId": "LON00035",
+    "amount": 25.0,
+    "issueDate": "2022-08-18",
+    "dueDate": "2022-09-17",
+    "status": "PENDING",
+    "note": "Reason: LOST"
+  },
+  {
+    "fineId": "FIN00003",
+    "userId": "USR00010",
+    "amount": 12.06,
+    "issueDate": "2022-12-04",
+    "dueDate": "2023-01-03",
+    "status": "PENDING",
+    "note": "Reason: DAMAGE | Media: MED00004"
+  },
+  {
+    "fineId": "FIN00004",
+    "userId": "USR00003",
+    "amount": 7.01,
+    "issueDate": "2023-03-23",
+    "dueDate": "2023-04-22",
+    "status": "WAIVED",
+    "note": "Reason: DAMAGE | Media: MED00048"
+  },
+  {
+    "fineId": "FIN00005",
+    "userId": "USR00014",
+    "amount": 8.22,
+    "issueDate": "2023-07-10",
+    "dueDate": "2023-08-09",
+    "status": "WAIVED",
+    "note": "Reason: DAMAGE | Media: MED00186"
+  },
+  {
+    "fineId": "FIN00006",
+    "userId": "USR00003",
+    "amount": 16.7,
+    "issueDate": "2023-10-27",
+    "dueDate": "2023-11-26",
+    "status": "PENDING",
+    "note": "Reason: DAMAGE | Media: MED00044"
+  },
+  {
+    "fineId": "FIN00007",
+    "userId": "USR00015",
+    "amount": 10.54,
+    "issueDate": "2024-02-12",
+    "dueDate": "2024-03-13",
+    "status": "PENDING",
+    "note": "Reason: DAMAGE | Media: MED00092"
+  },
+  {
+    "fineId": "FIN00008",
+    "userId": "USR00004",
+    "amount": 24.33,
+    "issueDate": "2024-05-31",
+    "dueDate": "2024-06-30",
+    "paidDate": "2026-01-30",
+    "status": "PAID",
+    "note": "Reason: DAMAGE | Media: MED00099"
+  },
+  {
+    "fineId": "FIN00009",
+    "userId": "USR00016",
+    "amount": 22.71,
+    "issueDate": "2024-09-17",
+    "dueDate": "2024-10-17",
+    "paidDate": "2024-10-01",
+    "status": "PAID",
+    "note": "Reason: DAMAGE | Media: MED00135"
+  },
+  {
+    "fineId": "FIN00010",
+    "userId": "USR00002",
+    "amount": 14.3,
+    "issueDate": "2025-01-03",
+    "dueDate": "2025-02-02",
+    "paidDate": "2025-05-24",
+    "status": "PAID",
+    "note": "Reason: DAMAGE | Media: MED00106"
+  },
+  {
+    "fineId": "FIN00011",
+    "userId": "USR00015",
+    "amount": 22.22,
+    "issueDate": "2025-04-22",
+    "dueDate": "2025-05-22",
+    "status": "PENDING",
+    "note": "Reason: DAMAGE | Media: MED00041"
+  },
+  {
+    "fineId": "FIN00012",
+    "userId": "USR00010",
+    "amount": 7.73,
+    "issueDate": "2025-08-09",
+    "dueDate": "2025-09-08",
+    "status": "PENDING",
+    "note": "Reason: DAMAGE | Media: MED00155"
+  },
+  {
+    "fineId": "FIN00013",
+    "userId": "USR00004",
+    "amount": 17.34,
+    "issueDate": "2025-11-26",
+    "dueDate": "2025-12-26",
+    "status": "WAIVED",
+    "note": "Reason: DAMAGE | Media: MED00164"
+  },
+  {
+    "fineId": "FIN00014",
+    "userId": "USR00002",
+    "amount": 24.57,
+    "issueDate": "2026-03-14",
+    "dueDate": "2026-04-13",
+    "paidDate": "2026-03-27",
+    "status": "PAID",
+    "note": "Reason: DAMAGE | Media: MED00142"
+  },
+  {
+    "fineId": "FIN00015",
+    "userId": "USR00017",
+    "amount": 23.73,
+    "issueDate": "2026-07-01",
+    "dueDate": "2026-07-31",
+    "status": "PENDING",
+    "note": "Reason: DAMAGE | Media: MED00035"
+  }
+]

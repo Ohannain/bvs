@@ -1,0 +1,28 @@
+[
+  {
+    "reportId": "RPT00001",
+    "type": "ANNUAL",
+    "generatedDate": "2026-04-30",
+    "startDate": "2026-01-01",
+    "endDate": "2026-05-01",
+    "title": "Annual System Report",
+    "summary": "Current status of the library system.",
+    "data": {
+      "total_media": 200,
+      "total_reservations": 30,
+      "total_loans": 60,
+      "total_users": 20
+    }
+  },
+  {
+    "reportId": "RPT00002",
+    "type": "FINE_STATISTICS",
+    "generatedDate": "2026-05-02",
+    "title": "Fine Financials",
+    "summary": "Overview of paid and pending fines.",
+    "data": {
+      "paid_amount_eur": 85.91,
+      "pending_amount_eur": 142.98
+    }
+  }
+]
