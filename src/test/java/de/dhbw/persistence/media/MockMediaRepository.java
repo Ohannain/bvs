@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 /**
  * Mock-Implementierung des MediaRepository für Tests.
  * Zählt Aufrufe, simuliert Verfügbarkeit und verifiziert Seiteneffekte im LoanService.
- * 
+ 
  * Verwendung:
  *   MockMediaRepository mockRepo = new MockMediaRepository();
  *   LoanService service = new LoanService(loanRepo, mockRepo, userRepo);
@@ -96,7 +96,7 @@ public class MockMediaRepository implements MediaRepository {
             return Collections.emptyList();
         }
         return media.values().stream()
-                .filter(m -> m.getType() == type)
+                .filter(m -> m.getMediaType() == type)
                 .collect(Collectors.toList());
     }
 
@@ -140,8 +140,6 @@ public class MockMediaRepository implements MediaRepository {
         }
         return media.containsKey(mediaId) && !unavailableMediaIds.contains(mediaId);
     }
-
-    // ===== Mock-spezifische Methoden =====
 
     /**
      * Gibt die Anzahl der Aufrufe einer bestimmten Methode zurück
