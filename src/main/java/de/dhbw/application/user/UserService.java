@@ -168,7 +168,7 @@ public class UserService {
         UUID userId;
         do {
             userId = UUID.nextUserId();
-        } while (userRepository.findById(userId).isEmpty());
+        } while (userRepository.exists(userId));
         return userId;
     }
 }
