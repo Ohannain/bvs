@@ -90,7 +90,7 @@ class LoanServiceIntegrationTest {
 
         List<Media> borrowedMediaList = mediaRepository.findById(book.getMediaId());
         assertEquals(1, borrowedMediaList.size());
-        Media borrowedMedia = borrowedMediaList.get(0);
+        Media borrowedMedia = borrowedMediaList.getFirst();
         assertEquals(MediaStatus.BORROWED, borrowedMedia.getStatus());
         assertEquals(user.getUserId().toString(), borrowedMedia.getCurrentBorrowerId());
 
@@ -113,7 +113,7 @@ class LoanServiceIntegrationTest {
 
         for (UUID mediaId : List.of(book1.getMediaId(), book2.getMediaId(), dvd.getMediaId())) {
             List<Media> mediaList = mediaRepository.findById(mediaId);
-            assertEquals(MediaStatus.BORROWED, mediaList.get(0).getStatus());
+            assertEquals(MediaStatus.BORROWED, mediaList.getFirst().getStatus());
         }
 
         int expectedUpdates = updateCountBefore + 3;
@@ -130,7 +130,7 @@ class LoanServiceIntegrationTest {
         loanService.borrowMedia(user.getUserId(), List.of(media.getMediaId()));
 
         List<User> updatedUsers = userRepository.findById(user.getUserId());
-        assertTrue(updatedUsers.get(0).getBorrowedMediaIds().contains(media.getMediaId()));
+        assertTrue(updatedUsers.getFirst().getBorrowedMediaIds().contains(media.getMediaId()));
     }
 
     @Test

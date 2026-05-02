@@ -47,7 +47,7 @@ class UserServiceIntegrationTest {
         List<User> retrievedUsers = userService.getUserById(createdUser.getUserId());
 
         assertEquals(1, retrievedUsers.size());
-        assertEquals(createdUser.getUserId(), retrievedUsers.get(0).getUserId());
+        assertEquals(createdUser.getUserId(), retrievedUsers.getFirst().getUserId());
     }
 
     @Test
@@ -101,7 +101,7 @@ class UserServiceIntegrationTest {
         userService.updateUser(user);
 
         List<User> retrievedUsers = userService.getUserById(user.getUserId());
-        assertEquals("Updated", retrievedUsers.get(0).getFirstName());
+        assertEquals("Updated", retrievedUsers.getFirst().getFirstName());
     }
 
     @Test
@@ -112,8 +112,8 @@ class UserServiceIntegrationTest {
         userService.suspendUser(user.getUserId(), "Too many fines");
 
         List<User> suspendedUsers = userService.getUserById(user.getUserId());
-        assertEquals(UserStatus.SUSPENDED, suspendedUsers.get(0).getStatus());
-        assertEquals(1, suspendedUsers.get(0).getWarningCount());
+        assertEquals(UserStatus.SUSPENDED, suspendedUsers.getFirst().getStatus());
+        assertEquals(1, suspendedUsers.getFirst().getWarningCount());
     }
 
     @Test
@@ -124,7 +124,7 @@ class UserServiceIntegrationTest {
         userService.activateUser(user.getUserId());
 
         List<User> activatedUsers = userService.getUserById(user.getUserId());
-        assertEquals(UserStatus.ACTIVE, activatedUsers.get(0).getStatus());
+        assertEquals(UserStatus.ACTIVE, activatedUsers.getFirst().getStatus());
     }
 
     @Test
